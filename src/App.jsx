@@ -102,8 +102,12 @@ export default function App() {
                       </div>
                     </div>
                     <button 
-                      onClick={() => removeGame(game.id)} 
-                      className="text-red-400 hover:text-red-600 opacity-0 group-hover:opacity-100 transition-opacity p-2 cursor-pointer"
+                      onClick={() => {
+                        if (window.confirm(`Are you sure you want to remove "${game.title}" from the shelf?`)) {
+                          removeGame(game.id);
+                        }
+                      }} 
+                      className="text-gray-400 hover:text-red-500 transition-colors p-2 cursor-pointer flex-shrink-0"
                       aria-label="Remove game"
                       title="Delete Game"
                     >
