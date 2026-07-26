@@ -15,3 +15,6 @@
 * **Editable House Rules:** Keep your tavern orderly (or chaotic) with a quick inline-editable house rule banner.
 * **Persistent Storage:** All games, custom additions, and RSVP guest lists are automatically saved to your browser's `localStorage`.
 * **Dark / Light Mode:** Seamlessly toggle between **Cozy Tavern** (dark mode) and **Sunlit Porch** (light mode) with custom color styling.
+
+<img width="2531" height="1226" alt="Screenshot 2026-07-26 172648" src="https://github.com/user-attachments/assets/74a85a55-79fa-4767-afaa-133fbf480aa5" />
+<img width="2531" height="1222" alt="Screenshot 2026-07-26 172708" src="https://github.com/user-attachments/assets/9b1aa62c-43cb-48f0-adb3-d380cc1c9832" />
