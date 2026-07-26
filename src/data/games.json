@@ -1,0 +1,182 @@
+[
+  {
+    "id": "mock-1",
+    "title": "Warhammer 40,000: Recruit Edition",
+    "image": "warhammer.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 2,
+    "playtime": 60,
+    "tags": ["Miniature Wargame", "Sci-Fi", "Tactical"]
+  },
+  {
+    "id": "mock-2",
+    "title": "Dungeons & Dragons: Starter Set",
+    "image": "dnd.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 6,
+    "playtime": 180,
+    "tags": ["RPG", "Fantasy", "Co-op"]
+  },
+  {
+    "id": "mock-3",
+    "title": "Exploding Kittens",
+    "image": "exploding-kittens.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 5,
+    "playtime": 15,
+    "tags": ["Card Game", "Humor", "Party"]
+  },
+  {
+    "id": "mock-4",
+    "title": "Monopoly: Classic Edition",
+    "image": "monopoly.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 6,
+    "playtime": 120,
+    "tags": ["Board Game", "Economics", "Classic"]
+  },
+  {
+    "id": "mock-5",
+    "title": "Cluedo (Clue)",
+    "image": "cluedo.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 6,
+    "playtime": 45,
+    "tags": ["Board Game", "Deduction", "Mystery"]
+  },
+  {
+    "id": "mock-6",
+    "title": "Catan",
+    "image": "catan.jpg",
+    "minPlayers": 3,
+    "maxPlayers": 4,
+    "playtime": 90,
+    "tags": ["Resource Management", "Classic", "Trading"]
+  },
+  {
+    "id": "mock-7",
+    "title": "Gloomhaven: Jaws of the Lion",
+    "image": "gloomhaven.jpg",
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "playtime": 120,
+    "tags": ["Campaign", "Fantasy", "Co-op"]
+  },
+  {
+    "id": "mock-8",
+    "title": "Secret Hitler",
+    "image": "secret-hitler.jpg",
+    "minPlayers": 5,
+    "maxPlayers": 10,
+    "playtime": 45,
+    "tags": ["Social Deduction", "Hidden Roles", "Party"]
+  },
+  {
+    "id": "mock-9",
+    "title": "Munchkin",
+    "image": "munchkin.jpg",
+    "minPlayers": 3,
+    "maxPlayers": 6,
+    "playtime": 90,
+    "tags": ["Card Game", "Fantasy", "Humor"]
+  },
+  {
+    "id": "mock-10",
+    "title": "Ticket to Ride",
+    "image": "ticket-to-ride.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 5,
+    "playtime": 60,
+    "tags": ["Board Game", "Strategy", "Trains"]
+  },
+  {
+    "id": "mock-11",
+    "title": "Risk: Global Domination",
+    "image": "risk.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 6,
+    "playtime": 120,
+    "tags": ["Board Game", "Strategy", "Military"]
+  },
+  {
+    "id": "mock-12",
+    "title": "Pathfinder: Beginner Box",
+    "image": "pathfinder.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 7,
+    "playtime": 180,
+    "tags": ["RPG", "High Fantasy", "Adventure"]
+  },
+  {
+    "id": "mock-13",
+    "title": "Cards Against Humanity",
+    "image": "cards-against-humanity.jpg",
+    "minPlayers": 4,
+    "maxPlayers": 20,
+    "playtime": 60,
+    "tags": ["Card Game", "Humor", "Party"]
+  },
+  {
+    "id": "mock-14",
+    "title": "Unstable Unicorns",
+    "image": "unstable-unicorns.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 8,
+    "playtime": 45,
+    "tags": ["Card Game", "Strategy", "Humor"]
+  },
+  {
+    "id": "mock-15",
+    "title": "Codenames",
+    "image": "codenames.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 8,
+    "playtime": 15,
+    "tags": ["Word Game", "Deduction", "Party"]
+  },
+  {
+    "id": "mock-16",
+    "title": "The Game of Life",
+    "image": "game-of-life.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 4,
+    "playtime": 45,
+    "tags": ["Board Game", "Family", "Classic"]
+  },
+  {
+    "id": "mock-17",
+    "title": "Star Wars: Legion",
+    "image": "star-wars-legion.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 2,
+    "playtime": 180,
+    "tags": ["Miniature Wargame", "Sci-Fi", "Tactical"]
+  },
+  {
+    "id": "mock-18",
+    "title": "Betrayal at House on the Hill",
+    "image": "betrayal-house.jpg",
+    "minPlayers": 3,
+    "maxPlayers": 6,
+    "playtime": 60,
+    "tags": ["Board Game", "Horror", "Hidden Traitor"]
+  },
+  {
+    "id": "mock-19",
+    "title": "Scrabble",
+    "image": "scrabble.jpg",
+    "minPlayers": 2,
+    "maxPlayers": 4,
+    "playtime": 60,
+    "tags": ["Board Game", "Word Play", "Classic"]
+  },
+  {
+    "id": "mock-20",
+    "title": "Everdell",
+    "image": "everdell.jpg",
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "playtime": 60,
+    "tags": ["Worker Placement", "Whimsical", "Strategy"]
+  }
+]

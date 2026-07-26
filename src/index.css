@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-parchment: #f8fafc;
+  --color-tavern-dark: #0f172a;
+  --color-mystic-glow: #6366f1;
+
+  --font-serif: "Merriweather", serif;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
