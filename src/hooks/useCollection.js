@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { usePersistentState } from './usePersistentState';
 
 /** List helpers shared by persisted collections (games, plays) and nested lists (guests). */
@@ -19,6 +19,11 @@ export function insertAt(list, item, index) {
  */
 export function useCollection(key, getDefault, normalizeItem, normalizeList) {
   const [items, setItems] = usePersistentState(key, getDefault, normalizeList);
+  // Latest list for callbacks captured earlier (e.g. an Undo stored in a toast).
+  const itemsRef = useRef(items);
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
 
   /** Adds a record and returns it (with its id), or null if invalid. */
   const add = useCallback(
@@ -43,12 +48,13 @@ export function useCollection(key, getDefault, normalizeItem, normalizeList) {
   /** Removes a record. Returns `{ item, index }` to pass to `restore`, or null. */
   const remove = useCallback(
     (id) => {
-      const index = items.findIndex((item) => item.id === id);
+      const current = itemsRef.current;
+      const index = current.findIndex((item) => item.id === id);
       if (index === -1) return null;
       setItems((prev) => prev.filter((item) => item.id !== id));
-      return { item: items[index], index };
+      return { item: current[index], index };
     },
-    [items, setItems],
+    [setItems],
   );
 
   const restore = useCallback(

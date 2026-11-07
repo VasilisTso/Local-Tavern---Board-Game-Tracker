@@ -27,3 +27,14 @@ export function formatShortDate(value, now = new Date()) {
   if (d.getFullYear() !== now.getFullYear()) opts.year = 'numeric';
   return d.toLocaleDateString(undefined, opts);
 }
+
+/** "Fri 14 Nov, 19:30" (adds the year when it is not this year). */
+export function formatNightDate(value, now = new Date()) {
+  const d = value instanceof Date ? value : parseLocal(value);
+  if (!d) return '';
+  const opts = { weekday: 'short', day: 'numeric', month: 'short' };
+  if (d.getFullYear() !== now.getFullYear()) opts.year = 'numeric';
+  const day = d.toLocaleDateString(undefined, opts);
+  const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  return `${day}, ${time}`;
+}

@@ -9,8 +9,7 @@ import Tabs, { TabPanel } from './components/Tabs';
 import Toast from './components/Toast';
 import ThemeToggle from './components/ThemeToggle';
 import Shelf from './components/shelf/Shelf';
-import WheelWidget from './components/WheelWidget';
-import RsvpBoard from './components/RsvpBoard';
+import Tonight from './components/tonight/Tonight';
 
 const TAB_IDS = ['tonight', 'shelf', 'ledger'];
 
@@ -35,7 +34,8 @@ function Wordmark() {
 
 export default function App() {
   const gamesApi = useGames();
-  const { plays } = usePlays();
+  const playsApi = usePlays();
+  const { plays } = playsApi;
   const nightApi = useNight();
   const { theme, toggleTheme } = useTheme();
   const [tab, setTab] = useHashTab(TAB_IDS);
@@ -64,11 +64,7 @@ export default function App() {
 
       <main className="mx-auto max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8">
         <TabPanel id="tonight" active={tab}>
-          {/* Interim: replaced by NightPanel + FateWheel in Phase 6. */}
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <WheelWidget games={gamesApi.games} />
-            <RsvpBoard nightApi={nightApi} />
-          </div>
+          <Tonight games={gamesApi.games} playsApi={playsApi} nightApi={nightApi} toast={toast} />
         </TabPanel>
 
         <TabPanel id="shelf" active={tab}>
