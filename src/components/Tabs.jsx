@@ -25,7 +25,7 @@ export default function Tabs({ tabs, active, onChange, label }) {
 
   return (
     <div role="tablist" aria-label={label} className="-mb-px flex gap-1" onKeyDown={onKeyDown}>
-      {tabs.map(({ id, label: tabLabel, icon: Icon, badge }) => {
+      {tabs.map(({ id, label: tabLabel, icon: Icon, badge, badgeLabel }) => {
         const selected = id === active;
         return (
           <button
@@ -49,6 +49,7 @@ export default function Tabs({ tabs, active, onChange, label }) {
             {badge != null && (
               <span className="tabular rounded-sm bg-raised px-1.5 text-xs font-semibold text-muted">
                 {badge}
+                {badgeLabel && <span className="sr-only"> {badgeLabel}</span>}
               </span>
             )}
             {selected && (

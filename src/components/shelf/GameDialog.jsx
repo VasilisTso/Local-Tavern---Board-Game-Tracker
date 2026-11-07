@@ -1,5 +1,5 @@
 import { useId, useMemo, useState } from 'react';
-import { Check } from 'lucide-react';
+import { Check, Plus } from 'lucide-react';
 import Modal, { ModalActions, ModalHeader } from '../Modal';
 import GameCover from '../GameCover';
 import { COVER_COLORS, swatchFor } from '../../lib/cover';
@@ -276,9 +276,7 @@ function GameForm({ game, games, allTags, onSave, onCancel, titleId }) {
                     onClick={() => addTag(tag)}
                     className="inline-flex h-8 items-center rounded-sm border border-dashed border-line-strong px-2 text-xs font-medium text-muted hover:border-solid hover:text-ink"
                   >
-                    <span aria-hidden="true" className="mr-0.5">
-                      +
-                    </span>
+                    <Plus aria-hidden="true" className="mr-0.5 size-3" strokeWidth={2.5} />
                     <span className="sr-only">Add tag </span>
                     {tag}
                   </button>

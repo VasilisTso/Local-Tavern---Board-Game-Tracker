@@ -20,20 +20,21 @@ const TAB_IDS = ['tonight', 'shelf', 'ledger'];
 
 function Wordmark() {
   return (
-    <a
-      href="#tonight"
-      className="flex items-center gap-2.5 rounded-sm text-ink no-underline"
-      aria-label="Local Tavern, go to Tonight"
-    >
-      <svg viewBox="0 0 64 64" aria-hidden="true" className="size-8 shrink-0">
-        <rect width="64" height="64" rx="12" className="fill-raised" />
-        <rect x="12" y="12" width="40" height="40" rx="7" fill="none" strokeWidth="3.5" className="stroke-accent" />
-        <circle cx="23" cy="23" r="4" className="fill-accent" />
-        <circle cx="32" cy="32" r="4" className="fill-accent" />
-        <circle cx="41" cy="41" r="4" className="fill-accent" />
-      </svg>
-      <span className="font-display text-2xl font-bold tracking-tight">Local Tavern</span>
-    </a>
+    <h1 className="min-w-0">
+      <a
+        href="#tonight"
+        className="flex items-center gap-2.5 rounded-sm pr-1 text-ink no-underline"
+      >
+        <svg viewBox="0 0 64 64" aria-hidden="true" className="size-8 shrink-0">
+          <rect width="64" height="64" rx="12" className="fill-raised" />
+          <rect x="12" y="12" width="40" height="40" rx="7" fill="none" strokeWidth="3.5" className="stroke-accent" />
+          <circle cx="23" cy="23" r="4" className="fill-accent" />
+          <circle cx="32" cy="32" r="4" className="fill-accent" />
+          <circle cx="41" cy="41" r="4" className="fill-accent" />
+        </svg>
+        <span className="font-display text-2xl font-bold tracking-tight">Local Tavern</span>
+      </a>
+    </h1>
   );
 }
 
@@ -73,8 +74,8 @@ export default function App() {
 
   const tabs = [
     { id: 'tonight', label: 'Tonight', icon: NightIcon },
-    { id: 'shelf', label: 'Shelf', icon: Library, badge: gamesApi.games.length },
-    { id: 'ledger', label: 'Ledger', icon: BookOpen, badge: plays.length || null },
+    { id: 'shelf', label: 'Shelf', icon: Library, badge: gamesApi.games.length, badgeLabel: 'games' },
+    { id: 'ledger', label: 'Ledger', icon: BookOpen, badge: plays.length || null, badgeLabel: 'plays' },
   ];
 
   return (

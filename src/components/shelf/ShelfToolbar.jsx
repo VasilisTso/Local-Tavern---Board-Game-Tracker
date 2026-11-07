@@ -7,7 +7,7 @@ function ChipGroup({ legend, name, options, value, onChange }) {
   return (
     <fieldset className="min-w-0">
       <legend className="mb-1.5 text-xs font-semibold text-muted">{legend}</legend>
-      <div className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:overflow-visible sm:px-0 sm:pb-0">
+      <div className="-mx-4 -my-1 flex gap-1.5 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:m-0 sm:flex-wrap sm:overflow-visible sm:p-0">
         {options.map((option) => (
           <label key={option.id} title={option.title} className="relative shrink-0">
             <input

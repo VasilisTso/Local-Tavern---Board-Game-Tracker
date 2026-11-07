@@ -8,7 +8,7 @@ import {
   useReducedMotion,
 } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { Dices, Lock, RotateCcw, Shuffle } from 'lucide-react';
+import { ChevronDown, Dices, Lock, RotateCcw, Shuffle } from 'lucide-react';
 import GameCover from '../GameCover';
 import { coverFor } from '../../lib/cover';
 import { formatPlayers, formatPlaytime } from '../../lib/format';
@@ -44,7 +44,7 @@ function WheelFace({ slices }) {
     <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="block size-full" aria-hidden="true">
       <circle cx={C} cy={C} r={R + 4} className="fill-raised stroke-line-strong" strokeWidth="1" />
       {slices.map((s) => {
-        const cover = coverFor(s.game.title);
+        const cover = coverFor(s.game.title, s.game.color);
         // Text height must fit the slice width at mid-radius.
         const room = ((HUB + labelEnd) / 2) * ((Math.min(s.sweep, 120) * Math.PI) / 180);
         const size = Math.min(base, room * 0.62);
@@ -119,9 +119,17 @@ function Pointer({ rotate }) {
 
 function Result({ game, onLock, onRespin }) {
   const reduceMotion = useReducedMotion();
+  const ref = useRef(null);
   const playtime = formatPlaytime(game.playtime);
+
+  // On a phone the result lands under the wheel; bring it into view without jumping if it already is.
+  useEffect(() => {
+    ref.current?.scrollIntoView({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
+  }, [reduceMotion]);
+
   return (
     <motion.div
+      ref={ref}
       initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: 0.42, ease: [0.16, 1, 0.3, 1] } }}
       exit={{ opacity: 0, transition: { duration: 0.12 } }}
@@ -135,9 +143,10 @@ function Result({ game, onLock, onRespin }) {
         <GameCover title={game.title} color={game.color} className="aspect-[3/4] w-16 sm:w-20" monogramClassName="text-3xl" />
       </motion.div>
       <div className="min-w-0 flex-1">
-        <p className="text-xs font-semibold tracking-wide text-accent uppercase">The fates choose</p>
-        <p className="mt-0.5 font-display text-2xl leading-tight font-bold text-ink">{game.title}</p>
+        <p className="font-display text-2xl leading-tight font-bold text-ink">{game.title}</p>
         <p className="tabular mt-1 text-sm text-muted">
+          <span className="font-semibold text-accent">The fates choose</span>
+          {' · '}
           {formatPlayers(game.minPlayers, game.maxPlayers)}
           {playtime && ` · ${playtime}`}
         </p>
@@ -370,7 +379,7 @@ export default function FateWheel({ games, playStats, count, countWithMaybes, on
           <div ref={wheelRef} className="relative mx-auto mt-5 aspect-square w-full max-w-[22rem]">
             {/* Clip so the rotated square never widens the page. */}
             <div className="absolute inset-0 overflow-hidden rounded-full">
-              <motion.div style={{ rotate: rotation }} className="size-full will-change-transform">
+              <motion.div style={{ rotate: rotation }} className={`size-full ${spinning ? 'will-change-transform' : ''}`}>
                 <WheelFace slices={slices} />
               </motion.div>
             </div>
@@ -436,9 +445,7 @@ export default function FateWheel({ games, playStats, count, countWithMaybes, on
                 {vetoedInPool ? `${vetoedInPool} off the table` : 'none yet'}
               </span>
             </span>
-            <span className="text-muted transition-transform group-open:rotate-180" aria-hidden="true">
-              ▾
-            </span>
+            <ChevronDown aria-hidden="true" className="size-4 text-muted transition-transform group-open:rotate-180" />
           </summary>
           <p className="mb-2 text-sm text-muted">Tap a game nobody wants tonight. It stays off the wheel until you tap it again.</p>
           <ul className="flex flex-wrap gap-1.5">

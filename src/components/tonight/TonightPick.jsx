@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion';
-import { BookOpen, Check, Dices } from 'lucide-react';
+import { BookOpen, Check, Dices, Lock } from 'lucide-react';
 import GameCover from '../GameCover';
 import { formatPlayers, formatPlaytime, formatShortDate } from '../../lib/format';
 import { btnGhost, btnPrimary, btnSecondary } from '../ui';
@@ -17,12 +17,7 @@ export default function TonightPick({ game, stats, logged, onLog, onChange }) {
       animate={{ opacity: 1, y: 0, transition: { duration: 0.36, ease: [0.16, 1, 0.3, 1] } }}
       className="rounded-md border border-accent bg-surface p-4 sm:p-5"
     >
-      <p className="flex items-center gap-1.5 text-xs font-semibold tracking-wide text-accent uppercase">
-        <Check aria-hidden="true" className="size-3.5" strokeWidth={3} />
-        Locked in for tonight
-      </p>
-
-      <div className="mt-3 flex gap-4 sm:gap-5">
+      <div className="flex gap-4 sm:gap-5">
         <GameCover
           title={game.title}
           color={game.color}
@@ -31,7 +26,11 @@ export default function TonightPick({ game, stats, logged, onLog, onChange }) {
         />
         <div className="min-w-0 flex-1">
           <h3 className="font-display text-3xl leading-tight font-bold text-ink">{game.title}</h3>
-          <p className="tabular mt-1.5 text-sm text-muted">
+          <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-accent">
+            <Lock aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
+            Locked in for tonight
+          </p>
+          <p className="tabular mt-2 text-sm text-muted">
             {formatPlayers(game.minPlayers, game.maxPlayers)}
             {playtime && ` · ${playtime}`}
           </p>

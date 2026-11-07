@@ -55,7 +55,7 @@ export default function Tonight({ games, plays, nightApi, onLog, toast }) {
           )}
         </p>
         {night.houseRule && (
-          <p className="mt-2 max-w-prose border-l-2 border-danger pl-3 text-sm text-ink">
+          <p className="mt-2 max-w-prose text-sm text-ink">
             <span className="font-semibold text-danger">House rule:</span> {night.houseRule}
           </p>
         )}
