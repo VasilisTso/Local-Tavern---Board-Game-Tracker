@@ -1,64 +1,27 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useNight } from '../hooks/useNight';
 import { CheckCircle, HelpCircle, XCircle, Trash2, Calendar, Edit2, Plus } from 'lucide-react';
 
 export default function RsvpBoard() {
-  const defaultDate = new Date().toISOString().slice(0, 16);
-  
-  const [sessionDate, setSessionDate] = useState(defaultDate);
-  const [houseRule, setHouseRule] = useState('Loser of the last game starts with -1 resource.');
+  // Interim wiring to the v2 data layer; this component is replaced in Phase 6.
+  const { night, setDate, setHouseRule, addGuest: addNightGuest, updateGuest, removeGuest } = useNight();
+  const { date: sessionDate, houseRule, guests } = night;
   const [isEditingRule, setIsEditingRule] = useState(false);
-  
-  const [guests, setGuests] = useState([
-    { id: '1', name: 'Alex', status: 'attending', note: 'Bringing snacks' },
-    { id: '2', name: 'Sam', status: 'attending', note: '' },
-    { id: '3', name: 'Jordan', status: 'maybe', note: '' }
-  ]);
-  
   const [newGuestName, setNewGuestName] = useState('');
-
-  useEffect(() => {
-    const saved = localStorage.getItem('tavern_rsvp');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      if (parsed.sessionDate) setSessionDate(parsed.sessionDate);
-      if (parsed.houseRule) setHouseRule(parsed.houseRule);
-      if (parsed.guests) setGuests(parsed.guests);
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('tavern_rsvp', JSON.stringify({ sessionDate, houseRule, guests }));
-  }, [sessionDate, houseRule, guests]);
 
   const addGuest = (e) => {
     e.preventDefault();
-    if (!newGuestName.trim()) return;
-    
-    setGuests([...guests, { 
-      id: crypto.randomUUID(), 
-      name: newGuestName.trim(), 
-      status: 'attending', 
-      note: '' 
-    }]);
-    setNewGuestName('');
+    if (addNightGuest(newGuestName)) setNewGuestName('');
   };
 
+  const NEXT_STATUS = { going: 'maybe', maybe: 'not-going', 'not-going': 'going' };
   const toggleStatus = (id) => {
-    setGuests(guests.map(guest => {
-      if (guest.id === id) {
-        const nextStatus = guest.status === 'attending' ? 'maybe' : guest.status === 'maybe' ? 'declined' : 'attending';
-        return { ...guest, status: nextStatus };
-      }
-      return guest;
-    }));
-  };
-
-  const removeGuest = (id) => {
-    setGuests(guests.filter(guest => guest.id !== id));
+    const guest = guests.find((g) => g.id === id);
+    if (guest) updateGuest(id, { status: NEXT_STATUS[guest.status] });
   };
 
   const getStatusIcon = (status) => {
-    if (status === 'attending') return <CheckCircle size={16} className="text-green-500 dark:text-green-400" />;
+    if (status === 'going') return <CheckCircle size={16} className="text-green-500 dark:text-green-400" />;
     if (status === 'maybe') return <HelpCircle size={16} className="text-indigo-500 dark:text-indigo-400" />;
     return <XCircle size={16} className="text-red-500 dark:text-red-400" />;
   };
@@ -80,7 +43,7 @@ export default function RsvpBoard() {
           <input 
             type="datetime-local" 
             value={sessionDate}
-            onChange={(e) => setSessionDate(e.target.value)}
+            onChange={(e) => setDate(e.target.value)}
             className="text-sm bg-gray-50 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-2 py-1.5 rounded border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-mystic-glow transition-colors cursor-pointer"
           />
         </div>
@@ -101,7 +64,7 @@ export default function RsvpBoard() {
                     >
                       {getStatusIcon(guest.status)}
                     </button>
-                    <span className={`font-medium ${guest.status === 'declined' ? 'line-through opacity-50' : ''}`}>
+                    <span className={`font-medium ${guest.status === 'not-going' ? 'line-through opacity-50' : ''}`}>
                       {guest.name}
                     </span>
                     {guest.note && (

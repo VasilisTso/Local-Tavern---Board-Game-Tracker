@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useGames } from './hooks/useGames';
+import { useTheme } from './hooks/useTheme';
 import WheelWidget from './components/WheelWidget';
 import AddGameForm from './components/AddGameForm';
 import RsvpBoard from './components/RsvpBoard';
@@ -7,7 +8,8 @@ import { Sun, Moon, Users, Clock, Trash2 } from 'lucide-react';
 
 export default function App() {
   const { games, addGame, removeGame } = useGames();
-  const [darkMode, setDarkMode] = useState(true);
+  const { theme, toggleTheme } = useTheme();
+  const darkMode = theme === 'dark';
   
   const [playerFilter, setPlayerFilter] = useState('All');
 
@@ -22,13 +24,6 @@ export default function App() {
     return targetPlayers >= game.minPlayers && targetPlayers <= game.maxPlayers;
   });
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [darkMode]);
 
   return (
     <div className="min-h-screen bg-parchment dark:bg-tavern-dark text-tavern-dark dark:text-parchment font-serif transition-colors duration-300">
@@ -37,7 +32,7 @@ export default function App() {
       <header className="p-4 flex justify-between items-center border-b border-mystic-glow/20 bg-white/50 dark:bg-black/20 backdrop-blur-md sticky top-0 z-50">
         <h1 className="text-2xl md:text-3xl font-bold tracking-wide text-indigo-600">The Ultimate Tavern</h1>
         <button 
-          onClick={() => setDarkMode(!darkMode)}
+          onClick={toggleTheme}
           className="px-4 py-2 bg-tavern-dark dark:bg-parchment text-parchment dark:text-tavern-dark rounded-md text-sm font-bold shadow-sm transition-transform hover:scale-105 flex items-center gap-2"
         >
           {darkMode ? <><Sun size={16} /> Sunlit Porch</> : <><Moon size={16} /> Cozy Tavern</>}
