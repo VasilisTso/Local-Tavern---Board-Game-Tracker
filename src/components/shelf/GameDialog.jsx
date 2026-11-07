@@ -1,6 +1,6 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
-import { X } from 'lucide-react';
-import { btnPrimary, btnSecondary, field, hint, iconBtn, label } from '../ui';
+import { useId, useMemo, useState } from 'react';
+import Modal, { ModalActions, ModalHeader } from '../Modal';
+import { btnPrimary, btnSecondary, field, hint, label } from '../ui';
 
 const LIMITS = { players: [1, 99], playtime: [1, 1440] };
 
@@ -122,14 +122,7 @@ function GameForm({ game, games, allTags, onSave, onCancel, titleId }) {
 
   return (
     <form noValidate onSubmit={submit} className="flex max-h-[inherit] flex-col">
-      <div className="flex items-center justify-between gap-4 border-b border-line px-5 py-3">
-        <h2 id={titleId} className="font-display text-xl font-bold">
-          {game ? `Edit ${game.title}` : 'Add a game'}
-        </h2>
-        <button type="button" onClick={onCancel} aria-label="Close" className={`${iconBtn} -mr-2`}>
-          <X aria-hidden="true" className="size-5" />
-        </button>
-      </div>
+      <ModalHeader id={titleId} title={game ? `Edit ${game.title}` : 'Add a game'} onClose={onCancel} />
 
       <div className="space-y-4 overflow-y-auto px-5 py-4">
         <Field id={ids.title} labelText="Title" error={liveErrors.title}>
@@ -232,69 +225,31 @@ function GameForm({ game, games, allTags, onSave, onCancel, titleId }) {
         )}
       </div>
 
-      <div className="flex justify-end gap-2 border-t border-line px-5 py-3">
+      <ModalActions>
         <button type="button" onClick={onCancel} className={btnSecondary}>
           Cancel
         </button>
         <button type="submit" className={btnPrimary}>
           {game ? 'Save changes' : 'Add to shelf'}
         </button>
-      </div>
+      </ModalActions>
     </form>
   );
 }
 
-/**
- * Native modal dialog for adding (game = null) or editing a game.
- * Esc and the Close button cancel; clicking the backdrop cancels too.
- */
+/** Modal for adding (game = null) or editing a game. */
 export default function GameDialog({ open, game, games, allTags, onSave, onClose }) {
-  const ref = useRef(null);
   const titleId = useId();
-  // Fresh form state every time the dialog opens.
-  const [session, setSession] = useState(0);
-  const [wasOpen, setWasOpen] = useState(open);
-  if (open !== wasOpen) {
-    setWasOpen(open);
-    if (open) setSession((s) => s + 1);
-  }
-
-  useEffect(() => {
-    const dialog = ref.current;
-    if (!dialog) return;
-    if (open && !dialog.open) {
-      dialog.showModal();
-      // Start in the first field, not on the Close button.
-      dialog.querySelector('input')?.focus();
-    }
-    if (!open && dialog.open) dialog.close();
-  }, [open]);
-
   return (
-    <dialog
-      ref={ref}
-      aria-labelledby={titleId}
-      onClose={onClose}
-      onCancel={(e) => {
-        e.preventDefault();
-        onClose();
-      }}
-      onClick={(e) => {
-        if (e.target === ref.current) onClose();
-      }}
-      className="m-auto max-h-[min(42rem,calc(100dvh-2rem))] w-[min(34rem,calc(100vw-2rem))] overflow-hidden rounded-md border border-line-strong bg-surface p-0 text-ink shadow-[0_24px_64px_-24px_oklch(0.08_0.02_55/0.7)] backdrop:bg-[oklch(0.12_0.02_55/0.6)]"
-    >
-      {open && (
-        <GameForm
-          key={session}
-          titleId={titleId}
-          game={game}
-          games={games}
-          allTags={allTags}
-          onSave={onSave}
-          onCancel={onClose}
-        />
-      )}
-    </dialog>
+    <Modal open={open} onClose={onClose} labelledBy={titleId}>
+      <GameForm
+        titleId={titleId}
+        game={game}
+        games={games}
+        allTags={allTags}
+        onSave={onSave}
+        onCancel={onClose}
+      />
+    </Modal>
   );
 }

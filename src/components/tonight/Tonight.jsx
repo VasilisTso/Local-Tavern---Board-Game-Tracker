@@ -6,9 +6,8 @@ import { formatNightDate } from '../../lib/format';
 import { nightCountsLine, tonightPlayerCount } from '../../lib/night';
 import { playStatsByGame } from '../../lib/plays';
 
-export default function Tonight({ games, playsApi, nightApi, toast }) {
+export default function Tonight({ games, plays, nightApi, onLog, toast }) {
   const { night, lockGame } = nightApi;
-  const { plays, addPlay, removePlay } = playsApi;
 
   const playStats = useMemo(() => playStatsByGame(plays), [plays]);
   const count = tonightPlayerCount(night);
@@ -33,16 +32,10 @@ export default function Tonight({ games, playsApi, nightApi, toast }) {
     }
   };
 
-  // Quick log: tonight's date and everyone going. Phase 7 swaps this for the full dialog.
+  // Opens the log dialog with tonight's date and everyone going.
   const logPlay = (game) => {
     const players = night.guests.filter((g) => g.status === 'going').map((g) => g.name);
-    const play = addPlay({ gameId: game.id, date: night.date, players, winners: [], note: '' });
-    if (!play) return;
-    toast.show({
-      message: `Logged ${game.title} in the ledger.`,
-      actionLabel: 'Undo',
-      onAction: () => removePlay(play.id),
-    });
+    onLog({ gameId: game.id, date: night.date, players });
   };
 
   return (

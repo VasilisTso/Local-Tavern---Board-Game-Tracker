@@ -77,12 +77,6 @@
   --radius-md: 6px;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Legacy tokens for the pre-redesign components; removed in Phase 9. */
-  --color-parchment: #f8fafc;
-  --color-tavern-dark: #0f172a;
-  --color-mystic-glow: #6366f1;
-  --font-serif: var(--font-display);
 }
 
 @layer base {
