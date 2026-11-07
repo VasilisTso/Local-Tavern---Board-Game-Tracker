@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useNight } from '../hooks/useNight';
 import { CheckCircle, HelpCircle, XCircle, Trash2, Calendar, Edit2, Plus } from 'lucide-react';
 
-export default function RsvpBoard() {
+export default function RsvpBoard({ nightApi }) {
   // Interim wiring to the v2 data layer; this component is replaced in Phase 6.
-  const { night, setDate, setHouseRule, addGuest: addNightGuest, updateGuest, removeGuest } = useNight();
+  const { night, setDate, setHouseRule, addGuest: addNightGuest, updateGuest, removeGuest } = nightApi;
   const { date: sessionDate, houseRule, guests } = night;
   const [isEditingRule, setIsEditingRule] = useState(false);
   const [newGuestName, setNewGuestName] = useState('');

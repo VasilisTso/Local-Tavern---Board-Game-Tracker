@@ -1,131 +1,92 @@
-import { useState } from 'react';
+import { BookOpen, Library, Moon as NightIcon } from 'lucide-react';
 import { useGames } from './hooks/useGames';
+import { usePlays } from './hooks/usePlays';
+import { useNight } from './hooks/useNight';
 import { useTheme } from './hooks/useTheme';
+import { useHashTab } from './hooks/useHashTab';
+import { useToast } from './hooks/useToast';
+import Tabs, { TabPanel } from './components/Tabs';
+import Toast from './components/Toast';
+import ThemeToggle from './components/ThemeToggle';
+import Shelf from './components/shelf/Shelf';
 import WheelWidget from './components/WheelWidget';
-import AddGameForm from './components/AddGameForm';
 import RsvpBoard from './components/RsvpBoard';
-import { Sun, Moon, Users, Clock, Trash2 } from 'lucide-react';
+
+const TAB_IDS = ['tonight', 'shelf', 'ledger'];
+
+function Wordmark() {
+  return (
+    <a
+      href="#tonight"
+      className="flex items-center gap-2.5 rounded-sm text-ink no-underline"
+      aria-label="Local Tavern, go to Tonight"
+    >
+      <svg viewBox="0 0 64 64" aria-hidden="true" className="size-8 shrink-0">
+        <rect width="64" height="64" rx="12" className="fill-raised" />
+        <rect x="12" y="12" width="40" height="40" rx="7" fill="none" strokeWidth="3.5" className="stroke-accent" />
+        <circle cx="23" cy="23" r="4" className="fill-accent" />
+        <circle cx="32" cy="32" r="4" className="fill-accent" />
+        <circle cx="41" cy="41" r="4" className="fill-accent" />
+      </svg>
+      <span className="font-display text-2xl font-bold tracking-tight">Local Tavern</span>
+    </a>
+  );
+}
 
 export default function App() {
-  const { games, addGame, removeGame } = useGames();
+  const gamesApi = useGames();
+  const { plays } = usePlays();
+  const nightApi = useNight();
   const { theme, toggleTheme } = useTheme();
-  const darkMode = theme === 'dark';
-  
-  const [playerFilter, setPlayerFilter] = useState('All');
+  const [tab, setTab] = useHashTab(TAB_IDS);
+  const toast = useToast();
 
-  const filteredGames = games.filter(game => {
-    if (playerFilter === 'All') return true;
-    
-    const targetPlayers = parseInt(playerFilter);
-    if (targetPlayers === 6) {
-      return game.maxPlayers >= 6;
-    }
-    
-    return targetPlayers >= game.minPlayers && targetPlayers <= game.maxPlayers;
-  });
-
+  const tabs = [
+    { id: 'tonight', label: 'Tonight', icon: NightIcon },
+    { id: 'shelf', label: 'Shelf', icon: Library, badge: gamesApi.games.length },
+    { id: 'ledger', label: 'Ledger', icon: BookOpen, badge: plays.length || null },
+  ];
 
   return (
-    <div className="min-h-screen bg-parchment dark:bg-tavern-dark text-tavern-dark dark:text-parchment font-serif transition-colors duration-300">
-      
-      {/* Header Widget */}
-      <header className="p-4 flex justify-between items-center border-b border-mystic-glow/20 bg-white/50 dark:bg-black/20 backdrop-blur-md sticky top-0 z-50">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-wide text-indigo-600">The Ultimate Tavern</h1>
-        <button 
-          onClick={toggleTheme}
-          className="px-4 py-2 bg-tavern-dark dark:bg-parchment text-parchment dark:text-tavern-dark rounded-md text-sm font-bold shadow-sm transition-transform hover:scale-105 flex items-center gap-2"
-        >
-          {darkMode ? <><Sun size={16} /> Sunlit Porch</> : <><Moon size={16} /> Cozy Tavern</>}
-        </button>
+    <div className="min-h-dvh pb-24">
+      <header className="sticky top-0 z-30 border-b border-line bg-bg">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="flex h-14 items-center justify-between gap-4">
+            <Wordmark />
+            <div className="flex items-center gap-1">
+              {/* Backup menu (export / import / copy summary) lands here in Phase 8. */}
+              <ThemeToggle theme={theme} onToggle={toggleTheme} />
+            </div>
+          </div>
+          <Tabs tabs={tabs} active={tab} onChange={setTab} label="Sections" />
+        </div>
       </header>
 
-      {/* Main Dashboard Grid */}
-      <main className="p-4 md:p-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Column: The Active Shelf */}
-        <section className="lg:col-span-2 space-y-6">
-          <div className="bg-white/80 dark:bg-gray-800/80 p-6 rounded-xl shadow-lg border border-mystic-glow/10">
-            
-            {/* UPDATED: Header now includes the Party Size dropdown */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-300 dark:border-gray-700 pb-4 gap-4">
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-semibold">The Tavern Shelf</h2>
-                <span className="text-sm bg-mystic-glow/20 text-indigo-700 dark:text-indigo-400 px-3 py-1 rounded-full">
-                  {filteredGames.length} Games
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-300">Party Size:</label>
-                <select 
-                  value={playerFilter} 
-                  onChange={(e) => setPlayerFilter(e.target.value)}
-                  className="p-1.5 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-mystic-glow outline-none cursor-pointer transition-colors"
-                >
-                  <option value="All">All Sizes</option>
-                  <option value="1">1 Player (Solo)</option>
-                  <option value="2">2 Players</option>
-                  <option value="3">3 Players</option>
-                  <option value="4">4 Players</option>
-                  <option value="5">5 Players</option>
-                  <option value="6">6+ Players</option>
-                </select>
-              </div>
-            </div>
-            
-            {/* UPDATED: Map over filteredGames instead of games */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {filteredGames.length === 0 ? (
-                <p className="col-span-full text-center py-8 text-gray-500 italic">
-                  No games match this party size. Time to buy a new one!
-                </p>
-              ) : (
-                filteredGames.map(game => (
-                  <div key={game.id} className="group flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-mystic-glow/30">
-                    <div>
-                      <h3 className="font-medium text-lg">{game.title}</h3>
-                      <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <span className="flex items-center gap-1"><Users size={14} /> {game.minPlayers}-{game.maxPlayers}</span>
-                        <span className="flex items-center gap-1"><Clock size={14} /> {game.playtime} min</span>
-                      </div>
-                      <div className="flex gap-1 mt-2">
-                        {game.tags.map(tag => (
-                          <span key={tag} className="text-[10px] px-2 py-0.5 bg-gray-200 dark:bg-gray-600 rounded">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        if (window.confirm(`Are you sure you want to remove "${game.title}" from the shelf?`)) {
-                          removeGame(game.id);
-                        }
-                      }} 
-                      className="text-gray-400 hover:text-red-500 transition-colors p-2 cursor-pointer flex-shrink-0"
-                      aria-label="Remove game"
-                      title="Delete Game"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-            
-            <AddGameForm onAdd={addGame} />
+      <main className="mx-auto max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8">
+        <TabPanel id="tonight" active={tab}>
+          {/* Interim: replaced by NightPanel + FateWheel in Phase 6. */}
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <WheelWidget games={gamesApi.games} />
+            <RsvpBoard nightApi={nightApi} />
           </div>
-        </section>
+        </TabPanel>
 
-        {/* Right Column */}
-        <section className="space-y-6">
-          
-          <WheelWidget games={filteredGames} />
-          
-          <RsvpBoard />
-          
-        </section>
+        <TabPanel id="shelf" active={tab}>
+          <Shelf gamesApi={gamesApi} plays={plays} night={nightApi.night} toast={toast} />
+        </TabPanel>
+
+        <TabPanel id="ledger" active={tab}>
+          {/* Play log and stats arrive in Phase 7. */}
+          <div className="rounded-md border border-dashed border-line-strong px-6 py-12 text-center">
+            <h2 className="font-display text-2xl font-bold">The ledger is empty</h2>
+            <p className="mx-auto mt-1 max-w-sm text-muted">
+              Plays you log after a game night show up here, with who won and what gathers dust.
+            </p>
+          </div>
+        </TabPanel>
       </main>
+
+      <Toast toast={toast.toast} onDismiss={toast.dismiss} />
     </div>
   );
 }
