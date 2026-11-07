@@ -1,136 +1,123 @@
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
+import { BookOpen, Library, Moon as NightIcon } from 'lucide-react';
 import { useGames } from './hooks/useGames';
-import WheelWidget from './components/WheelWidget';
-import AddGameForm from './components/AddGameForm';
-import RsvpBoard from './components/RsvpBoard';
-import { Sun, Moon, Users, Clock, Trash2 } from 'lucide-react';
+import { usePlays } from './hooks/usePlays';
+import { useNight } from './hooks/useNight';
+import { useTheme } from './hooks/useTheme';
+import { useHashTab } from './hooks/useHashTab';
+import { useToast } from './hooks/useToast';
+import Tabs, { TabPanel } from './components/Tabs';
+import Toast from './components/Toast';
+import ThemeToggle from './components/ThemeToggle';
+import Shelf from './components/shelf/Shelf';
+import Tonight from './components/tonight/Tonight';
+import Ledger from './components/ledger/Ledger';
+import LogPlayDialog from './components/ledger/LogPlayDialog';
+import BackupMenu from './components/BackupMenu';
+import { knownPlayerNames } from './lib/ledger';
+
+const TAB_IDS = ['tonight', 'shelf', 'ledger'];
+
+function Wordmark() {
+  return (
+    <h1 className="min-w-0">
+      <a
+        href="#tonight"
+        className="flex items-center gap-2.5 rounded-sm pr-1 text-ink no-underline"
+      >
+        <svg viewBox="0 0 64 64" aria-hidden="true" className="size-8 shrink-0">
+          <rect width="64" height="64" rx="12" className="fill-raised" />
+          <rect x="12" y="12" width="40" height="40" rx="7" fill="none" strokeWidth="3.5" className="stroke-accent" />
+          <circle cx="23" cy="23" r="4" className="fill-accent" />
+          <circle cx="32" cy="32" r="4" className="fill-accent" />
+          <circle cx="41" cy="41" r="4" className="fill-accent" />
+        </svg>
+        <span className="font-display text-2xl font-bold tracking-tight">Local Tavern</span>
+      </a>
+    </h1>
+  );
+}
 
 export default function App() {
-  const { games, addGame, removeGame } = useGames();
-  const [darkMode, setDarkMode] = useState(true);
-  
-  const [playerFilter, setPlayerFilter] = useState('All');
+  const gamesApi = useGames();
+  const playsApi = usePlays();
+  const { plays } = playsApi;
+  const nightApi = useNight();
+  const { theme, toggleTheme } = useTheme();
+  const [tab, setTab] = useHashTab(TAB_IDS);
+  const toast = useToast();
+  const [logDialog, setLogDialog] = useState({ open: false, play: null, prefill: null });
+  const knownNames = useMemo(() => knownPlayerNames(nightApi.night, plays), [nightApi.night, plays]);
 
-  const filteredGames = games.filter(game => {
-    if (playerFilter === 'All') return true;
-    
-    const targetPlayers = parseInt(playerFilter);
-    if (targetPlayers === 6) {
-      return game.maxPlayers >= 6;
-    }
-    
-    return targetPlayers >= game.minPlayers && targetPlayers <= game.maxPlayers;
-  });
+  const openLog = (prefill = null) => setLogDialog({ open: true, play: null, prefill });
+  const openEditPlay = (play) => setLogDialog({ open: true, play, prefill: null });
+  const closeLog = () => setLogDialog((d) => ({ ...d, open: false }));
 
-  useEffect(() => {
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
+  const titleOf = (gameId) => gamesApi.games.find((g) => g.id === gameId)?.title ?? 'that game';
+
+  const savePlay = (values) => {
+    if (logDialog.play) {
+      playsApi.updatePlay(logDialog.play.id, values);
+      toast.show({ message: `Saved the ${titleOf(values.gameId)} play.` });
     } else {
-      document.documentElement.classList.remove('dark');
+      const play = playsApi.addPlay(values);
+      if (play) {
+        toast.show({
+          message: `Logged ${titleOf(play.gameId)} in the ledger.`,
+          actionLabel: 'Undo',
+          onAction: () => playsApi.removePlay(play.id),
+        });
+      }
     }
-  }, [darkMode]);
+    closeLog();
+  };
+
+  const tabs = [
+    { id: 'tonight', label: 'Tonight', icon: NightIcon },
+    { id: 'shelf', label: 'Shelf', icon: Library, badge: gamesApi.games.length, badgeLabel: 'games' },
+    { id: 'ledger', label: 'Ledger', icon: BookOpen, badge: plays.length || null, badgeLabel: 'plays' },
+  ];
 
   return (
-    <div className="min-h-screen bg-parchment dark:bg-tavern-dark text-tavern-dark dark:text-parchment font-serif transition-colors duration-300">
-      
-      {/* Header Widget */}
-      <header className="p-4 flex justify-between items-center border-b border-mystic-glow/20 bg-white/50 dark:bg-black/20 backdrop-blur-md sticky top-0 z-50">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-wide text-indigo-600">The Ultimate Tavern</h1>
-        <button 
-          onClick={() => setDarkMode(!darkMode)}
-          className="px-4 py-2 bg-tavern-dark dark:bg-parchment text-parchment dark:text-tavern-dark rounded-md text-sm font-bold shadow-sm transition-transform hover:scale-105 flex items-center gap-2"
-        >
-          {darkMode ? <><Sun size={16} /> Sunlit Porch</> : <><Moon size={16} /> Cozy Tavern</>}
-        </button>
+    <div className="min-h-dvh pb-24">
+      <header className="sticky top-0 z-30 border-b border-line bg-bg">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="flex h-14 items-center justify-between gap-4">
+            <Wordmark />
+            <div className="flex items-center gap-1">
+              <BackupMenu gamesApi={gamesApi} playsApi={playsApi} nightApi={nightApi} toast={toast} />
+              <ThemeToggle theme={theme} onToggle={toggleTheme} />
+            </div>
+          </div>
+          <Tabs tabs={tabs} active={tab} onChange={setTab} label="Sections" />
+        </div>
       </header>
 
-      {/* Main Dashboard Grid */}
-      <main className="p-4 md:p-8 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        {/* Left Column: The Active Shelf */}
-        <section className="lg:col-span-2 space-y-6">
-          <div className="bg-white/80 dark:bg-gray-800/80 p-6 rounded-xl shadow-lg border border-mystic-glow/10">
-            
-            {/* UPDATED: Header now includes the Party Size dropdown */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-gray-300 dark:border-gray-700 pb-4 gap-4">
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-semibold">The Tavern Shelf</h2>
-                <span className="text-sm bg-mystic-glow/20 text-indigo-700 dark:text-indigo-400 px-3 py-1 rounded-full">
-                  {filteredGames.length} Games
-                </span>
-              </div>
-              
-              <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-600 dark:text-gray-300">Party Size:</label>
-                <select 
-                  value={playerFilter} 
-                  onChange={(e) => setPlayerFilter(e.target.value)}
-                  className="p-1.5 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm focus:ring-2 focus:ring-mystic-glow outline-none cursor-pointer transition-colors"
-                >
-                  <option value="All">All Sizes</option>
-                  <option value="1">1 Player (Solo)</option>
-                  <option value="2">2 Players</option>
-                  <option value="3">3 Players</option>
-                  <option value="4">4 Players</option>
-                  <option value="5">5 Players</option>
-                  <option value="6">6+ Players</option>
-                </select>
-              </div>
-            </div>
-            
-            {/* UPDATED: Map over filteredGames instead of games */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {filteredGames.length === 0 ? (
-                <p className="col-span-full text-center py-8 text-gray-500 italic">
-                  No games match this party size. Time to buy a new one!
-                </p>
-              ) : (
-                filteredGames.map(game => (
-                  <div key={game.id} className="group flex justify-between items-center p-4 rounded-lg bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-transparent hover:border-mystic-glow/30">
-                    <div>
-                      <h3 className="font-medium text-lg">{game.title}</h3>
-                      <div className="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400 mt-1">
-                        <span className="flex items-center gap-1"><Users size={14} /> {game.minPlayers}-{game.maxPlayers}</span>
-                        <span className="flex items-center gap-1"><Clock size={14} /> {game.playtime} min</span>
-                      </div>
-                      <div className="flex gap-1 mt-2">
-                        {game.tags.map(tag => (
-                          <span key={tag} className="text-[10px] px-2 py-0.5 bg-gray-200 dark:bg-gray-600 rounded">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                    <button 
-                      onClick={() => {
-                        if (window.confirm(`Are you sure you want to remove "${game.title}" from the shelf?`)) {
-                          removeGame(game.id);
-                        }
-                      }} 
-                      className="text-gray-400 hover:text-red-500 transition-colors p-2 cursor-pointer flex-shrink-0"
-                      aria-label="Remove game"
-                      title="Delete Game"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-            
-            <AddGameForm onAdd={addGame} />
-          </div>
-        </section>
+      <main className="mx-auto max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8">
+        <TabPanel id="tonight" active={tab}>
+          <Tonight games={gamesApi.games} plays={plays} nightApi={nightApi} onLog={openLog} toast={toast} />
+        </TabPanel>
 
-        {/* Right Column */}
-        <section className="space-y-6">
-          
-          <WheelWidget games={filteredGames} />
-          
-          <RsvpBoard />
-          
-        </section>
+        <TabPanel id="shelf" active={tab}>
+          <Shelf gamesApi={gamesApi} plays={plays} night={nightApi.night} toast={toast} />
+        </TabPanel>
+
+        <TabPanel id="ledger" active={tab}>
+          <Ledger games={gamesApi.games} playsApi={playsApi} onLog={openLog} onEdit={openEditPlay} toast={toast} />
+        </TabPanel>
       </main>
+
+      <LogPlayDialog
+        open={logDialog.open}
+        play={logDialog.play}
+        prefill={logDialog.prefill}
+        games={gamesApi.games}
+        knownNames={knownNames}
+        onSave={savePlay}
+        onClose={closeLog}
+      />
+
+      <Toast toast={toast.toast} onDismiss={toast.dismiss} />
     </div>
   );
 }

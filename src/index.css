@@ -1,11 +1,201 @@
+@import "@fontsource-variable/alegreya";
+@import "@fontsource-variable/figtree";
 @import "tailwindcss";
 
-@theme {
-  --color-parchment: #f8fafc;
-  --color-tavern-dark: #0f172a;
-  --color-mystic-glow: #6366f1;
+/*
+ * Theme: data-theme on <html> ("dark" = Cozy Tavern, "light" = Sunlit Porch).
+ * Set before first paint by the inline script in index.html.
+ * Dark values are the default so the page still reads if JS never runs.
+ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
-  --font-serif: "Merriweather", serif;
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.19 0.018 55);
+  --surface: oklch(0.235 0.022 55);
+  --raised: oklch(0.28 0.026 55);
+  --line: oklch(0.36 0.026 60);
+  --line-strong: oklch(0.56 0.03 65);
+  --ink: oklch(0.93 0.02 80);
+  --muted: oklch(0.75 0.025 75);
+  --accent: oklch(0.8 0.145 72);
+  --accent-fill: oklch(0.8 0.145 72);
+  --on-accent: oklch(0.22 0.03 55);
+  --danger: oklch(0.68 0.15 25);
+  --ok: oklch(0.76 0.11 135);
+  --grain-opacity: 0.07;
 }
 
-@custom-variant dark (&:where(.dark, .dark *));
+[data-theme="light"] {
+  color-scheme: light;
+  --bg: oklch(0.95 0.022 82);
+  --surface: oklch(0.985 0.01 85);
+  --raised: oklch(0.92 0.026 78);
+  --line: oklch(0.84 0.025 72);
+  --line-strong: oklch(0.6 0.035 60);
+  --ink: oklch(0.25 0.035 50);
+  --muted: oklch(0.47 0.035 55);
+  --accent: oklch(0.51 0.125 56);
+  --accent-fill: oklch(0.8 0.145 72);
+  --on-accent: oklch(0.22 0.03 55);
+  --danger: oklch(0.49 0.16 25);
+  --ok: oklch(0.5 0.11 138);
+  --grain-opacity: 0.05;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-raised: var(--raised);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-fill: var(--accent-fill);
+  --color-on-accent: var(--on-accent);
+  --color-danger: var(--danger);
+  --color-ok: var(--ok);
+}
+
+@theme {
+  --font-display: "Alegreya Variable", "Iowan Old Style", Georgia, serif;
+  --font-sans: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* Fixed rem scale, ratio ~1.2 */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.2rem;
+  --text-xl: 1.44rem;
+  --text-2xl: 1.728rem;
+  --text-3xl: 2.074rem;
+  --text-4xl: 2.488rem;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    accent-color: var(--accent-fill);
+    caret-color: var(--accent);
+    scrollbar-color: var(--line-strong) var(--bg);
+  }
+
+  body {
+    min-height: 100dvh;
+    background-color: var(--bg);
+    line-height: 1.5;
+  }
+
+  /* Paper grain: fixed, non-interactive, above backgrounds, below content. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: var(--grain-opacity);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.5 0 0 0 0 0.4 0 0 0 0 0.3 0 0 0 1.4 -0.3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  #root {
+    position: relative;
+    z-index: 1;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    line-height: 1.15;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  time,
+  .tabular,
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+
+  a {
+    color: var(--accent);
+    text-underline-offset: 0.2em;
+    text-decoration-thickness: 1px;
+  }
+
+  ::selection {
+    background-color: var(--accent-fill);
+    color: var(--on-accent);
+  }
+
+  ::placeholder {
+    color: var(--muted);
+    opacity: 1;
+  }
+
+  button,
+  [role="button"],
+  [role="tab"],
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: not-allowed;
+  }
+
+  /* One focus ring everywhere, keyboard only. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--bg);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 999px;
+    border: 2px solid var(--bg);
+  }
+
+  dialog::backdrop {
+    background: oklch(0.12 0.02 55 / 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

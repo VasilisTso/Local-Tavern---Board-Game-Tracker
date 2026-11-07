@@ -1,32 +1,29 @@
-import { useState, useEffect } from 'react';
-import mockGames from '../data/games.json';
+import { useCollection } from './useCollection';
+import { KEYS, defaultGames, normalizeGame } from '../lib/storage';
+
+// New games get a fresh id and addedAt; edits keep theirs (update passes the id through).
+const normalizeItem = (input) =>
+  normalizeGame({ ...input, id: input?.id, addedAt: input?.addedAt ?? new Date().toISOString() });
+
+const normalizeList = (stored) =>
+  Array.isArray(stored) ? stored.map((g) => normalizeGame(g)).filter(Boolean) : null;
 
 export function useGames() {
-  const [games, setGames] = useState([]);
+  const { items, add, update, remove, restore, replace } = useCollection(
+    KEYS.games,
+    defaultGames,
+    normalizeItem,
+    normalizeList,
+  );
 
-  // initialize from LocalStorage or fallback to Mock JSON
-  useEffect(() => {
-    const storedGames = localStorage.getItem('tavern_games');
-    if (storedGames) {
-      setGames(JSON.parse(storedGames));
-    } else {
-      setGames(mockGames);
-      localStorage.setItem('tavern_games', JSON.stringify(mockGames));
-    }
-  }, []);
-
-  const addGame = (newGame) => {
-    const newId = crypto.randomUUID(); // Modern browser built-in ID generator
-    const updatedGames = [...games, { ...newGame, id: newId }];
-    setGames(updatedGames);
-    localStorage.setItem('tavern_games', JSON.stringify(updatedGames));
+  return {
+    games: items,
+    /** Returns the new game, or null if the input is invalid. */
+    addGame: (input) => add({ ...input, id: undefined, addedAt: undefined }),
+    updateGame: update,
+    /** Returns `{ item, index }` for `restoreGame`. */
+    removeGame: remove,
+    restoreGame: restore,
+    replaceGames: replace,
   };
-
-  const removeGame = (id) => {
-    const updatedGames = games.filter(game => game.id !== id);
-    setGames(updatedGames);
-    localStorage.setItem('tavern_games', JSON.stringify(updatedGames));
-  };
-
-  return { games, addGame, removeGame };
 }
