@@ -18,7 +18,7 @@ The app has three tabs (linked by URL hash: `#tonight`, `#shelf`, `#ledger`).
 ### Shelf
 * Game cards with generated box covers, player count, playtime, tags, play count and last played.
 * Search, player-count chips (including "fits tonight"), playtime buckets, tag filter and six sort orders.
-* Add and edit games in a validated dialog; delete with **Undo**.
+* Add and edit games in a validated dialog, with a box color picker (or let the title pick one); delete with **Undo**.
 
 ### Ledger
 * **Log a play:** game, date, who played (guests and past players, or type a new name), who won, and a note. Edit or delete any play (with Undo).
@@ -44,5 +44,9 @@ npm run lint
 npm run build
 ```
 
-<img width="2531" height="1226" alt="Screenshot 2026-07-26 172648" src="https://github.com/user-attachments/assets/74a85a55-79fa-4767-afaa-133fbf480aa5" />
-<img width="2531" height="1222" alt="Screenshot 2026-07-26 172708" src="https://github.com/user-attachments/assets/9b1aa62c-43cb-48f0-adb3-d380cc1c9832" />
+## Screenshots
+
+![Tonight tab in the Cozy Tavern theme: guest list with RSVPs and the locked-in pick](docs/screenshots/tonight.png)
+![Shelf tab in the Sunlit Porch theme: filters and game cards with generated box covers](docs/screenshots/shelf.png)
+![Adding a game with a chosen box color](docs/screenshots/add-game.png)
+![Ledger tab: plays by month beside the stats panel](docs/screenshots/ledger.png)

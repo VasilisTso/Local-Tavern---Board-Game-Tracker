@@ -132,7 +132,7 @@ function Result({ game, onLock, onRespin }) {
         animate={{ rotate: 0, y: 0, opacity: 1, transition: { delay: 0.08, type: 'spring', stiffness: 260, damping: 18 } }}
         className="shrink-0 self-start"
       >
-        <GameCover title={game.title} className="aspect-[3/4] w-16 sm:w-20" monogramClassName="text-3xl" />
+        <GameCover title={game.title} color={game.color} className="aspect-[3/4] w-16 sm:w-20" monogramClassName="text-3xl" />
       </motion.div>
       <div className="min-w-0 flex-1">
         <p className="text-xs font-semibold tracking-wide text-accent uppercase">The fates choose</p>

@@ -3,6 +3,7 @@
 // Legacy data (`tavern_games`, `tavern_rsvp`) is migrated once and left in place.
 
 import seedGames from '../data/games.json';
+import { toCoverColor } from './cover';
 
 export const STORAGE_VERSION = 2;
 
@@ -79,6 +80,7 @@ export function normalizeGame(game, fallbackAddedAt = new Date().toISOString()) 
     maxPlayers,
     playtime: playtime == null ? null : clamp(playtime, 1, 1440),
     tags,
+    color: toCoverColor(game.color),
     addedAt: typeof game.addedAt === 'string' ? game.addedAt : fallbackAddedAt,
   };
 }

@@ -25,6 +25,7 @@ export default function TonightPick({ game, stats, logged, onLog, onChange }) {
       <div className="mt-3 flex gap-4 sm:gap-5">
         <GameCover
           title={game.title}
+          color={game.color}
           className="aspect-[3/4] w-24 shrink-0 self-start sm:w-32"
           monogramClassName="text-4xl sm:text-5xl"
         />

@@ -1,22 +1,35 @@
 // Generated game-box covers: the same title always gets the same cover.
 // No external images; colors come from a curated set of warm, shelf-like hues.
 
+const oklch = (l, c, h) => `oklch(${l.toFixed(3)} ${c.toFixed(3)} ${h})`;
+
 const STOP_WORDS = new Set(['the', 'a', 'an', 'of', 'and', 'at', 'on', 'in', 'to', '&']);
 
 /** Curated hues (OKLCH h) with a chroma that keeps each one earthy rather than neon. */
-const HUES = [
-  { h: 25, c: 0.11 }, // oxblood
-  { h: 40, c: 0.11 }, // brick
-  { h: 55, c: 0.07 }, // walnut
-  { h: 72, c: 0.1 }, // amber
-  { h: 88, c: 0.09 }, // ochre
-  { h: 112, c: 0.07 }, // olive
-  { h: 140, c: 0.07 }, // moss
-  { h: 178, c: 0.06 }, // verdigris
-  { h: 232, c: 0.06 }, // slate
-  { h: 290, c: 0.06 }, // heather
-  { h: 335, c: 0.08 }, // plum
+export const COVER_COLORS = [
+  { id: 'oxblood', label: 'Oxblood', h: 25, c: 0.11 },
+  { id: 'brick', label: 'Brick', h: 40, c: 0.11 },
+  { id: 'walnut', label: 'Walnut', h: 55, c: 0.07 },
+  { id: 'amber', label: 'Amber', h: 72, c: 0.1 },
+  { id: 'ochre', label: 'Ochre', h: 88, c: 0.09 },
+  { id: 'olive', label: 'Olive', h: 112, c: 0.07 },
+  { id: 'moss', label: 'Moss', h: 140, c: 0.07 },
+  { id: 'verdigris', label: 'Verdigris', h: 178, c: 0.06 },
+  { id: 'slate', label: 'Slate', h: 232, c: 0.06 },
+  { id: 'heather', label: 'Heather', h: 290, c: 0.06 },
+  { id: 'plum', label: 'Plum', h: 335, c: 0.08 },
 ];
+
+const COLOR_BY_ID = new Map(COVER_COLORS.map((color) => [color.id, color]));
+
+/** A known cover color id, or null (null means "pick from the title"). */
+export const toCoverColor = (value) => (typeof value === 'string' && COLOR_BY_ID.has(value) ? value : null);
+
+/** Swatch fill for a color id, at the middle of the cover lightness range. */
+export function swatchFor(colorId) {
+  const color = COLOR_BY_ID.get(colorId);
+  return color ? oklch(0.45, color.c, color.h) : null;
+}
 
 /** FNV-1a 32-bit. Stable across sessions and browsers. */
 export function hashString(text) {
@@ -42,16 +55,14 @@ export function monogram(title) {
   return (pick[0][0] + pick[1][0]).toUpperCase();
 }
 
-const oklch = (l, c, h) => `oklch(${l.toFixed(3)} ${c.toFixed(3)} ${h})`;
-
 /**
- * Cover recipe for a title.
+ * Cover recipe for a title. `colorId` (from COVER_COLORS) overrides the hue the title would get.
  * @returns {{ base: string, spine: string, band: string, ink: string, monogram: string, variant: 'bands' | 'frame' | 'corner' }}
  */
-export function coverFor(title = '') {
+export function coverFor(title = '', colorId = null) {
   const key = title.trim().toLowerCase();
   const hash = hashString(key);
-  const { h, c } = HUES[hash % HUES.length];
+  const { h, c } = COLOR_BY_ID.get(colorId) ?? COVER_COLORS[hash % COVER_COLORS.length];
   const l = 0.4 + ((hash >>> 8) % 9) * 0.012; // 0.40–0.50: light ink stays ≥ 4.5:1
   const variants = ['bands', 'frame', 'corner'];
   return {

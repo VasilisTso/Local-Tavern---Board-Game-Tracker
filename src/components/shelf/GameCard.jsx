@@ -9,7 +9,7 @@ export default function GameCard({ game, stats, isTonightPick, onEdit, onRemove 
 
   return (
     <article className="flex h-full gap-3.5 rounded-md border border-line bg-surface p-3 transition-colors duration-150 hover:border-line-strong">
-      <GameCover title={game.title} className="aspect-[3/4] w-16 shrink-0 self-start sm:w-[4.5rem]" />
+      <GameCover title={game.title} color={game.color} className="aspect-[3/4] w-16 shrink-0 self-start sm:w-[4.5rem]" />
 
       <div className="flex min-w-0 flex-1 flex-col">
         <h3 className="font-display text-lg font-bold leading-tight text-ink">{game.title}</h3>

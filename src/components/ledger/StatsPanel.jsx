@@ -128,7 +128,7 @@ export default function StatsPanel({ plays, games }) {
           <ul className="mt-3 space-y-2.5">
             {stats.dusty.map(({ game, last, days }) => (
               <li key={game.id} className="flex items-center gap-3">
-                <GameCover title={game.title} className="aspect-[3/4] w-7 shrink-0" monogramClassName="text-[0.6rem]" />
+                <GameCover title={game.title} color={game.color} className="aspect-[3/4] w-7 shrink-0" monogramClassName="text-[0.6rem]" />
                 <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink">{game.title}</span>
                 <span className="tabular shrink-0 text-xs text-muted">
                   {last ? (

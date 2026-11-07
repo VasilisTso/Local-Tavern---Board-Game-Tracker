@@ -1,5 +1,8 @@
 import { useId, useMemo, useState } from 'react';
+import { Check } from 'lucide-react';
 import Modal, { ModalActions, ModalHeader } from '../Modal';
+import GameCover from '../GameCover';
+import { COVER_COLORS, swatchFor } from '../../lib/cover';
 import { btnPrimary, btnSecondary, field, hint, label } from '../ui';
 
 const LIMITS = { players: [1, 99], playtime: [1, 1440] };
@@ -11,6 +14,7 @@ function toForm(game) {
     maxPlayers: String(game?.maxPlayers ?? 4),
     playtime: game?.playtime == null ? (game ? '' : '60') : String(game.playtime),
     tags: game?.tags?.join(', ') ?? '',
+    color: game?.color ?? null,
   };
 }
 
@@ -64,6 +68,65 @@ function Field({ id, labelText, error, hintText, children }) {
   );
 }
 
+/** Box color: "From title" (the generated hue) or one of the curated cover colors, with a live preview. */
+function ColorPicker({ name, title, value, onChange }) {
+  const options = [
+    {
+      id: null,
+      label: 'From title',
+      fill: `conic-gradient(${[...COVER_COLORS, COVER_COLORS[0]].map((c) => swatchFor(c.id)).join(', ')})`,
+    },
+    ...COVER_COLORS.map((c) => ({ id: c.id, label: c.label, fill: swatchFor(c.id) })),
+  ];
+  const current = options.find((o) => o.id === value) ?? options[0];
+
+  return (
+    <fieldset>
+      <legend className={label}>
+        Box color <span className="font-normal text-muted">· {current.label}</span>
+      </legend>
+      <div className="mt-2 flex gap-4">
+        <GameCover
+          title={title || '?'}
+          color={value}
+          className="aspect-[3/4] w-14 shrink-0 self-start"
+          monogramClassName="text-xl"
+        />
+        <div className="flex min-w-0 flex-1 flex-wrap content-start gap-1">
+          {options.map((option) => {
+            const checked = option.id === value;
+            return (
+              <label key={option.id ?? 'auto'} title={option.label} className="relative cursor-pointer">
+                <input
+                  type="radio"
+                  name={name}
+                  checked={checked}
+                  onChange={() => onChange(option.id)}
+                  className="peer sr-only"
+                />
+                <span className="sr-only">{option.label}</span>
+                <span
+                  aria-hidden="true"
+                  className={`grid size-8 place-items-center rounded-full border-2 transition-[border-color,transform] duration-150 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:scale-105 ${
+                    checked ? 'border-ink' : 'border-transparent'
+                  }`}
+                >
+                  <span
+                    className="grid size-6 place-items-center rounded-full"
+                    style={{ background: option.fill }}
+                  >
+                    {checked && <Check className="size-3.5 text-white drop-shadow" strokeWidth={3} />}
+                  </span>
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      </div>
+    </fieldset>
+  );
+}
+
 function GameForm({ game, games, allTags, onSave, onCancel, titleId }) {
   const uid = useId();
   const ids = Object.fromEntries([...FIELD_ORDER, 'tags'].map((k) => [k, `${uid}-${k}`]));
@@ -114,6 +177,7 @@ function GameForm({ game, games, allTags, onSave, onCancel, titleId }) {
       maxPlayers: wholeNumber(form.maxPlayers),
       playtime: form.playtime.trim() === '' ? null : wholeNumber(form.playtime),
       tags: typedTags,
+      color: form.color,
     });
   };
 
@@ -223,6 +287,13 @@ function GameForm({ game, games, allTags, onSave, onCancel, titleId }) {
             </ul>
           </div>
         )}
+
+        <ColorPicker
+          name={`${uid}-color`}
+          title={form.title.trim()}
+          value={form.color}
+          onChange={(color) => setForm((prev) => ({ ...prev, color }))}
+        />
       </div>
 
       <ModalActions>

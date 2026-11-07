@@ -31,7 +31,7 @@ function PlayRow({ play, game, onEdit, onRemove }) {
     <article className="flex gap-3 py-3 sm:gap-4">
       <PlayDate date={play.date} />
       {game ? (
-        <GameCover title={game.title} className="aspect-[3/4] w-10 shrink-0 self-start" monogramClassName="text-base" />
+        <GameCover title={game.title} color={game.color} className="aspect-[3/4] w-10 shrink-0 self-start" monogramClassName="text-base" />
       ) : (
         <div aria-hidden="true" className="aspect-[3/4] w-10 shrink-0 self-start rounded-sm border border-dashed border-line-strong" />
       )}
