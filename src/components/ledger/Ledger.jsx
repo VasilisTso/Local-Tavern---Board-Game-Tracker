@@ -35,7 +35,7 @@ export default function Ledger({ games, playsApi, onLog, onEdit, toast }) {
             : 'Log a play after a game night. Who played, who won, and what gathers dust show up here.'}
         </p>
         {noGames ? (
-          <a href="#shelf" className={`${btnPrimary} mt-5 no-underline`}>
+          <a href="#library" className={`${btnPrimary} mt-5 no-underline`}>
             Go to the shelf
           </a>
         ) : (

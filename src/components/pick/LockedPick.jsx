@@ -2,33 +2,34 @@ import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, Check, Dices, Lock } from 'lucide-react';
 import Cover from '../covers/Cover';
 import { formatLength, formatPlayers, formatShortDate } from '../../lib/format';
+import { kindLine } from '../../lib/shelf';
+import { EASE_OUT_EXPO, fade } from '../../lib/motion';
 import { btnGhost, btnPrimary, btnSecondary } from '../ui';
 
-/** The game locked in for tonight, with a one-tap "log this play". */
-export default function TonightPick({ game, stats, logged, onLog, onChange }) {
+/** Game night: the item locked in for tonight, with a one-tap "log this session". */
+export default function LockedPick({ item, stats, logged, onLog, onChange }) {
   const reduceMotion = useReducedMotion();
-  const playtime = formatLength(game);
   const count = stats?.count ?? 0;
+  const meta = [kindLine(item), formatPlayers(item.minPlayers, item.maxPlayers), formatLength(item)].filter(Boolean);
 
   return (
     <motion.section
       aria-label="Tonight's pick"
       initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0, transition: { duration: 0.36, ease: [0.16, 1, 0.3, 1] } }}
+      animate={{ opacity: 1, y: 0, transition: reduceMotion ? fade : { duration: 0.36, ease: EASE_OUT_EXPO } }}
       className="rounded-md border border-accent bg-surface p-4 sm:p-5"
     >
       <div className="flex gap-4 sm:gap-5">
-        <Cover item={game} className="w-24 shrink-0 self-start sm:w-32" />
+        <div className="shrink-0 self-start" style={{ filter: 'var(--obj-pulled)' }}>
+          <Cover item={item} className="w-24 sm:w-32" />
+        </div>
         <div className="min-w-0 flex-1">
-          <h3 className="font-display text-3xl leading-tight font-bold text-ink">{game.title}</h3>
+          <h3 className="font-display text-3xl leading-[1.05] font-extrabold break-words text-ink">{item.title}</h3>
           <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-accent">
             <Lock aria-hidden="true" className="size-3.5" strokeWidth={2.5} />
             Locked in for tonight
           </p>
-          <p className="tabular mt-2 text-sm text-muted">
-            {formatPlayers(game.minPlayers, game.maxPlayers)}
-            {playtime && ` · ${playtime}`}
-          </p>
+          <p className="tabular mt-2 text-sm text-muted">{meta.join(' · ')}</p>
           <p className="tabular mt-0.5 text-sm text-muted">
             {count === 0 ? (
               'First time at this table'
@@ -38,9 +39,9 @@ export default function TonightPick({ game, stats, logged, onLog, onChange }) {
               </>
             )}
           </p>
-          {game.tags.length > 0 && (
+          {item.tags.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-1" aria-label="Tags">
-              {game.tags.map((tag) => (
+              {item.tags.map((tag) => (
                 <li key={tag} className="rounded-sm bg-raised px-1.5 py-0.5 text-xs font-medium text-muted">
                   {tag}
                 </li>
@@ -55,17 +56,17 @@ export default function TonightPick({ game, stats, logged, onLog, onChange }) {
           <>
             <p className="mr-auto flex items-center gap-1.5 text-sm font-semibold text-ok">
               <Check aria-hidden="true" className="size-4" strokeWidth={3} />
-              Logged in the ledger
+              Logged
             </p>
-            <a href="#ledger" className={`${btnSecondary} no-underline`}>
+            <a href="#log" className={`${btnSecondary} no-underline`}>
               <BookOpen aria-hidden="true" className="size-4" />
-              Open ledger
+              Open the log
             </a>
           </>
         ) : (
-          <button type="button" onClick={() => onLog(game)} className={btnPrimary}>
+          <button type="button" onClick={() => onLog(item)} className={btnPrimary}>
             <BookOpen aria-hidden="true" className="size-4" />
-            Log this play
+            Log this session
           </button>
         )}
         <button type="button" onClick={onChange} className={btnGhost}>

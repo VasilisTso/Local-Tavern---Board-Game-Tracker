@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { BookOpen, Library as LibraryIcon, Moon as NightIcon } from 'lucide-react';
+import { BookOpen, Dices, Library as LibraryIcon } from 'lucide-react';
 import { useItems } from './hooks/useItems';
 import { useLocations } from './hooks/useLocations';
 import { useActivity } from './hooks/useActivity';
@@ -11,13 +11,15 @@ import Tabs, { TabPanel } from './components/Tabs';
 import Toast from './components/Toast';
 import ThemeToggle from './components/ThemeToggle';
 import Library from './components/library/Library';
-import Tonight from './components/tonight/Tonight';
+import Pick from './components/pick/Pick';
 import Ledger from './components/ledger/Ledger';
 import LogPlayDialog from './components/ledger/LogPlayDialog';
 import BackupMenu from './components/BackupMenu';
 import { knownPlayerNames } from './lib/ledger';
 
-const TAB_IDS = ['library', 'tonight', 'ledger'];
+const TAB_IDS = ['library', 'pick', 'log'];
+/** Hashes from earlier versions. */
+const TAB_ALIASES = { shelf: 'library', tonight: 'pick', ledger: 'log' };
 
 function Wordmark() {
   return (
@@ -47,7 +49,7 @@ export default function App() {
   const { activity } = activityApi;
   const nightApi = useNight();
   const { theme, toggleTheme } = useTheme();
-  const [tab, setTab] = useHashTab(TAB_IDS);
+  const [tab, setTab] = useHashTab(TAB_IDS, TAB_ALIASES);
   const toast = useToast();
   const [logDialog, setLogDialog] = useState({ open: false, play: null, prefill: null });
   const knownNames = useMemo(() => knownPlayerNames(nightApi.night, activity), [nightApi.night, activity]);
@@ -77,8 +79,8 @@ export default function App() {
 
   const tabs = [
     { id: 'library', label: 'Library', icon: LibraryIcon, badge: items.length, badgeLabel: 'items' },
-    { id: 'tonight', label: 'Tonight', icon: NightIcon },
-    { id: 'ledger', label: 'Ledger', icon: BookOpen, badge: activity.length || null, badgeLabel: 'log entries' },
+    { id: 'pick', label: 'Pick', icon: Dices },
+    { id: 'log', label: 'Log', icon: BookOpen, badge: activity.length || null, badgeLabel: 'log entries' },
   ];
 
   return (
@@ -107,11 +109,19 @@ export default function App() {
           <Library itemsApi={itemsApi} locationsApi={locationsApi} activity={activity} toast={toast} />
         </TabPanel>
 
-        <TabPanel id="tonight" active={tab}>
-          <Tonight games={items} plays={activity} nightApi={nightApi} onLog={openLog} toast={toast} />
+        <TabPanel id="pick" active={tab}>
+          <Pick
+            items={items}
+            activity={activity}
+            locations={locationsApi.locations}
+            itemsApi={itemsApi}
+            nightApi={nightApi}
+            onLog={openLog}
+            toast={toast}
+          />
         </TabPanel>
 
-        <TabPanel id="ledger" active={tab}>
+        <TabPanel id="log" active={tab}>
           <Ledger games={items} playsApi={activityApi} onLog={openLog} onEdit={openEditPlay} toast={toast} />
         </TabPanel>
       </main>

@@ -27,6 +27,8 @@ export const KEYS = {
   night: 'tavern:v3:night',
   /** Library view (shelf, grid or list). */
   view: 'tavern:v3:view',
+  /** Pick tab filters and game night mode. */
+  pick: 'tavern:v3:pick',
   theme: 'tavern:theme',
 };
 
