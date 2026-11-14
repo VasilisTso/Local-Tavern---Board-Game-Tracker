@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { collapse } from '../../lib/motion';
 import { Pencil, Trash2, Trophy } from 'lucide-react';
 import Cover from '../covers/Cover';
 import { RatingStars } from '../library/Rating';
@@ -97,13 +98,7 @@ export default function ActivityList({ activity, items, onEdit, onRemove }) {
   const itemById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
   const months = useMemo(() => groupByMonth(activity), [activity]);
 
-  const rowMotion = reduceMotion
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
-    : {
-        initial: { opacity: 0, height: 0 },
-        animate: { opacity: 1, height: 'auto', transition: { duration: 0.24, ease: [0.16, 1, 0.3, 1] } },
-        exit: { opacity: 0, height: 0, transition: { duration: 0.16 } },
-      };
+  const rowMotion = collapse(reduceMotion);
 
   return (
     <div className="space-y-6">

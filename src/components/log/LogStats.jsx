@@ -1,19 +1,44 @@
 import { useId, useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { EASE_OUT_EXPO, staggerDelay } from '../../lib/motion';
 import Cover from '../covers/Cover';
 import { agoLabel, logStats } from '../../lib/log';
-import { formatShortDate } from '../../lib/format';
+import { countLabel, formatShortDate, plural } from '../../lib/format';
 
 const numberFormat = new Intl.NumberFormat();
 
-/** One headline number. Display face per the direction contract; proportional figures at size. */
-function Figure({ label, value, detail }) {
+/** How each headline figure reads inside the year sentence. */
+const PHRASES = {
+  finished: (n) => ['finished ', n, plural(n, ' thing', ' things')],
+  nights: (n) => ['had ', n, plural(n, ' game night', ' game nights')],
+  pages: (n) => ['read ', n, plural(n, ' page', ' pages')],
+  played: (n) => ['played for ', n, plural(n, ' hour', ' hours')],
+  watched: (n) => ['watched for ', n, plural(n, ' hour', ' hours')],
+  watchedHeard: (n) => ['watched and listened for ', n, plural(n, ' hour', ' hours')],
+  listened: (n) => ['listened for ', n, plural(n, ' hour', ' hours')],
+};
+
+/** The year so far as one sentence; figures at zero are left out rather than shown as 0. */
+function YearSentence({ year, figures }) {
+  const parts = figures.filter((f) => f.value > 0);
+  if (parts.length === 0) return <p className="text-muted">Nothing finished in {year} yet.</p>;
   return (
-    <div className="min-w-0">
-      <dt className="text-xs font-semibold text-muted">{label}</dt>
-      <dd className="mt-0.5 font-display text-3xl leading-none font-bold text-ink">{value}</dd>
-      {detail && <dd className="mt-1 text-xs text-muted">{detail}</dd>}
-    </div>
+    <p className="text-lg leading-snug text-muted">
+      So far in {year} you{' '}
+      {parts.map((f, i) => {
+        const [before, n, after] = PHRASES[f.id](f.value);
+        const sep = i === 0 ? '' : i === parts.length - 1 ? ' and ' : ', ';
+        return (
+          <span key={f.id}>
+            {sep}
+            {before}
+            <strong className="tabular font-semibold text-ink">{numberFormat.format(n)}</strong>
+            {after}
+          </span>
+        );
+      })}
+      .
+    </p>
   );
 }
 
@@ -36,10 +61,10 @@ function BarList({ rows, max }) {
             <div className="mt-1 flex items-center gap-2">
               <div className="h-3 min-w-0 flex-1">
                 <motion.div
-                  className="h-full rounded-r-[4px] bg-accent"
+                  className="h-full rounded-r-[4px] bg-muted"
                   initial={reduceMotion ? false : { width: 0 }}
                   animate={{ width: `${pct}%` }}
-                  transition={reduceMotion ? { duration: 0 } : { duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: i * 0.04 }}
+                  transition={reduceMotion ? { duration: 0 } : { duration: 0.5, ease: EASE_OUT_EXPO, delay: staggerDelay(i, 0.04) }}
                 />
               </div>
               <span className="tabular w-20 shrink-0 text-right text-sm text-muted">
@@ -66,7 +91,7 @@ function Block({ title, caption, children }) {
   );
 }
 
-/** Log stats for the kinds in view: headline figures, by kind, most used, win leaderboard, gathering dust. */
+/** Log stats for the kinds in view: the year in a sentence, by kind, most used, win leaderboard, gathering dust. */
 export default function LogStats({ activity, items, kinds }) {
   const stats = useMemo(() => logStats(activity, items, { kinds }), [activity, items, kinds]);
   const boardOnly = stats.kinds.length === 1 && stats.kinds[0] === 'board';
@@ -74,11 +99,7 @@ export default function LogStats({ activity, items, kinds }) {
 
   return (
     <div className="space-y-5 rounded-md border border-line bg-surface p-4 sm:p-5">
-      <dl className="grid grid-cols-2 gap-x-4 gap-y-4">
-        {stats.figures.map((f) => (
-          <Figure key={f.id} label={f.label} value={numberFormat.format(f.value)} detail={f.detail} />
-        ))}
-      </dl>
+      <YearSentence year={stats.year} figures={stats.figures} />
 
       {stats.byKind.length > 1 && (
         <Block title={`${stats.year} by kind`} caption="Log entries this year">
@@ -91,8 +112,8 @@ export default function LogStats({ activity, items, kinds }) {
                 lead: <Icon aria-hidden="true" className="size-4 shrink-0 text-muted" />,
                 label: kind.plural,
                 value: count,
-                unit: count === 1 ? 'entry' : 'entries',
-                title: `${kind.plural}: ${count} ${count === 1 ? 'entry' : 'entries'}`,
+                unit: plural(count, 'entry', 'entries'),
+                title: `${kind.plural}: ${countLabel(count, 'entry', 'entries')}`,
               };
             })}
           />
@@ -107,8 +128,8 @@ export default function LogStats({ activity, items, kinds }) {
               key: item.id,
               label: item.title,
               value: count,
-              unit: count === 1 ? 'time' : 'times',
-              title: `${item.title}: ${count} ${count === 1 ? 'time' : 'times'}`,
+              unit: plural(count, 'time'),
+              title: `${item.title}: ${countLabel(count, 'time')}`,
             }))}
           />
         </Block>
@@ -134,8 +155,8 @@ export default function LogStats({ activity, items, kinds }) {
                   </>
                 ),
                 value: p.wins,
-                unit: p.wins === 1 ? 'win' : 'wins',
-                title: `${p.name}: ${p.wins} ${p.wins === 1 ? 'win' : 'wins'} in ${p.played} ${p.played === 1 ? 'game' : 'games'}`,
+                unit: plural(p.wins, 'win'),
+                title: `${p.name}: ${countLabel(p.wins, 'win')} in ${countLabel(p.played, 'game')}`,
               }))}
             />
           )}

@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import ItemObject from './ItemObject';
-import { frontAspect } from '../../lib/cover';
+import { frontWidth } from '../../lib/cover';
 import { dropIn } from '../../lib/motion';
 import { itemLabel } from './objects';
 
@@ -11,22 +11,18 @@ export default function GridView({ items, placeNames, openId, onOpen }) {
     <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6">
       {items.map((item, index) => (
         <motion.li key={item.id} className="min-w-0" {...dropIn(index, reduceMotion)}>
-          <motion.button
+          <button
             type="button"
             onClick={() => onOpen(item, 'grid')}
             aria-label={itemLabel(item, placeNames.get(item.locationId))}
             aria-haspopup="dialog"
-            initial="rest"
-            animate="rest"
-            whileHover="lift"
-            whileFocus="lift"
             className="lib-obj group block w-full rounded-md text-left"
           >
             <div className="lib-stage">
               <ItemObject
                 item={item}
                 origin="grid"
-                width={`min(100cqw, calc(100cqh * ${frontAspect(item.kind, item.format)}))`}
+                width={frontWidth(item, '100cqw', '100cqh')}
                 away={openId === item.id}
               />
             </div>
@@ -38,7 +34,7 @@ export default function GridView({ items, placeNames, openId, onOpen }) {
                 {item.creator}
               </p>
             )}
-          </motion.button>
+          </button>
         </motion.li>
       ))}
     </ul>

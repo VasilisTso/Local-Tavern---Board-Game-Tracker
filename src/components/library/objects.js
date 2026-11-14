@@ -16,6 +16,3 @@ export function itemLabel(item, placeName) {
 
 /** Shared-layout id that ties an object in a view to the cover in the detail sheet. */
 export const objectLayoutId = (origin, id) => `obj:${origin}:${id}`;
-
-/** Lift on hover or focus (variants propagate from the button around the object). */
-export const liftVariants = { rest: { y: 0 }, lift: { y: -6 } };

@@ -49,12 +49,37 @@ export default function LibraryToolbar({ filters, onChange, view, onViewChange, 
 
   // Player counts only mean something for board and video games.
   const showPlayers = !filters.kinds.length || filters.kinds.some((k) => kindHasField(k, 'players'));
-  const playerOptions = PLAYER_OPTIONS.map((id) => ({ id, label: id === 'any' ? 'Any' : id }));
+  const playerOptions = PLAYER_OPTIONS.map((id) => ({
+    id,
+    label: id === 'any' ? 'Any' : id,
+  }));
+
+  // Phones fold the kind chips into the panel, so its count includes them there.
+  const toggle = (count, className) => (
+    <button
+      type="button"
+      aria-expanded={open}
+      aria-controls={panelId}
+      onClick={() => setOpen((o) => !o)}
+      className={`${chip} ${className} ${open || count ? 'text-ink' : ''}`}
+    >
+      <SlidersHorizontal aria-hidden="true" className="size-4" />
+      Filters
+      {count > 0 && (
+        <span className="tabular rounded-sm bg-accent-fill px-1.5 text-xs font-bold text-on-accent">
+          {count}
+          <span className="sr-only"> on</span>
+        </span>
+      )}
+      <ChevronDown aria-hidden="true" className={`size-4 transition-transform ${open ? 'rotate-180' : ''}`} />
+    </button>
+  );
 
   return (
     <div className="space-y-3">
+      {/* Phones: search and Add on one row, view, places and Filters on the next. */}
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative min-w-0 basis-full sm:basis-auto sm:flex-1">
+        <div className="relative max-sm:order-1 min-w-0 flex-1">
           <label htmlFor={searchId} className="sr-only">
             Search the library
           </label>
@@ -79,39 +104,32 @@ export default function LibraryToolbar({ filters, onChange, view, onViewChange, 
             </button>
           )}
         </div>
-        <ViewSwitch value={view} onChange={onViewChange} />
-        <button type="button" onClick={onPlaces} className={`${btnSecondary} max-sm:px-3`}>
+        <span aria-hidden="true" className="order-3 basis-full sm:hidden" />
+        <div className="max-sm:order-4">
+          <ViewSwitch value={view} onChange={onViewChange} />
+        </div>
+        <button type="button" onClick={onPlaces} className={`${btnSecondary} max-sm:order-5 max-[22.5rem]:px-3`}>
           <MapPin aria-hidden="true" className="size-4" />
-          <span className="max-sm:sr-only">Places</span>
+          <span className="max-[22.5rem]:sr-only">Places</span>
         </button>
-        <button type="button" onClick={onAdd} className={`${btnPrimary} max-sm:ml-auto max-sm:px-3`}>
+        <button type="button" onClick={onAdd} className={`${btnPrimary} max-sm:order-2 max-sm:px-3`}>
           <Plus aria-hidden="true" className="size-4" strokeWidth={2.5} />
-          Add item
+          <span>
+            Add<span className="max-sm:sr-only"> item</span>
+          </span>
         </button>
+        {toggle(extra + (filters.kinds.length > 0), 'order-6 ml-auto sm:hidden')}
       </div>
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex items-start justify-between gap-2 max-sm:hidden">
         <KindChips value={filters.kinds} onChange={set('kinds')} />
-        <button
-          type="button"
-          aria-expanded={open}
-          aria-controls={panelId}
-          onClick={() => setOpen((o) => !o)}
-          className={`${chip} self-start ${open || extra ? 'text-ink' : ''}`}
-        >
-          <SlidersHorizontal aria-hidden="true" className="size-4" />
-          Filters
-          {extra > 0 && (
-            <span className="tabular rounded-sm bg-accent-fill px-1.5 text-xs font-bold text-on-accent">
-              {extra}
-              <span className="sr-only"> on</span>
-            </span>
-          )}
-          <ChevronDown aria-hidden="true" className={`size-4 transition-transform ${open ? 'rotate-180' : ''}`} />
-        </button>
+        {toggle(extra, 'shrink-0')}
       </div>
 
       <div id={panelId} hidden={!open} className="space-y-4 rounded-md border border-line bg-surface p-4">
+        <div className="sm:hidden">
+          <KindChips value={filters.kinds} onChange={set('kinds')} legend="Kinds" visibleLegend />
+        </div>
         <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end sm:gap-x-6">
           <div className="sm:w-56">
             <label htmlFor={placeId} className="mb-1.5 block text-xs font-semibold text-muted">

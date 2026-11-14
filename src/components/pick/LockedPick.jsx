@@ -3,7 +3,7 @@ import { BookOpen, Check, Dices, Lock } from 'lucide-react';
 import Cover from '../covers/Cover';
 import { formatLength, formatPlayers, formatShortDate } from '../../lib/format';
 import { kindLine } from '../../lib/shelf';
-import { EASE_OUT_EXPO, fade } from '../../lib/motion';
+import { riseIn } from '../../lib/motion';
 import { btnGhost, btnPrimary, btnSecondary } from '../ui';
 
 /** Game night: the item locked in for tonight, with a one-tap "log this session". */
@@ -15,8 +15,7 @@ export default function LockedPick({ item, stats, logged, onLog, onChange }) {
   return (
     <motion.section
       aria-label="Tonight's pick"
-      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0, transition: reduceMotion ? fade : { duration: 0.36, ease: EASE_OUT_EXPO } }}
+      {...riseIn(reduceMotion)}
       className="rounded-md border border-accent bg-surface p-4 sm:p-5"
     >
       <div className="flex gap-4 sm:gap-5">

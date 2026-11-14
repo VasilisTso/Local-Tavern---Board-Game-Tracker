@@ -14,9 +14,7 @@ export function groupByMonth(activity, now = new Date()) {
       const [y, m] = key.split('-').map(Number);
       const opts = { month: 'long' };
       if (y !== now.getFullYear()) opts.year = 'numeric';
-      const label = Number.isFinite(y) && Number.isFinite(m)
-        ? new Date(y, m - 1, 1).toLocaleDateString(undefined, opts)
-        : 'Undated';
+      const label = Number.isFinite(y) && Number.isFinite(m) ? new Date(y, m - 1, 1).toLocaleDateString(undefined, opts) : 'Undated';
       group = { key, label, entries: [] };
       groups.push(group);
     }
@@ -92,7 +90,7 @@ const byLatest = (a, b) => (b.last ?? '').localeCompare(a.last ?? '');
  * session, and a whole item's length once when it is finished.
  * @returns {{
  *   year: number, entries: number, kinds: string[],
- *   figures: { id: string, label: string, value: number, unit?: string, detail?: string }[],
+ *   figures: { id: 'finished' | 'nights' | 'pages' | 'played' | 'watched' | 'watchedHeard' | 'listened', value: number }[],
  *   byKind: { kind: object, count: number }[],
  *   mostUsed: { item: object, count: number, last: string }[],
  *   winners: { name: string, wins: number, played: number }[] | null,
@@ -123,7 +121,8 @@ export function logStats(activity, items, { kinds = [], top = 5, now = Date.now(
     const item = itemById.get(entry.itemId);
     if (entry.type === 'finished') finished += 1;
     if (item?.kind === 'board' && entry.type === 'session') {
-      nights.add(entry.date.slice(0, 10));
+      // A night needs company: someone besides you on the list (the host is never listed).
+      if (entry.players.length > 0) nights.add(entry.date.slice(0, 10));
       playMinutes += item.length ?? 0;
     } else if (item && entry.type === 'finished') {
       if (countsPages(item)) pages += item.length ?? 0;
@@ -133,13 +132,14 @@ export function logStats(activity, items, { kinds = [], top = 5, now = Date.now(
   }
   const hours = (minutes) => Math.round(minutes / 60);
 
-  const figures = [{ id: 'finished', label: 'Finished', value: finished, detail: `in ${year}` }];
-  if (has('board')) figures.push({ id: 'nights', label: 'Game nights', value: nights.size, detail: `in ${year}` });
-  if (has('book')) figures.push({ id: 'pages', label: 'Pages read', value: pages, detail: 'from finished books' });
-  if (has('board') || has('video')) figures.push({ id: 'played', label: 'Hours played', value: hours(playMinutes), detail: 'by listed length' });
+  const figures = [{ id: 'finished', value: finished }];
+  if (has('board')) figures.push({ id: 'nights', value: nights.size });
+  if (has('book')) figures.push({ id: 'pages', value: pages });
+  if (has('board') || has('video')) figures.push({ id: 'played', value: hours(playMinutes) });
   if (has('film') || has('music') || has('book')) {
-    const label = has('film') ? (has('music') ? 'Hours watched and heard' : 'Hours watched') : 'Hours listened';
-    figures.push({ id: 'watched', label, value: hours(watchMinutes), detail: 'by listed length' });
+    // Audiobooks count here too, so books in scope mean listening.
+    const id = has('film') ? (has('music') || has('book') ? 'watchedHeard' : 'watched') : 'listened';
+    figures.push({ id, value: hours(watchMinutes) });
   }
   // Board-only scope: finishing does not apply, so lead with nights.
   if (scope.length === 1 && scope[0] === 'board') figures.shift();

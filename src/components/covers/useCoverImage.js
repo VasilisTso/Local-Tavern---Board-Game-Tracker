@@ -1,18 +1,22 @@
-import { useEffect, useState, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useState, useSyncExternalStore } from 'react';
 import { COVERS_CHANGED, getCover } from '../../lib/coverStore';
 
 // Object URLs for stored cover blobs, shared by every Cover on the page so a cover that
 // remounts (the shelf-to-sheet transition) shows its image at once instead of flashing.
 const resolved = new Map(); // coverId -> object URL, or null when nothing is stored
 const pending = new Set();
-const listeners = new Set();
+const listeners = new Map(); // coverId -> Set of listeners, so a resolved blob wakes only its covers
 let generation = 0;
 
-const emit = () => listeners.forEach((listener) => listener());
+const emit = (id) => (id ? listeners.get(id) : [...listeners.values()].flatMap((set) => [...set]))?.forEach((listener) => listener());
 
-function subscribe(listener) {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+function subscribe(id, listener) {
+  if (!listeners.has(id)) listeners.set(id, new Set());
+  listeners.get(id).add(listener);
+  return () => {
+    listeners.get(id)?.delete(listener);
+    if (!listeners.get(id)?.size) listeners.delete(id);
+  };
 }
 
 function request(id) {
@@ -25,7 +29,7 @@ function request(id) {
     })
     .finally(() => {
       pending.delete(id);
-      emit();
+      emit(id);
     });
 }
 
@@ -46,7 +50,8 @@ if (typeof window !== 'undefined') {
  * to load, and the generated cover shows instead.
  */
 export function useCoverImage(coverId, coverUrl) {
-  const stored = useSyncExternalStore(subscribe, () => (coverId ? resolved.get(coverId) : null));
+  const subscribeToCover = useCallback((listener) => (coverId ? subscribe(coverId, listener) : () => {}), [coverId]);
+  const stored = useSyncExternalStore(subscribeToCover, () => (coverId ? resolved.get(coverId) : null));
 
   useEffect(() => {
     if (coverId && stored === undefined) request(coverId);

@@ -2,6 +2,12 @@
 
 import { lengthUnit } from './kinds';
 
+/** The singular or plural word for `n`. */
+export const plural = (n, one, many = `${one}s`) => (n === 1 ? one : many);
+
+/** "1 item", "3 log entries". */
+export const countLabel = (n, one, many) => `${n} ${plural(n, one, many)}`;
+
 /** "2–4 players", or null when the item has no player range. */
 export function formatPlayers(min, max) {
   if (min == null || max == null) return null;

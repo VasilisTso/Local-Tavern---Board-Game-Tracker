@@ -103,7 +103,6 @@ export const KINDS = [
   },
 ];
 
-export const KIND_IDS = KINDS.map((k) => k.id);
 export const DEFAULT_KIND = 'board';
 
 const KIND_BY_ID = new Map(KINDS.map((k) => [k.id, k]));

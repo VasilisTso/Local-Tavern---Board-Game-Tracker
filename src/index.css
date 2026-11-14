@@ -95,6 +95,8 @@
   --radius-md: 6px;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Spine lift: settles with a hair of overshoot, like an object tipped forward and caught. */
+  --ease-pull: cubic-bezier(0.3, 1.4, 0.55, 1);
 }
 
 @layer base {
@@ -208,13 +210,59 @@
   }
 }
 
+/*
+ * Motion (DESIGN.md › Motion). Opening a dialog or switching a tab gets a short arrival; closing is
+ * instant. Under reduced motion the same changes stay legible as opacity fades with no travel;
+ * transforms elsewhere are written with `motion-safe:` or gated in framer via `useReducedMotion`.
+ */
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--panel-rise, 6px);
+  }
+}
+
+@layer base {
+  [role="tabpanel"]:not([hidden]) {
+    animation: panel-in 240ms var(--ease-out-expo);
+  }
+
+  /* Entry only: the dialog's content unmounts on close, so an exit fade would show an empty box. */
+  dialog[open] {
+    transition:
+      opacity 200ms var(--ease-out-expo),
+      translate 320ms var(--ease-out-expo),
+      scale 320ms var(--ease-out-expo);
+  }
+  dialog[open]::backdrop {
+    transition: background-color 200ms var(--ease-out-expo);
+  }
+  @starting-style {
+    dialog[open] {
+      opacity: 0;
+      translate: 0 12px;
+      scale: 0.98;
+    }
+    dialog[open]::backdrop {
+      background-color: transparent;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  :root {
+    --panel-rise: 0px;
+  }
+  dialog[open] {
+    transition: opacity 150ms linear;
+  }
+  @starting-style {
+    dialog[open] {
+      translate: none;
+      scale: none;
+    }
+  }
+  html {
+    scroll-behavior: auto;
   }
 }

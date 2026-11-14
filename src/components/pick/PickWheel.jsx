@@ -1,20 +1,12 @@
 import { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import {
-  AnimatePresence,
-  animate,
-  motion,
-  useAnimate,
-  useMotionValue,
-  useMotionValueEvent,
-  useReducedMotion,
-} from 'framer-motion';
+import { AnimatePresence, animate, motion, useAnimate, useMotionValue, useMotionValueEvent, useReducedMotion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { ChevronDown, Dices, RotateCcw, Shuffle } from 'lucide-react';
 import Cover from '../covers/Cover';
 import { coverFor } from '../../lib/cover';
 import { formatLength, formatPlayers } from '../../lib/format';
 import { kindLine } from '../../lib/shelf';
-import { fade } from '../../lib/motion';
+import { DURATION, SPRING, WHEEL, exit, fade } from '../../lib/motion';
 import {
   MAX_SLICES,
   layoutSlices,
@@ -34,7 +26,6 @@ const R = 156;
 const RIM = 11;
 const FACE = R - RIM;
 const HUB = 30;
-const SPIN_EASE = [0.12, 0.72, 0.1, 1];
 // canvas-confetti needs hex: amber plus a few object hues (vermilion, cobalt, mustard, bottle, linen).
 const CONFETTI = ['#e8a93b', '#f3c56b', '#d4523a', '#3f6fb5', '#d9b23a', '#3f7a52', '#f2e6cf'];
 
@@ -82,11 +73,7 @@ function WheelFace({ slices, winnerId, gradientId }) {
                 className="font-sans"
               >
                 {lines.map((line, i) => (
-                  <tspan
-                    key={i}
-                    x={flip ? C - labelEnd : C + labelEnd}
-                    dy={i === 0 ? (-(lines.length - 1) * lineHeight) / 2 : lineHeight}
-                  >
+                  <tspan key={i} x={flip ? C - labelEnd : C + labelEnd} dy={i === 0 ? (-(lines.length - 1) * lineHeight) / 2 : lineHeight}>
                     {line}
                   </tspan>
                 ))}
@@ -158,7 +145,7 @@ function Result({ item, getOrigin, actions }) {
     animateCover(
       el,
       { x: [dx, 0], y: [dy, 0], scale: [0.3, 1], rotate: [-16, 0], opacity: [0, 1] },
-      { type: 'spring', stiffness: 170, damping: 17, mass: 0.9, opacity: { duration: 0.12 } },
+      { ...SPRING.fly, opacity: { duration: DURATION.fast } },
     );
     // Runs once per winner; the card is keyed by item id.
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -176,18 +163,15 @@ function Result({ item, getOrigin, actions }) {
     <motion.div
       ref={ref}
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1, transition: reduceMotion ? fade : { duration: 0.2 } }}
-      exit={{ opacity: 0, transition: { duration: 0.12 } }}
+      animate={{ opacity: 1, transition: reduceMotion ? fade : { duration: DURATION.base } }}
+      exit={{ opacity: 0, transition: exit }}
       className="flex gap-4 rounded-md border border-accent bg-raised p-4 sm:gap-5"
     >
       <div ref={coverRef} style={{ opacity: 0, filter: 'var(--obj-pulled)' }} className="relative z-20 shrink-0 self-start">
         <Cover item={item} className="w-24 sm:w-32" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-accent">The wheel picked</p>
-        <p className="mt-0.5 font-display text-3xl leading-[1.05] font-extrabold break-words text-ink sm:text-4xl">
-          {item.title}
-        </p>
+        <p className="font-display text-3xl leading-[1.05] font-extrabold break-words text-ink sm:text-4xl">{item.title}</p>
         {item.creator && <p className="mt-1 text-sm text-ink">{item.creator}</p>}
         <p className="tabular mt-1 text-sm text-muted">{meta.join(' · ')}</p>
         <div className="mt-3 flex flex-wrap items-center gap-2">{actions}</div>
@@ -249,7 +233,7 @@ export default function PickWheel({ pool, weightOf, resetKey, renderActions }) {
     if (index === lastIndex.current) return;
     lastIndex.current = index;
     if (spinRef.current && slicesRef.current.length > 1) {
-      animate(pointer, [-24, 0], { duration: 0.22, ease: 'easeOut' });
+      animate(pointer, [WHEEL.tickAngle, 0], WHEEL.tick);
     }
   });
 
@@ -299,7 +283,7 @@ export default function PickWheel({ pool, weightOf, resetKey, renderActions }) {
       return;
     }
     setSpinning(true);
-    spinRef.current = animate(rotation, target, { duration: 4.4, ease: SPIN_EASE, onComplete: finish });
+    spinRef.current = animate(rotation, target, { ...WHEEL.spin, onComplete: finish });
   };
 
   const toggleSkip = (id) => {
@@ -316,11 +300,27 @@ export default function PickWheel({ pool, weightOf, resetKey, renderActions }) {
 
   return (
     <section aria-label="Picker wheel" className="rounded-md border border-line bg-surface p-4 sm:p-5">
-      <p className="tabular text-sm text-muted">
-        {slices.length} on the wheel
-        {hidden > 0 && ` · ${hidden} more off it`}
-        {skippedInPool > 0 && ` · ${skippedInPool} skipped`}
-      </p>
+      <div className="flex min-h-9 flex-wrap items-center gap-x-3 gap-y-1">
+        <p className="tabular text-sm text-muted">
+          {hidden > 0 ? `${slices.length} of ${candidates.length}` : slices.length} on the wheel
+          {skippedInPool > 0 && ` · ${skippedInPool} skipped`}
+        </p>
+        {hidden > 0 && (
+          <button
+            type="button"
+            disabled={spinning}
+            onClick={() => {
+              clear();
+              setSeed(Math.random());
+            }}
+            title={`The wheel holds ${MAX_SLICES}. Reshuffle to draw a different ${MAX_SLICES}.`}
+            className="inline-flex min-h-9 items-center gap-1.5 rounded-md px-2 text-sm font-semibold text-accent hover:bg-raised disabled:opacity-50"
+          >
+            <Shuffle aria-hidden="true" className="size-3.5" />
+            Reshuffle
+          </button>
+        )}
+      </div>
 
       {candidates.length === 0 ? (
         <div className="mt-4 rounded-md border border-dashed border-line-strong px-5 py-10 text-center">
@@ -348,37 +348,18 @@ export default function PickWheel({ pool, weightOf, resetKey, renderActions }) {
             </ul>
           </div>
 
-          <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+          {/* After a spin the result's action is the one amber button; spinning again steps back. */}
+          <div className="mt-5 flex justify-center">
             <button
               type="button"
               onClick={spin}
               aria-disabled={spinning || undefined}
-              className={`${btnPrimary} h-12 min-w-44 px-6 text-base ${spinning ? 'opacity-70' : ''}`}
+              className={`${showWinner ? btnSecondary : btnPrimary} h-12 min-w-44 px-6 text-base ${spinning ? 'opacity-70' : ''}`}
             >
-              <Dices aria-hidden="true" className="size-5" />
-              {spinning ? 'Spinning…' : 'Spin'}
+              {showWinner ? <RotateCcw aria-hidden="true" className="size-5" /> : <Dices aria-hidden="true" className="size-5" />}
+              {spinning ? 'Spinning…' : showWinner ? 'Spin again' : 'Spin'}
             </button>
-            {hidden > 0 && (
-              <button
-                type="button"
-                disabled={spinning}
-                onClick={() => {
-                  clear();
-                  setSeed(Math.random());
-                }}
-                className={btnSecondary}
-              >
-                <Shuffle aria-hidden="true" className="size-4" />
-                Reshuffle
-              </button>
-            )}
           </div>
-          {hidden > 0 && (
-            <p className="tabular mt-2 text-center text-sm text-muted">
-              The wheel holds {MAX_SLICES}. {hidden} other {hidden === 1 ? 'item sits' : 'items sit'} out this round;
-              reshuffle to draw again.
-            </p>
-          )}
         </>
       )}
 
@@ -388,22 +369,7 @@ export default function PickWheel({ pool, weightOf, resetKey, renderActions }) {
 
       <div className="mt-5 empty:hidden">
         <AnimatePresence mode="wait">
-          {showWinner && (
-            <Result
-              key={liveWinner.id}
-              item={liveWinner}
-              getOrigin={getOrigin}
-              actions={
-                <>
-                  {renderActions(liveWinner)}
-                  <button type="button" onClick={spin} className={btnSecondary}>
-                    <RotateCcw aria-hidden="true" className="size-4" />
-                    Spin again
-                  </button>
-                </>
-              }
-            />
-          )}
+          {showWinner && <Result key={liveWinner.id} item={liveWinner} getOrigin={getOrigin} actions={renderActions(liveWinner)} />}
         </AnimatePresence>
       </div>
 
@@ -411,10 +377,8 @@ export default function PickWheel({ pool, weightOf, resetKey, renderActions }) {
         <details className="group mt-5 border-t border-line pt-4">
           <summary className="flex min-h-10 items-center justify-between gap-2 text-sm font-semibold text-ink [&::-webkit-details-marker]:hidden">
             <span>
-              Skip for now
-              <span className="tabular ml-1.5 font-normal text-muted">
-                {skippedInPool ? `${skippedInPool} off the wheel` : 'none yet'}
-              </span>
+              Leave some out
+              {skippedInPool > 0 && <span className="tabular ml-1.5 font-normal text-muted">{skippedInPool} skipped</span>}
             </span>
             <ChevronDown aria-hidden="true" className="size-4 text-muted transition-transform group-open:rotate-180" />
           </summary>
@@ -456,4 +420,3 @@ export default function PickWheel({ pool, weightOf, resetKey, renderActions }) {
     </section>
   );
 }
-

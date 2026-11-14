@@ -113,7 +113,8 @@ export function matchesFilters(item, filters, locationIds) {
   return true;
 }
 
-const byTitle = (a, b) => a.title.localeCompare(b.title, undefined, { sensitivity: 'base' });
+const collator = new Intl.Collator(undefined, { sensitivity: 'base' });
+const byTitle = (a, b) => collator.compare(a.title, b.title);
 const surname = (creator) => creator.trim().split(/\s+/).pop() ?? '';
 
 /**
@@ -129,7 +130,7 @@ export function sortItems(items, sort, useStats) {
       // Surname first, as a shelf is ordered; items without a creator go last.
       return list.sort((a, b) => {
         if (!a.creator !== !b.creator) return a.creator ? -1 : 1;
-        return surname(a.creator).localeCompare(surname(b.creator), undefined, { sensitivity: 'base' }) || byTitle(a, b);
+        return collator.compare(surname(a.creator), surname(b.creator)) || byTitle(a, b);
       });
     case 'dusty':
       // Never used first, then the oldest last use.

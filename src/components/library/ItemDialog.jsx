@@ -209,7 +209,7 @@ function ColorPicker({ name, value, onChange }) {
               <span className="sr-only">{option.label}</span>
               <span
                 aria-hidden="true"
-                className={`grid size-8 place-items-center rounded-full border-2 transition-[border-color,transform] duration-150 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent hover:scale-105 ${
+                className={`grid size-8 place-items-center rounded-full border-2 transition-[border-color,transform] duration-150 peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-accent motion-safe:hover:scale-105 ${
                   checked ? 'border-ink' : 'border-transparent'
                 }`}
               >

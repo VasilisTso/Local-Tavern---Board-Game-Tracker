@@ -2,9 +2,9 @@ import { useId, useState } from 'react';
 import { Plus, Trash2, Undo2 } from 'lucide-react';
 import Modal, { ModalActions, ModalHeader } from '../Modal';
 import { LOCATION_KINDS } from '../../lib/kinds';
+import { countLabel } from '../../lib/format';
 import { btnPrimary, btnSecondary, field, iconBtnDanger, label } from '../ui';
 
-const count = (n) => `${n} ${n === 1 ? 'item' : 'items'}`;
 
 /** One place: rename in place (saved on blur or Enter; an empty name snaps back), kind, remove. */
 function PlaceRow({ location, items, onUpdate, onRemove }) {
@@ -50,7 +50,7 @@ function PlaceRow({ location, items, onUpdate, onRemove }) {
           </option>
         ))}
       </select>
-      <span className="tabular w-16 shrink-0 text-right text-sm text-muted">{count(items)}</span>
+      <span className="tabular w-16 shrink-0 text-right text-sm text-muted">{countLabel(items, 'item')}</span>
       <button type="button" onClick={() => onRemove(location)} aria-label={`Remove ${location.name}`} className={iconBtnDanger}>
         <Trash2 aria-hidden="true" className="size-4" />
       </button>
@@ -129,7 +129,7 @@ function PlacesForm({ locationsApi, itemCounts, titleId, removed, setRemoved, on
               <li key={entry.item.id} className="flex items-center gap-2 rounded-md bg-raised py-1 pr-1 pl-3 text-sm">
                 <span className="min-w-0 flex-1">
                   Removed <strong className="font-semibold">{entry.item.name}</strong>
-                  {itemCounts.get(entry.item.id) ? ` · ${count(itemCounts.get(entry.item.id))} now have no place` : ''}
+                  {itemCounts.get(entry.item.id) ? ` · ${countLabel(itemCounts.get(entry.item.id), 'item')} now have no place` : ''}
                 </span>
                 <button
                   type="button"

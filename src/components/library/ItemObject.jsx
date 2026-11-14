@@ -3,7 +3,7 @@ import { HandHelping } from 'lucide-react';
 import Cover from '../covers/Cover';
 import { frontAspect, spineSize } from '../../lib/cover';
 import { SPRING } from '../../lib/motion';
-import { liftVariants, objectLayoutId } from './objects';
+import { objectLayoutId } from './objects';
 
 /**
  * An item drawn as its object inside a view (shelf, grid, list, Now). While the item is open in
@@ -32,9 +32,8 @@ export default function ItemObject({ item, view = 'front', origin, away = false,
   return (
     <motion.div
       layoutId={reduceMotion ? undefined : objectLayoutId(origin, item.id)}
-      variants={lift && !reduceMotion ? liftVariants : undefined}
       transition={SPRING.pull}
-      className={`relative shrink-0 ${className}`}
+      className={`relative shrink-0 ${lift ? 'lib-lift' : ''} ${className}`}
       style={size}
     >
       <Cover item={item} view={view} className="size-full" style={view === 'spine' ? { width: '100%', height: '100%' } : undefined} />

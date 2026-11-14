@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
+import { SPRING } from '../lib/motion';
 
 /**
  * ARIA tabs (automatic activation). Arrow keys move between tabs, Home/End jump to the ends.
@@ -57,7 +58,7 @@ export default function Tabs({ tabs, active, onChange, label }) {
                 layoutId="tab-underline"
                 aria-hidden="true"
                 className="absolute inset-x-2 bottom-0 h-0.5 rounded-full bg-accent"
-                transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 520, damping: 40 }}
+                transition={reduceMotion ? { duration: 0 } : SPRING.indicator}
               />
             )}
           </button>

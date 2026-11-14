@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { collapse } from '../../lib/motion';
 import { Plus, X } from 'lucide-react';
 import { btnSecondary, field, hint, iconBtnDanger, label } from '../ui';
 
@@ -131,13 +132,7 @@ export default function NightPanel({ nightApi, toast }) {
     });
   };
 
-  const rowMotion = reduceMotion
-    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
-    : {
-        initial: { opacity: 0, height: 0 },
-        animate: { opacity: 1, height: 'auto', transition: { duration: 0.24, ease: [0.16, 1, 0.3, 1] } },
-        exit: { opacity: 0, height: 0, transition: { duration: 0.16 } },
-      };
+  const rowMotion = collapse(reduceMotion);
 
   return (
     <section aria-labelledby={`${uid}-heading`} className="rounded-md border border-line bg-surface p-4 sm:p-5">

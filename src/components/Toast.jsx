@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
+import { enter, exit, fade } from '../lib/motion';
 import { X } from 'lucide-react';
 
 /**
@@ -36,9 +37,8 @@ export default function Toast({ toast, onDismiss }) {
           <motion.div
             key={toast.id}
             initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 8 }}
-            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            animate={{ opacity: 1, y: 0, transition: reduceMotion ? fade : { ...enter, duration: 0.22 } }}
+            exit={reduceMotion ? { opacity: 0, transition: fade } : { opacity: 0, y: 8, transition: exit }}
             onPointerEnter={() => setPaused(true)}
             onPointerLeave={() => setPaused(false)}
             onFocus={() => setPaused(true)}

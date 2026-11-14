@@ -4,8 +4,8 @@ import ItemObject from './ItemObject';
 import StatusBadge from './StatusBadge';
 import { RatingStars } from './Rating';
 import { kindLine } from '../../lib/shelf';
-import { frontAspect } from '../../lib/cover';
-import { fade } from '../../lib/motion';
+import { frontWidth } from '../../lib/cover';
+import { rowIn } from '../../lib/motion';
 import { iconBtn, iconBtnDanger } from '../ui';
 import { itemLabel } from './objects';
 
@@ -21,31 +21,25 @@ export default function ListView({ items, placeNames, openId, onOpen, onEdit, on
           <motion.li
             key={item.id}
             className="flex items-center gap-1 py-1.5"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={reduceMotion ? fade : { duration: 0.2, delay: Math.min(index * 0.012, 0.2) }}
+            {...rowIn(index, reduceMotion)}
           >
-            <motion.button
+            <button
               type="button"
               onClick={() => onOpen(item, 'list')}
               aria-label={itemLabel(item, place)}
               aria-haspopup="dialog"
-              initial="rest"
-              animate="rest"
-              whileHover="lift"
-              whileFocus="lift"
               className="lib-obj group flex min-w-0 flex-1 items-center gap-3.5 rounded-md py-1 pr-2 text-left"
             >
               <div className="flex h-14 w-12 shrink-0 items-end justify-center">
                 <ItemObject
                   item={item}
                   origin="list"
-                  width={`min(3rem, calc(3.5rem * ${frontAspect(item.kind, item.format)}))`}
+                  width={frontWidth(item, '3rem', '3.5rem')}
                   lift={false}
                   away={openId === item.id}
                 />
               </div>
-              <span aria-hidden="true" className="grid min-w-0 flex-1 gap-x-6 gap-y-0.5 md:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)_auto] md:items-center">
+              <span aria-hidden="true" className="grid min-w-0 flex-1 gap-x-6 gap-y-0.5 md:grid-cols-[minmax(0,2fr)_minmax(0,1.2fr)_minmax(0,1fr)_11rem] md:items-center">
                 <span className="min-w-0">
                   <span className="block truncate font-display text-base font-bold [font-variation-settings:'wdth'_92] group-hover:text-accent">
                     {item.title}
@@ -63,7 +57,7 @@ export default function ListView({ items, placeNames, openId, onOpen, onEdit, on
                   {item.rating > 0 && <RatingStars value={item.rating} />}
                 </span>
               </span>
-            </motion.button>
+            </button>
             <button type="button" onClick={() => onEdit(item)} aria-label={`Edit ${item.title}`} className={iconBtn}>
               <Pencil aria-hidden="true" className="size-4" />
             </button>

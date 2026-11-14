@@ -3,10 +3,9 @@ import { ChevronDown, ClipboardCopy, DatabaseBackup, Download, Images, Upload } 
 import Modal, { ModalActions, ModalHeader } from './Modal';
 import { backupFileName, buildBackup, copyText, downloadJson, mergeBackup, nightSummary, parseBackup } from '../lib/backup';
 import { exportCovers, importCovers } from '../lib/coverStore';
-import { formatShortDate } from '../lib/format';
+import { countLabel, formatShortDate } from '../lib/format';
 import { btnPrimary, btnSecondary, hint } from './ui';
 
-const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 function focusItem(menu, index) {
   const nodes = menu?.querySelectorAll('[role="menuitem"]');
@@ -119,13 +118,13 @@ function ImportForm({ backup, current, onImport, onCancel, titleId }) {
       label: 'Merge into what is here',
       detail:
         merged.added.items || merged.added.activity || merged.added.locations
-          ? `Adds ${count(merged.added.items, 'new item', 'new items')}, ${count(merged.added.activity, 'log entry', 'log entries')} and ${count(merged.added.locations, 'place', 'places')}. The game night plan stays.`
+          ? `Adds ${countLabel(merged.added.items, 'new item', 'new items')}, ${countLabel(merged.added.activity, 'log entry', 'log entries')} and ${countLabel(merged.added.locations, 'place', 'places')}. The game night plan stays.`
           : 'Nothing new to add: everything in the file is already here.',
     },
     {
       id: 'replace',
       label: 'Replace everything',
-      detail: `Your ${count(current.items.length, 'item', 'items')}, ${count(current.activity.length, 'log entry', 'log entries')} and game night plan are swapped for the file's. You can undo right after.`,
+      detail: `Your ${countLabel(current.items.length, 'item', 'items')}, ${countLabel(current.activity.length, 'log entry', 'log entries')} and game night plan are swapped for the file's. You can undo right after.`,
     },
   ];
 
@@ -141,9 +140,9 @@ function ImportForm({ backup, current, onImport, onCancel, titleId }) {
       <div className="space-y-4 overflow-y-auto px-5 py-4">
         <p className="text-ink">
           The file holds{' '}
-          <strong className="tabular">{count(backup.items.length, 'item', 'items')}</strong> and{' '}
-          <strong className="tabular">{count(backup.activity.length, 'log entry', 'log entries')}</strong>
-          {coverCount > 0 && <> with {count(coverCount, 'cover image', 'cover images')}</>}
+          <strong className="tabular">{countLabel(backup.items.length, 'item', 'items')}</strong> and{' '}
+          <strong className="tabular">{countLabel(backup.activity.length, 'log entry', 'log entries')}</strong>
+          {coverCount > 0 && <> with {countLabel(coverCount, 'cover image', 'cover images')}</>}
           {backup.exportedAt && (
             <>
               , saved <time dateTime={backup.exportedAt}>{formatShortDate(backup.exportedAt)}</time>
@@ -152,7 +151,7 @@ function ImportForm({ backup, current, onImport, onCancel, titleId }) {
           .
         </p>
         {backup.skipped > 0 && (
-          <p className={hint}>{count(backup.skipped, 'damaged entry was', 'damaged entries were')} skipped.</p>
+          <p className={hint}>{countLabel(backup.skipped, 'damaged entry was', 'damaged entries were')} skipped.</p>
         )}
         <fieldset>
           <legend className="sr-only">How to import</legend>
@@ -217,11 +216,11 @@ export default function BackupMenu({ itemsApi, locationsApi, activityApi, nightA
       }
     }
     downloadJson(buildBackup({ items, locations, activity, night, covers }), backupFileName());
-    const saved = `Saved a backup of ${count(items.length, 'item', 'items')} and ${count(activity.length, 'log entry', 'log entries')}`;
+    const saved = `Saved a backup of ${countLabel(items.length, 'item', 'items')} and ${countLabel(activity.length, 'log entry', 'log entries')}`;
     let images = '';
     if (withCovers) {
       const n = covers ? Object.keys(covers).length : 0;
-      images = n ? ` with ${count(n, 'cover image', 'cover images')}` : '. Couldn’t read the cover images, so they were left out';
+      images = n ? ` with ${countLabel(n, 'cover image', 'cover images')}` : '. Couldn’t read the cover images, so they were left out';
     }
     toast.show({ message: `${saved}${images}.` });
   };
@@ -271,15 +270,15 @@ export default function BackupMenu({ itemsApi, locationsApi, activityApi, nightA
     if (Object.keys(backup.covers).length) {
       try {
         const n = await importCovers(backup.covers);
-        coverNote = ` Added ${count(n, 'cover image', 'cover images')}.`;
+        coverNote = ` Added ${countLabel(n, 'cover image', 'cover images')}.`;
       } catch {
         coverNote = ' Couldn’t store the cover images, so generated covers are shown instead.';
       }
     }
     const message =
       (mode === 'replace'
-        ? `Replaced with ${count(backup.items.length, 'item', 'items')} and ${count(backup.activity.length, 'log entry', 'log entries')}.`
-        : `Merged ${count(merged.added.items, 'new item', 'new items')} and ${count(merged.added.activity, 'new log entry', 'new log entries')}.`) + coverNote;
+        ? `Replaced with ${countLabel(backup.items.length, 'item', 'items')} and ${countLabel(backup.activity.length, 'log entry', 'log entries')}.`
+        : `Merged ${countLabel(merged.added.items, 'new item', 'new items')} and ${countLabel(merged.added.activity, 'new log entry', 'new log entries')}.`) + coverNote;
     toast.show({
       message,
       actionLabel: 'Undo',

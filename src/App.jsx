@@ -31,12 +31,13 @@ function Wordmark() {
       >
         <svg viewBox="0 0 64 64" aria-hidden="true" className="size-8 shrink-0">
           <rect width="64" height="64" rx="12" className="fill-raised" />
-          <rect x="12" y="12" width="40" height="40" rx="7" fill="none" strokeWidth="3.5" className="stroke-accent" />
-          <circle cx="23" cy="23" r="4" className="fill-accent" />
-          <circle cx="32" cy="32" r="4" className="fill-accent" />
-          <circle cx="41" cy="41" r="4" className="fill-accent" />
+          <rect x="13" y="20" width="7" height="27" rx="1.5" className="fill-accent" />
+          <rect x="22" y="26" width="7" height="21" rx="1.5" className="fill-accent" />
+          <rect x="31" y="15" width="7" height="32" rx="1.5" className="fill-ink" />
+          <rect x="41" y="21" width="7" height="26" rx="1.5" className="fill-accent" transform="rotate(14 41 47)" />
+          <rect x="9" y="47" width="46" height="4" rx="1" className="fill-accent" />
         </svg>
-        <span className="font-display text-2xl font-bold tracking-tight">Local Tavern</span>
+        <span className="font-display text-2xl font-bold tracking-tight">Shelfspace</span>
       </a>
     </h1>
   );

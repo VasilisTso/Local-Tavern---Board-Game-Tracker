@@ -635,11 +635,16 @@
 
 .cv-spine__title {
   flex: 1 1 auto;
-  font-size: clamp(0.75rem, 44cqw, 1.2rem);
+  font-size: min(var(--spine-fs, 44cqw), 1.2rem);
   font-weight: 720;
   font-variation-settings: "wdth" 75, "opsz" 14;
   letter-spacing: 0.01em;
   text-align: center;
+}
+.cv-spine__title[data-lines="2"] {
+  white-space: normal;
+  text-wrap: balance;
+  line-height: 1.02;
 }
 
 .cv-spine__foot {

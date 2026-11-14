@@ -112,7 +112,7 @@ export default function Library({ itemsApi, locationsApi, activity, onLog, toast
 
   return (
     <LayoutGroup>
-      <div className="space-y-10">
+      <div className="space-y-8 sm:space-y-10">
         {!filtered && <NowStrip items={now} placeNames={placeNames} openId={openIdFor('now')} onOpen={(item, origin) => setOpen({ id: item.id, origin })} />}
 
         <div className="space-y-6">

@@ -4,6 +4,7 @@ import { Cloud, Layers } from 'lucide-react';
 import ItemObject from './ItemObject';
 import { dropIn } from '../../lib/motion';
 import { standsFaceOut } from '../../lib/shelf';
+import { countLabel } from '../../lib/format';
 import { itemLabel } from './objects';
 
 const FACE_HEIGHT = '8.5rem';
@@ -32,11 +33,11 @@ function Place({ group, openId, onOpen, wide }) {
 
   return (
     <section aria-labelledby={headingId} className={`min-w-0 space-y-3 ${wide ? 'lg:col-span-2' : ''}`}>
-      <h3 id={headingId} className="flex items-baseline gap-2.5 font-display text-2xl font-[750] tracking-tight sm:text-3xl">
+      <h3 id={headingId} className="flex flex-wrap items-baseline gap-x-2.5 font-display text-2xl font-[750] tracking-tight sm:text-3xl">
         <Icon aria-hidden="true" className="size-5 shrink-0 self-center text-muted" />
         <span className="min-w-0">{group.name}</span>
-        <span className="tabular font-sans text-sm font-semibold text-muted">
-          {group.items.length} {group.items.length === 1 ? 'item' : 'items'}
+        <span className="tabular font-sans text-sm font-semibold whitespace-nowrap text-muted">
+          {countLabel(group.items.length, 'item')}
         </span>
       </h3>
 
@@ -54,7 +55,7 @@ function Place({ group, openId, onOpen, wide }) {
                 className={`lib-slot ${face ? 'lib-slot--face' : ''}`}
                 {...dropIn(index, reduceMotion)}
               >
-                <motion.button
+                <button
                   ref={(el) => {
                     refs.current[index] = el;
                   }}
@@ -64,10 +65,6 @@ function Place({ group, openId, onOpen, wide }) {
                   onClick={() => onOpen(item, 'shelf')}
                   aria-label={itemLabel(item, group.id === 'none' ? null : group.name)}
                   aria-haspopup="dialog"
-                  initial="rest"
-                  animate="rest"
-                  whileHover="lift"
-                  whileFocus="lift"
                   className="lib-obj block rounded-[3px]"
                 >
                   <ItemObject
@@ -77,7 +74,7 @@ function Place({ group, openId, onOpen, wide }) {
                     height={FACE_HEIGHT}
                     away={openId === item.id}
                   />
-                </motion.button>
+                </button>
               </motion.li>
             );
           })}

@@ -126,6 +126,10 @@ const FRONT_ASPECT = {
 
 export const frontAspect = (kind, format) => FRONT_ASPECT[`${kind}:${format}`] ?? 1;
 
+/** CSS width for an item's front that fits a `maxWidth` × `maxHeight` box (any CSS lengths). */
+export const frontWidth = (item, maxWidth, maxHeight = maxWidth) =>
+  `min(${maxWidth}, calc(${maxHeight} * ${frontAspect(item.kind, item.format)}))`;
+
 /**
  * Natural spine size in rem ({ width, height }) for the shelf. Print books get thicker with
  * their page count and vary a little in height; everything else follows its real case.
@@ -144,7 +148,7 @@ export function spineSize({ kind, format, title = '', length = null }) {
     case 'board:box':
       return { width: 2.75 + ((hash >>> 4) % 3) * 0.5, height: 10.5 };
     case 'board:card':
-      return { width: 2.25, height: 6.5 };
+      return { width: 2.25, height: 7.25 };
     case 'film:series':
       return { width: 3.5, height: 9.5 };
     case 'music:vinyl':

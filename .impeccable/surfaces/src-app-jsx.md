@@ -5,7 +5,7 @@ primary_target: "src/App.jsx"
 related_targets: ["src/components/library","src/components/covers"]
 ---
 
-# Local Tavern app shell and Library (Library / Pick / Log)
+# Shelfspace app shell and Library (Library / Pick / Log)
 
 Mode: Operate. Single-page app, tabs synced to URL hash. One owner curates on a laptop and picks or logs on a phone, often on the couch in dim light.
 

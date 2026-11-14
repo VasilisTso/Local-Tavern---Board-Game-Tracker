@@ -1,0 +1,207 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-14T18:00:00Z",
+  "title": "Design System: Shelfspace",
+  "extensions": {
+    "themes": [
+      { "name": "Stacks", "attribute": "data-theme=\"dark\"", "default": true, "purpose": "Dark; the couch at night." },
+      { "name": "Reading Room", "attribute": "data-theme=\"light\"", "purpose": "Light; daytime at the laptop." }
+    ],
+    "colorMeta": {
+      "walnut-ground": { "role": "neutral", "displayName": "Walnut Ground", "cssVar": "--bg", "theme": "Stacks", "tonalRamp": ["oklch(0.15 0.014 55)", "oklch(0.19 0.018 55)", "oklch(0.235 0.022 55)", "oklch(0.28 0.026 55)", "oklch(0.36 0.026 60)", "oklch(0.56 0.03 65)", "oklch(0.75 0.025 75)", "oklch(0.93 0.02 80)"] },
+      "walnut-surface": { "role": "neutral", "displayName": "Walnut Surface", "cssVar": "--surface", "theme": "Stacks" },
+      "walnut-raised": { "role": "neutral", "displayName": "Walnut Raised", "cssVar": "--raised", "theme": "Stacks" },
+      "walnut-hairline": { "role": "neutral", "displayName": "Walnut Hairline", "cssVar": "--line", "theme": "Stacks" },
+      "walnut-control-line": { "role": "neutral", "displayName": "Walnut Control Line", "cssVar": "--line-strong", "theme": "Stacks" },
+      "walnut-light-falloff": { "role": "neutral", "displayName": "Lamplight Falloff", "cssVar": "--falloff", "theme": "Stacks" },
+      "parchment-ink": { "role": "neutral", "displayName": "Parchment Ink", "cssVar": "--ink", "theme": "Stacks" },
+      "parchment-muted": { "role": "neutral", "displayName": "Parchment Muted", "cssVar": "--muted", "theme": "Stacks" },
+      "amber": { "role": "primary", "displayName": "Amber", "cssVar": "--accent", "theme": "Stacks", "tonalRamp": ["oklch(0.3 0.06 60)", "oklch(0.4 0.09 60)", "oklch(0.51 0.125 56)", "oklch(0.62 0.14 64)", "oklch(0.72 0.145 68)", "oklch(0.8 0.145 72)", "oklch(0.88 0.1 78)", "oklch(0.95 0.04 82)"] },
+      "amber-fill": { "role": "primary", "displayName": "Amber Fill", "cssVar": "--accent-fill", "theme": "both" },
+      "amber-fill-hover": { "role": "primary", "displayName": "Amber Fill Hover", "theme": "both" },
+      "on-amber": { "role": "primary", "displayName": "On Amber", "cssVar": "--on-accent", "theme": "both" },
+      "oxblood": { "role": "semantic", "displayName": "Oxblood", "cssVar": "--danger", "theme": "Stacks" },
+      "moss": { "role": "semantic", "displayName": "Moss", "cssVar": "--ok", "theme": "Stacks" },
+      "linen-ground": { "role": "neutral", "displayName": "Linen Ground", "cssVar": "--bg", "theme": "Reading Room" },
+      "linen-surface": { "role": "neutral", "displayName": "Linen Surface", "cssVar": "--surface", "theme": "Reading Room" },
+      "linen-raised": { "role": "neutral", "displayName": "Linen Raised", "cssVar": "--raised", "theme": "Reading Room" },
+      "linen-hairline": { "role": "neutral", "displayName": "Linen Hairline", "cssVar": "--line", "theme": "Reading Room" },
+      "linen-control-line": { "role": "neutral", "displayName": "Linen Control Line", "cssVar": "--line-strong", "theme": "Reading Room" },
+      "linen-light-falloff": { "role": "neutral", "displayName": "Daylight Falloff", "cssVar": "--falloff", "theme": "Reading Room" },
+      "walnut-ink": { "role": "neutral", "displayName": "Walnut Ink", "cssVar": "--ink", "theme": "Reading Room" },
+      "walnut-muted": { "role": "neutral", "displayName": "Walnut Muted", "cssVar": "--muted", "theme": "Reading Room" },
+      "deep-amber": { "role": "primary", "displayName": "Deep Amber", "cssVar": "--accent", "theme": "Reading Room" },
+      "oxblood-deep": { "role": "semantic", "displayName": "Deep Oxblood", "cssVar": "--danger", "theme": "Reading Room" },
+      "moss-deep": { "role": "semantic", "displayName": "Deep Moss", "cssVar": "--ok", "theme": "Reading Room" },
+      "wood-dark-top": { "role": "material", "displayName": "Board Lip (Stacks)", "cssVar": "--wood-top" },
+      "wood-dark-face": { "role": "material", "displayName": "Board Face (Stacks)", "cssVar": "--wood-face" },
+      "wood-dark-edge": { "role": "material", "displayName": "Board Underside (Stacks)", "cssVar": "--wood-edge" },
+      "wood-light-top": { "role": "material", "displayName": "Board Lip (Reading Room)", "cssVar": "--wood-top" },
+      "wood-light-face": { "role": "material", "displayName": "Board Face (Reading Room)", "cssVar": "--wood-face" },
+      "wood-light-edge": { "role": "material", "displayName": "Board Underside (Reading Room)", "cssVar": "--wood-edge" },
+      "cover-vermilion": { "role": "object", "displayName": "Vermilion", "ink": "light" },
+      "cover-oxblood": { "role": "object", "displayName": "Oxblood", "ink": "light" },
+      "cover-coral": { "role": "object", "displayName": "Coral", "ink": "dark" },
+      "cover-ochre": { "role": "object", "displayName": "Ochre", "ink": "dark" },
+      "cover-mustard": { "role": "object", "displayName": "Mustard", "ink": "dark" },
+      "cover-sage": { "role": "object", "displayName": "Sage", "ink": "dark" },
+      "cover-bottle": { "role": "object", "displayName": "Bottle Green", "ink": "light" },
+      "cover-teal": { "role": "object", "displayName": "Teal", "ink": "light" },
+      "cover-cobalt": { "role": "object", "displayName": "Cobalt", "ink": "light" },
+      "cover-slate": { "role": "object", "displayName": "Slate", "ink": "light" },
+      "cover-plum": { "role": "object", "displayName": "Plum", "ink": "light" },
+      "cover-walnut": { "role": "object", "displayName": "Walnut", "ink": "light" },
+      "cover-ink-light": { "role": "object", "displayName": "Cover Ink (light)" },
+      "cover-ink-dark": { "role": "object", "displayName": "Cover Ink (dark)" }
+    },
+    "objectPaletteDerivation": {
+      "source": "src/lib/cover.js",
+      "spine": "base L - 0.08, chroma x0.95",
+      "band": "hue +18deg; light covers L-0.42 (min 0.24), dark covers L+0.34 (max 0.88), chroma x0.7-0.9",
+      "lightnessShift": "0-0.03 per title, always away from the ink",
+      "legacyMap": { "brick": "vermilion", "amber": "ochre", "olive": "sage", "moss": "bottle", "verdigris": "teal", "heather": "plum" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Item title in the detail sheet; 2.488rem below 768px." },
+      "headline": { "displayName": "Headline", "purpose": "Tab headings, wheel winner, locked pick; 2.074rem below 640px." },
+      "place": { "displayName": "Place", "purpose": "Place names above shelves; 1.728rem below 640px." },
+      "title": { "displayName": "Title", "purpose": "Dialog and panel titles, log month headings." },
+      "object-title": { "displayName": "Object Title", "purpose": "Item names under covers in grid, Now row and list." },
+      "spine": { "displayName": "Spine", "purpose": "Vertical titles on spines, container-scaled." },
+      "body": { "displayName": "Body", "purpose": "Paragraphs and input text." },
+      "label": { "displayName": "Label", "purpose": "Buttons, tabs, chips, field labels, toasts." },
+      "caption": { "displayName": "Caption", "purpose": "Status, tags, badges, metadata; tabular numerals." }
+    },
+    "shadows": [
+      { "name": "obj-contact", "value": "drop-shadow(0 1px 0 oklch(0.1 0.02 55 / 0.5)) drop-shadow(0 5px 5px oklch(0.1 0.02 55 / 0.4))", "purpose": "Every object at rest (Stacks)." },
+      { "name": "obj-contact-light", "value": "drop-shadow(0 1px 0 oklch(0.3 0.03 55 / 0.3)) drop-shadow(0 5px 5px oklch(0.3 0.03 55 / 0.24))", "purpose": "Every object at rest (Reading Room)." },
+      { "name": "obj-pulled", "value": "drop-shadow(0 1px 0 oklch(0.1 0.02 55 / 0.4)) drop-shadow(0 16px 14px oklch(0.08 0.02 55 / 0.55))", "purpose": "Object lifted by hover or focus (Stacks)." },
+      { "name": "obj-pulled-light", "value": "drop-shadow(0 1px 0 oklch(0.3 0.03 55 / 0.24)) drop-shadow(0 16px 14px oklch(0.3 0.03 55 / 0.33))", "purpose": "Object lifted by hover or focus (Reading Room)." },
+      { "name": "board-shadow", "value": "oklch(0.1 0.02 55 / 0.55) fading over 0.75rem below the board", "purpose": "Shelf board fall-off (Reading Room: oklch(0.3 0.03 55 / 0.3))." },
+      { "name": "sheet", "value": "0 24px 64px -24px oklch(0.08 0.02 55 / 0.7)", "purpose": "Detail sheet and modal dialogs (Reading Room: oklch(0.3 0.03 55 / 0.45))." },
+      { "name": "popover", "value": "0 12px 32px -12px oklch(0.1 0.02 55 / 0.55)", "purpose": "Menus and chip dropdowns." },
+      { "name": "toast", "value": "0 8px 24px -8px oklch(0.1 0.02 55 / 0.5)", "purpose": "Undo toast." },
+      { "name": "backdrop", "value": "oklch(0.12 0.02 55 / 0.6)", "purpose": "Behind dialogs and the detail sheet; no blur." }
+    ],
+    "motion": [
+      { "name": "ease-out-expo", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Arrivals: fades, reveals, dialogs, tab panels." },
+      { "name": "ease-pull", "value": "cubic-bezier(0.3, 1.4, 0.55, 1)", "purpose": "Object lift: settles with a hair of overshoot." },
+      { "name": "duration-fast", "value": "120ms", "purpose": "Exits, press-pull." },
+      { "name": "duration-base", "value": "200ms", "purpose": "Fades, dialog opacity." },
+      { "name": "duration-slow", "value": "320ms", "purpose": "Dialog travel and scale; stagger cap." },
+      { "name": "spring-settle", "value": "stiffness 380, damping 30", "purpose": "Objects dropping 8px onto a board." },
+      { "name": "spring-pull", "value": "stiffness 520, damping 34", "purpose": "Shared-layout travel of an object into and out of the sheet." },
+      { "name": "spring-sheet", "value": "stiffness 300, damping 32", "purpose": "Detail sheet slide in and out." },
+      { "name": "spring-indicator", "value": "stiffness 520, damping 40", "purpose": "Tab underline." },
+      { "name": "spring-fly", "value": "stiffness 170, damping 17, mass 0.9", "purpose": "Wheel winner flying out of its slice." },
+      { "name": "stagger", "value": "24ms per object, capped at 320ms (rows: 12ms, cap 200ms)", "purpose": "Board and grid entrances." },
+      { "name": "lift", "value": "translate 0 -6px, 280ms ease-pull; press: -10px + scale 1.03, 120ms", "purpose": "Spine pull-out first beats (CSS, hover-capable devices or keyboard focus)." },
+      { "name": "panel-in", "value": "240ms ease-out-expo, opacity + 6px rise", "purpose": "Tab panel arrival." },
+      { "name": "dialog-in", "value": "opacity 200ms, translate 12px and scale 0.98 over 320ms via @starting-style; close instant", "purpose": "Modal dialogs." },
+      { "name": "wheel-spin", "value": "4.4s cubic-bezier(0.12, 0.72, 0.1, 1); pointer tick 220ms from -24deg", "purpose": "Wheel." },
+      { "name": "reduced-motion", "value": "opacity fade 150ms linear; no travel, stagger, lift or confetti; tab underline jumps", "purpose": "prefers-reduced-motion: reduce." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one amber action in an area.",
+      "html": "<button class=\"ds-btn ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg>Add item</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 6px; font-family: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; white-space: nowrap; border: 0; cursor: pointer; transition: background-color 150ms, color 150ms, border-color 150ms, transform 150ms; } .ds-btn-primary { background: var(--accent-fill, oklch(0.8 0.145 72)); color: var(--on-accent, oklch(0.22 0.03 55)); } .ds-btn-primary:hover { background: oklch(0.84 0.14 74); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--accent, oklch(0.8 0.145 72)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Outlined action beside or instead of the primary.",
+      "html": "<button class=\"ds-btn2\">Clear filters</button>",
+      "css": ".ds-btn2 { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 6px; border: 1px solid var(--line-strong, oklch(0.56 0.03 65)); background: transparent; color: var(--ink, oklch(0.93 0.02 80)); font-family: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background-color 150ms; } .ds-btn2:hover { background: var(--raised, oklch(0.28 0.026 55)); } .ds-btn2:active { transform: translateY(1px); } .ds-btn2:focus-visible { outline: 2px solid var(--accent, oklch(0.8 0.145 72)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Chip Group",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Radio or checkbox chips over hidden inputs; selected chip gets the amber border.",
+      "html": "<div class=\"ds-chips\"><label><input type=\"radio\" name=\"k\" checked><span>Games</span></label><label><input type=\"radio\" name=\"k\"><span>Books</span></label><label><input type=\"radio\" name=\"k\"><span>Films</span></label></div>",
+      "css": ".ds-chips { display: flex; gap: 6px; font-family: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif; } .ds-chips input { position: absolute; opacity: 0; width: 1px; height: 1px; } .ds-chips span { display: inline-flex; align-items: center; height: 36px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--line, oklch(0.36 0.026 60)); color: var(--muted, oklch(0.75 0.025 75)); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: color 150ms, border-color 150ms; } .ds-chips span:hover { border-color: var(--line-strong, oklch(0.56 0.03 65)); color: var(--ink, oklch(0.93 0.02 80)); } .ds-chips input:checked + span { border-color: var(--accent, oklch(0.8 0.145 72)); background: var(--raised, oklch(0.28 0.026 55)); color: var(--ink, oklch(0.93 0.02 80)); } .ds-chips input:focus-visible + span { outline: 2px solid var(--accent, oklch(0.8 0.145 72)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "40px field on the surface fill; 1rem text.",
+      "html": "<label class=\"ds-field\"><span>Title</span><input type=\"text\" placeholder=\"Ticket to Ride\"></label>",
+      "css": ".ds-field { display: grid; gap: 6px; font-family: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif; } .ds-field span { font-size: 0.875rem; font-weight: 600; color: var(--ink, oklch(0.93 0.02 80)); } .ds-field input { height: 40px; padding: 0 12px; border-radius: 6px; border: 1px solid var(--line-strong, oklch(0.56 0.03 65)); background: var(--surface, oklch(0.235 0.022 55)); color: var(--ink, oklch(0.93 0.02 80)); font: inherit; font-size: 1rem; transition: border-color 150ms; } .ds-field input::placeholder { color: var(--muted, oklch(0.75 0.025 75)); } .ds-field input:hover { border-color: var(--muted, oklch(0.75 0.025 75)); } .ds-field input:focus-visible { outline: 2px solid var(--accent, oklch(0.8 0.145 72)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Tabs",
+      "kind": "nav",
+      "refersTo": "tab",
+      "description": "Library, Pick, Log with an amber underline on the selected tab.",
+      "html": "<div class=\"ds-tabs\" role=\"tablist\"><button role=\"tab\" aria-selected=\"true\">Library</button><button role=\"tab\" aria-selected=\"false\">Pick</button><button role=\"tab\" aria-selected=\"false\">Log</button></div>",
+      "css": ".ds-tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line, oklch(0.36 0.026 60)); font-family: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif; } .ds-tabs button { position: relative; height: 48px; padding: 0 16px; background: none; border: 0; color: var(--muted, oklch(0.75 0.025 75)); font: inherit; font-size: 1rem; font-weight: 600; cursor: pointer; transition: color 150ms; } .ds-tabs button:hover, .ds-tabs button[aria-selected=\"true\"] { color: var(--ink, oklch(0.93 0.02 80)); } .ds-tabs button[aria-selected=\"true\"]::after { content: ''; position: absolute; left: 8px; right: 8px; bottom: -1px; height: 2px; border-radius: 999px; background: var(--accent, oklch(0.8 0.145 72)); } .ds-tabs button:focus-visible { outline: 2px solid var(--accent, oklch(0.8 0.145 72)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Undo Toast",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Bottom toast with an amber Undo action instead of a confirm dialog.",
+      "html": "<div class=\"ds-toast\" role=\"status\"><p>Removed Wingspan.</p><button class=\"ds-toast-undo\">Undo</button></div>",
+      "css": ".ds-toast { display: flex; align-items: center; gap: 8px; max-width: 28rem; padding: 6px 6px 6px 16px; border-radius: 6px; border: 1px solid var(--line-strong, oklch(0.56 0.03 65)); background: var(--raised, oklch(0.28 0.026 55)); color: var(--ink, oklch(0.93 0.02 80)); font-family: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif; font-size: 0.875rem; box-shadow: 0 8px 24px -8px oklch(0.1 0.02 55 / 0.5); } .ds-toast p { flex: 1; margin: 0; } .ds-toast-undo { height: 36px; padding: 0 12px; border: 0; border-radius: 6px; background: none; color: var(--accent, oklch(0.8 0.145 72)); font: inherit; font-weight: 600; cursor: pointer; } .ds-toast-undo:hover { background: var(--surface, oklch(0.235 0.022 55)); text-decoration: underline; text-underline-offset: 4px; } .ds-toast-undo:focus-visible { outline: 2px solid var(--accent, oklch(0.8 0.145 72)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Shelf Board with Spines",
+      "kind": "custom",
+      "description": "Signature: spines standing on a three-stop wooden board; hover or focus lifts a spine 6px on the overshooting pull curve with the pulled shadow.",
+      "html": "<ul class=\"ds-board\"><li><button class=\"ds-spine\" style=\"--b: oklch(0.52 0.17 32); --i: oklch(0.96 0.02 85); height: 9.6rem\" aria-label=\"Dune, book\"><span>Dune</span></button></li><li><button class=\"ds-spine\" style=\"--b: oklch(0.45 0.15 262); --i: oklch(0.96 0.02 85); height: 9rem; width: 2.2rem\" aria-label=\"Piranesi, book\"><span>Piranesi</span></button></li><li><button class=\"ds-spine\" style=\"--b: oklch(0.82 0.14 90); --i: oklch(0.22 0.03 55); height: 10.2rem\" aria-label=\"Middlemarch, book\"><span>Middlemarch</span></button></li></ul>",
+      "css": ".ds-board { display: flex; align-items: flex-end; gap: 2px; margin: 0; padding: 12px 12px 0; list-style: none; border-bottom: 14px solid var(--wood-face, oklch(0.37 0.062 52)); box-shadow: inset 0 -3px 0 var(--wood-top, oklch(0.47 0.075 60)), 0 3px 0 var(--wood-edge, oklch(0.25 0.04 48)); } .ds-spine { display: flex; align-items: center; justify-content: center; width: 1.75rem; padding: 6px 0; border: 0; border-radius: 1.5px; background: linear-gradient(var(--b), var(--b)); color: var(--i); font-family: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif; font-weight: 720; font-variation-settings: 'wdth' 75, 'opsz' 14; font-size: 0.8125rem; cursor: pointer; filter: drop-shadow(0 1px 0 oklch(0.1 0.02 55 / 0.5)) drop-shadow(0 5px 5px oklch(0.1 0.02 55 / 0.4)); transition: translate 280ms cubic-bezier(0.3, 1.4, 0.55, 1), scale 280ms cubic-bezier(0.3, 1.4, 0.55, 1), filter 200ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-spine span { writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ds-spine:hover, .ds-spine:focus-visible { translate: 0 -6px; filter: drop-shadow(0 1px 0 oklch(0.1 0.02 55 / 0.4)) drop-shadow(0 16px 14px oklch(0.08 0.02 55 / 0.55)); } .ds-spine:active { translate: 0 -10px; scale: 1.03; transition-duration: 120ms; } .ds-spine:focus-visible { outline: 2px solid var(--accent, oklch(0.8 0.145 72)); outline-offset: 4px; } @media (prefers-reduced-motion: reduce) { .ds-spine, .ds-spine:hover, .ds-spine:focus-visible, .ds-spine:active { translate: none; scale: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Wall of Shelves",
+    "overview": "The library looks like a wall of real shelves in the owner's home: walnut boards, things standing on them as the objects they are, a warm light falling from above onto faintly grained paper. Books show bookcloth spines with head and tail bands, board games stand as lidded boxes, video games and films sit in keep-cases behind a clear sleeve, records lean in their sleeves with the disc peeking out. You recognise the kind of thing before you read its title.\n\nIt is still a working tool. Navigation, tabs, chips, inputs, menus and dialogs are plain, flat web controls on a neutral walnut (or linen) ramp. The world lends four things: lettering, palette, density and one signature move, the spine pull-out: hovering or focusing a spine tips it forward off the board, pressing pulls it further, and it travels into the detail sheet as the full cover.\n\nTwo themes, never mixed: Stacks (dark, the default; the couch at night) and Reading Room (light; daytime at the laptop). The theme is set on <html data-theme> before first paint.",
+    "keyCharacteristics": [
+      "Chrome stays flat (surface panels, hairlines, 6px corners); only objects and things that float carry shadows.",
+      "Colour lives in the objects: twelve bookcloth, jacket and sleeve hues across the whole spectrum.",
+      "Bricolage Grotesque sets names and numbers (heavy in headings, condensed on spines); Figtree sets everything you operate and read.",
+      "One accent, amber, for the primary action, the selected state and the focus ring.",
+      "Motion is physical on objects (springs, a lift that overshoots a hair) and brief everywhere else; reduced motion keeps the fades and drops the travel.",
+      "Undo toasts instead of confirm dialogs."
+    ],
+    "rules": [
+      { "name": "The Objects Carry Color Rule", "body": "Saturated colour belongs to covers, spines, wheel slices and confetti. Chrome stays on the neutral ramp plus amber, oxblood and moss. No new UI hues, no Tailwind palette utilities.", "section": "colors" },
+      { "name": "The One Amber Rule", "body": "Within one area amber marks one thing: the primary action, the selected option, or the focused control. One amber-filled button per area.", "section": "colors" },
+      { "name": "The Wood Is Material Rule", "body": "Wood appears only on shelf boards and the wheel rim. It is never a panel, button or background colour.", "section": "colors" },
+      { "name": "The Lettered Names Rule", "body": "Bricolage sets names and numbers worth reading: the wordmark, a place, an item, a month, a date, a stat figure. It never sets a button, a field label or a paragraph; Figtree never sets a heading.", "section": "typography" },
+      { "name": "The Tabular Rule", "body": "Dates, times, counts, durations, page counts and stats use tabular numerals.", "section": "typography" },
+      { "name": "The No Eyebrow Rule", "body": "No small label stacked above a heading. Counts and context sit on the heading's baseline or below it.", "section": "typography" },
+      { "name": "The Physical-Only Shadow Rule", "body": "Only real objects and things that float have shadows. No glass, no backdrop blur, no glow halos on chrome. Light on objects (a sleeve's glare, a lid's sheen) is part of drawing the object, not a UI effect.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do put every chrome colour on the semantic tokens so both themes follow.",
+      "Do show an item as its object (cover or spine) wherever it appears, sized from its real aspect ratio.",
+      "Do keep Edit and Remove always visible, and undo instead of confirm.",
+      "Do give every moving thing a reduced-motion form: keep the opacity fade (about 150ms), drop the travel, the stagger and the confetti.",
+      "Do write object lift with `translate` and `scale` so it never fights the transform the shared-layout move writes.",
+      "Do make arrivals confident (ease-out-expo, 200–320ms) and exits faster than arrivals; dialogs close instantly.",
+      "Do give every spine an accessible name with the full title, kind and place."
+    ],
+    "donts": [
+      "Don't make a poster-thumbnail grid the default view; the shelf is home.",
+      "Don't put shadows on chrome, or glass, backdrop blur or glow anywhere in the interface.",
+      "Don't use Tailwind palette utilities (indigo, gray, slate) or hues outside the token ramp and the object palette.",
+      "Don't set buttons, labels or paragraphs in Bricolage, or headings in Figtree.",
+      "Don't stack a small label above a heading.",
+      "Don't use tavern, pub or fantasy vocabulary in copy.",
+      "Don't use `window.confirm`, hover-only actions, or emoji as icons."
+    ]
+  }
+}

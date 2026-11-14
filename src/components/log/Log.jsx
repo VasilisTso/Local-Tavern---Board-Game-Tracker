@@ -3,7 +3,10 @@ import { NotebookPen } from 'lucide-react';
 import ActivityList from './ActivityList';
 import LogStats from './LogStats';
 import { KindChips } from '../Chips';
+import ItemObject from '../library/ItemObject';
+import { frontWidth } from '../../lib/cover';
 import { filterActivityByKind } from '../../lib/log';
+import { nowItems } from '../../lib/shelf';
 import { btnPrimary, btnSecondary } from '../ui';
 
 /** Log tab: the activity log beside the stats it feeds, both filtered by kind. */
@@ -31,20 +34,45 @@ export default function Log({ items, activityApi, onLog, onEdit, toast }) {
   );
 
   if (activity.length === 0) {
+    const now = nowItems(items).slice(0, 6);
     return (
-      <div className="rounded-md border border-dashed border-line-strong px-6 py-12 text-center">
-        <h2 className="font-display text-2xl font-bold">Nothing logged yet</h2>
-        <p className="mx-auto mt-1 max-w-sm text-muted">
-          {empty
-            ? 'Put something in the library first, then log what you play, read, watch and hear.'
-            : 'Log when you start, finish or sit down with something. What you finish, how long it took and what gathers dust show up here.'}
-        </p>
+      <div className="max-w-2xl space-y-5">
+        <div>
+          <h2 className="font-display text-3xl font-extrabold sm:text-4xl">Nothing logged yet</h2>
+          <p className="mt-1 max-w-prose text-muted">
+            {empty
+              ? 'Put something in the library first, then log what you play, read, watch and hear.'
+              : 'Log when you start, finish or sit down with something. What you finish, how long it took and what gathers dust show up here.'}
+          </p>
+        </div>
+        {now.length > 0 && (
+          <section aria-labelledby="log-now-heading">
+            <h3 id="log-now-heading" className="font-display text-lg font-bold">
+              Start with what you're in the middle of
+            </h3>
+            <ul className="mt-3 flex flex-wrap items-end gap-4">
+              {now.map((item) => (
+                <li key={item.id} className="w-24">
+                  <button type="button" onClick={() => onLog({ itemId: item.id })} className="lib-obj group flex w-full flex-col text-left">
+                    <span className="flex h-24 items-end">
+                      <ItemObject item={item} origin="log" width={frontWidth(item, '6rem')} />
+                    </span>
+                    <span className="mt-2 line-clamp-2 text-sm leading-tight font-semibold group-hover:text-accent">
+                      <span className="sr-only">Log </span>
+                      {item.title}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
         {empty ? (
-          <a href="#library" className={`${btnPrimary} mt-5 no-underline`}>
+          <a href="#library" className={`${btnPrimary} no-underline`}>
             Go to the library
           </a>
         ) : (
-          logButton('mt-5')
+          logButton()
         )}
       </div>
     );
@@ -65,7 +93,7 @@ export default function Log({ items, activityApi, onLog, onEdit, toast }) {
       <KindChips value={kinds} onChange={setKinds} legend="Show entries for these kinds" />
 
       <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)]">
-        <aside aria-label="Stats" className="lg:order-last">
+        <aside aria-label="Stats" className="order-last">
           <LogStats activity={activity} items={items} kinds={kinds} />
         </aside>
         {shown.length === 0 ? (

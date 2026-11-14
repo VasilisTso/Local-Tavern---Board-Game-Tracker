@@ -5,8 +5,8 @@ import { HandHelping, NotebookPen, Pencil, Trash2, X } from 'lucide-react';
 import Cover from '../covers/Cover';
 import { RatingInput } from './Rating';
 import { objectLayoutId } from './objects';
-import { frontAspect } from '../../lib/cover';
-import { STATUSES, isDigitalFormat, kindMeta } from '../../lib/kinds';
+import { frontAspect, frontWidth } from '../../lib/cover';
+import { STATUSES, isDigitalFormat, kindMeta, lengthUnit } from '../../lib/kinds';
 import { kindLine } from '../../lib/shelf';
 import { formatLength, formatPlayers, formatShortDate } from '../../lib/format';
 import { DURATION, EASE_OUT_EXPO, SPRING, fade } from '../../lib/motion';
@@ -169,7 +169,7 @@ export default function ItemSheet({ item, origin, fromSpine, placeName, stats, o
 
           <dl className="mt-6 border-t border-line">
             <Fact label="Place">{placeName ?? 'No place yet'}</Fact>
-            <Fact label={item.kind === 'book' && item.format !== 'audio' ? 'Pages' : 'Length'}>{formatLength(item)}</Fact>
+            <Fact label={lengthUnit(item.kind, item.format) === 'pages' ? 'Pages' : 'Length'}>{formatLength(item)}</Fact>
             <Fact label="Players">{players}</Fact>
             <Fact label="Platform">{item.platform}</Fact>
             <Fact label="Used">
@@ -225,8 +225,8 @@ export default function ItemSheet({ item, origin, fromSpine, placeName, stats, o
             initial={reduceMotion ? { opacity: 0 } : false}
             animate={{ opacity: 1 }}
             exit={reduceMotion ? { opacity: 0 } : undefined}
-            className="relative"
-            style={{ width: `min(100%, calc(var(--slot-h) * ${aspect}))`, aspectRatio: aspect, '--slot-h': wide ? '15rem' : '11rem' }}
+            className="relative [--slot-h:11rem] md:[--slot-h:15rem]"
+            style={{ width: frontWidth(item, '100%', 'var(--slot-h)'), aspectRatio: aspect }}
           >
             <Cover item={item} className="size-full" style={{ filter: 'var(--obj-pulled)' }} />
             {fromSpine && !reduceMotion && (

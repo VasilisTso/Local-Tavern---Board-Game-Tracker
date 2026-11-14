@@ -8,9 +8,9 @@ export function ChipGroup({ legend, name, options, value, onChange }) {
   return (
     <fieldset className="min-w-0">
       <legend className="mb-1.5 text-xs font-semibold text-muted">{legend}</legend>
-      <div className="-mx-4 -my-1 flex gap-1.5 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:m-0 sm:flex-wrap sm:overflow-visible sm:p-0">
+      <div className="flex flex-wrap gap-1.5">
         {options.map((option) => (
-          <label key={option.id} title={option.title} className="relative shrink-0">
+          <label key={option.id} title={option.title} className="relative">
             <input
               type="radio"
               name={name}
@@ -28,22 +28,17 @@ export function ChipGroup({ legend, name, options, value, onChange }) {
 }
 
 /** Kind chips: several can be on; none on means every kind. */
-export function KindChips({ value, onChange, legend = 'Show kinds' }) {
+export function KindChips({ value, onChange, legend = 'Show kinds', visibleLegend = false }) {
   const toggle = (id) => onChange(value.includes(id) ? value.filter((k) => k !== id) : [...value, id]);
   return (
     <fieldset className="min-w-0">
-      <legend className="sr-only">{legend}</legend>
-      <div className="-mx-4 -my-1 flex gap-1.5 overflow-x-auto px-4 py-1 [scrollbar-width:none] sm:m-0 sm:flex-wrap sm:overflow-visible sm:p-0">
+      <legend className={visibleLegend ? 'mb-1.5 text-xs font-semibold text-muted' : 'sr-only'}>{legend}</legend>
+      <div className="flex flex-wrap gap-1.5">
         {KINDS.map((kind) => {
           const Icon = kind.icon;
           return (
-            <label key={kind.id} className="relative shrink-0">
-              <input
-                type="checkbox"
-                checked={value.includes(kind.id)}
-                onChange={() => toggle(kind.id)}
-                className="peer sr-only"
-              />
+            <label key={kind.id} className="relative">
+              <input type="checkbox" checked={value.includes(kind.id)} onChange={() => toggle(kind.id)} className="peer sr-only" />
               <span className={chip}>
                 <Icon aria-hidden="true" className="size-4" />
                 {kind.plural}

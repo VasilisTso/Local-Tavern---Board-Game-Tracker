@@ -14,6 +14,7 @@ import {
 import { formatNightDate, formatPlaytime } from './format';
 import { lengthUnit } from './kinds';
 
+// Kept from the Local Tavern days so every backup ever exported still imports.
 export const BACKUP_APP = 'local-tavern';
 
 /**
@@ -27,7 +28,7 @@ export function buildBackup({ items, locations, activity, night, covers = null }
 }
 
 export function backupFileName(now = new Date()) {
-  return `local-tavern-backup-${localDateTimeString(now).slice(0, 10)}.json`;
+  return `shelfspace-backup-${localDateTimeString(now).slice(0, 10)}.json`;
 }
 
 /** Saves `data` as a JSON file through a temporary download link. */
@@ -43,7 +44,7 @@ export function downloadJson(data, fileName) {
   setTimeout(() => URL.revokeObjectURL(url), 0);
 }
 
-const NOT_A_BACKUP = 'That file is not a Local Tavern backup.';
+const NOT_A_BACKUP = 'That file is not a Shelfspace backup.';
 
 /** Only string ids mapped to string values; the cover store checks each data URL again on import. */
 function cleanCovers(raw) {
@@ -74,7 +75,7 @@ export function parseBackup(text) {
   }
   if (typeof raw.version !== 'number') return { ok: false, error: NOT_A_BACKUP };
   if (raw.version > STORAGE_VERSION) {
-    return { ok: false, error: 'That backup comes from a newer version of Local Tavern.' };
+    return { ok: false, error: 'That backup comes from a newer version of Shelfspace.' };
   }
 
   const legacy = raw.version < 3;

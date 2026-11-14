@@ -110,13 +110,22 @@ export default function Pick({ items, activity, locations, itemsApi, nightApi, o
     const previous = locked;
     lockItem(null);
     if (previous) {
-      toast.show({ message: `Unlocked ${previous.title}.`, actionLabel: 'Undo', onAction: () => lockItem(previous.id) });
+      toast.show({
+        message: `Unlocked ${previous.title}.`,
+        actionLabel: 'Undo',
+        onAction: () => lockItem(previous.id),
+      });
     }
   };
 
   const logSession = (item) => {
     const names = night.guests.filter((g) => g.status === 'going').map((g) => g.name);
-    onLog({ itemId: item.id, type: 'session', date: night.date, players: names });
+    onLog({
+      itemId: item.id,
+      type: 'session',
+      date: night.date,
+      players: names,
+    });
   };
 
   const start = (item) => {
@@ -183,9 +192,16 @@ export default function Pick({ items, activity, locations, itemsApi, nightApi, o
   } else if (pool.length === 0) {
     const actions = [];
     if (players != null && hasMaybes && source === 'fits') {
-      actions.push({ label: `Try ${countWithMaybes} with maybes`, onClick: () => setSource('maybes') });
+      actions.push({
+        label: `Try ${countWithMaybes} with maybes`,
+        onClick: () => setSource('maybes'),
+      });
     }
-    if (players != null) actions.push({ label: 'Any player count', onClick: () => setSource('any') });
+    if (players != null)
+      actions.push({
+        label: 'Any player count',
+        onClick: () => setSource('any'),
+      });
     if (pickFilterCount(effective) > 0) {
       actions.push({
         label: 'Reset filters',
@@ -195,9 +211,7 @@ export default function Pick({ items, activity, locations, itemsApi, nightApi, o
     empty = {
       title: players != null ? `Nothing seats ${players}` : 'Nothing fits those filters',
       body:
-        players != null
-          ? 'No board or video game in this pool takes that many players.'
-          : 'Loosen a filter, or pick a different status.',
+        players != null ? 'No board or video game in this pool takes that many players.' : 'Loosen a filter, or pick a different status.',
       actions,
     };
   }
@@ -219,9 +233,10 @@ export default function Pick({ items, activity, locations, itemsApi, nightApi, o
       night={nightMode ? { sources: nightSources, source, onSource: setSource } : null}
     />
   );
+  const showFilters = !locked && items.length > 0;
 
   return (
-    <div className="space-y-5 sm:space-y-6">
+    <div className={`space-y-5 sm:space-y-6 ${nightMode ? '' : 'mx-auto max-w-xl'}`}>
       <header className="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
         <div className="min-w-0">
           {nightMode ? (
@@ -241,17 +256,15 @@ export default function Pick({ items, activity, locations, itemsApi, nightApi, o
               </p>
               {night.houseRule && (
                 <p className="mt-2 max-w-prose text-sm text-ink">
-                  <span className="font-semibold text-danger">House rule:</span> {night.houseRule}
+                  <span className="font-semibold text-muted">House rule:</span> {night.houseRule}
                 </p>
               )}
             </>
           ) : (
             <>
               <h2 className="font-display text-3xl font-extrabold sm:text-4xl">Can't decide?</h2>
-              <p className="tabular mt-1 text-muted">
-                {items.length === 0
-                  ? 'Spin the wheel once the library has something in it.'
-                  : `${pool.length} ${pool.length === 1 ? 'thing' : 'things'} in the pool. Spin and let the wheel choose.`}
+              <p className="mt-1 text-muted">
+                {items.length === 0 ? 'Spin the wheel once the library has something in it.' : 'Spin and let the wheel choose.'}
               </p>
             </>
           )}
@@ -259,13 +272,20 @@ export default function Pick({ items, activity, locations, itemsApi, nightApi, o
         <NightToggle on={nightMode} onToggle={toggleNight} />
       </header>
 
-      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-6">
-        <div className="lg:order-last">{stage}</div>
-        <div className="space-y-5 lg:space-y-6">
-          {nightMode && <NightPanel nightApi={nightApi} toast={toast} />}
-          {!locked && items.length > 0 && filters}
+      {nightMode ? (
+        <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-6">
+          <div className="lg:order-last">{stage}</div>
+          <div className="space-y-5 lg:space-y-6">
+            <NightPanel nightApi={nightApi} toast={toast} />
+            {showFilters && filters}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="space-y-4">
+          {showFilters && filters}
+          {stage}
+        </div>
+      )}
     </div>
   );
 }

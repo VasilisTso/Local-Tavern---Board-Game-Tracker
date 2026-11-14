@@ -29,10 +29,10 @@ A private, zero-setup personal library for every kind of media at once, kept ent
 - Three areas: **Library** (shelf, grid and list views; filters; a "Now" strip of active items; item detail; places manager), **Pick** (the wheel over a filtered pool, plus game night mode), **Log** (activity by month and stats per kind).
 - Covers are generated per kind and format from the title and an optional chosen color; an uploaded image or image URL sits inside the object's frame. No remote catalogue APIs.
 - Existing users have v2 data (`tavern:v2:*`) and older v1 keys; everything must migrate without loss, and v2 backups must still import.
-- Undecided: the product name. "Local Tavern" stays until the owner decides (to be asked before the final polish phase).
+- Product name: **Shelfspace** (renamed from Local Tavern in Phase 7). Storage keys and the backup `app` id keep their old `tavern`/`local-tavern` values so existing data and backups still load.
 
 ## Brand Commitments
-- Product name for now: **Local Tavern** (wordmark, `<title>`, README). Possible rename is open.
+- Product name: **Shelfspace** (wordmark, `<title>`, favicon, README).
 - Voice: warm, plain library. Clear labels with a light personal touch ("Now", "Gathering dust"); no tavern, fantasy or pub vocabulary. The wheel is simply the picker, not the "Fate Wheel".
 - The theme names "Cozy Tavern" and "Sunlit Porch" are retired; new library-fitting names (or plain Dark/Light) are chosen with the new visual direction.
 

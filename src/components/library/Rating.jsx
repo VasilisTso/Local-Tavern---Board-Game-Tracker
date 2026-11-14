@@ -40,7 +40,7 @@ export function RatingInput({ name, value, onChange, legend = 'Rating', legendCl
               <span className="sr-only">{n === 1 ? '1 star' : `${n} stars`}</span>
               <span
                 aria-hidden="true"
-                className="grid size-9 place-items-center rounded-md text-accent transition-transform duration-150 peer-focus-visible:outline-2 peer-focus-visible:outline-accent hover:scale-110"
+                className="grid size-9 place-items-center rounded-md text-accent transition-transform duration-150 peer-focus-visible:outline-2 peer-focus-visible:outline-accent motion-safe:hover:scale-110"
               >
                 <Star className={`size-5 ${n <= value ? 'fill-current' : 'opacity-40'}`} />
               </span>

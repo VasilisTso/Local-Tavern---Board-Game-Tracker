@@ -1,7 +1,7 @@
 // Shared class recipes so controls look and behave the same everywhere.
 
 export const btnBase =
-  'inline-flex items-center justify-center gap-2 rounded-md text-sm font-semibold whitespace-nowrap transition-[background-color,color,border-color,transform] duration-150 active:translate-y-px disabled:pointer-events-none disabled:opacity-50';
+  'inline-flex items-center justify-center gap-2 rounded-md text-sm font-semibold whitespace-nowrap transition-[background-color,color,border-color,transform] duration-150 motion-safe:active:translate-y-px disabled:pointer-events-none disabled:opacity-50';
 
 export const btnPrimary = `${btnBase} h-10 px-4 bg-accent-fill text-on-accent hover:bg-[oklch(0.84_0.14_74)]`;
 
