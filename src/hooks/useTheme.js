@@ -18,7 +18,7 @@ function applyTheme(theme) {
 }
 
 /**
- * "dark" (Cozy Tavern) or "light" (Sunlit Porch). The inline script in index.html applies
+ * "dark" (Stacks) or "light" (Reading Room). The inline script in index.html applies
  * the same choice before first paint; this hook keeps it in sync afterwards.
  * Follows the OS preference until the user picks a theme explicitly.
  */

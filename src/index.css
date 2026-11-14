@@ -1,9 +1,9 @@
-@import "@fontsource-variable/alegreya";
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
 @import "@fontsource-variable/figtree";
 @import "tailwindcss";
 
 /*
- * Theme: data-theme on <html> ("dark" = Cozy Tavern, "light" = Sunlit Porch).
+ * Theme: data-theme on <html> ("dark" = Stacks, "light" = Reading Room).
  * Set before first paint by the inline script in index.html.
  * Dark values are the default so the page still reads if JS never runs.
  */
@@ -25,6 +25,16 @@
   --danger: oklch(0.68 0.15 25);
   --ok: oklch(0.76 0.11 135);
   --grain-opacity: 0.07;
+  /* Physical objects only (covers, spines): resting on a board, and pulled forward. */
+  --obj-contact: drop-shadow(0 1px 0 oklch(0.1 0.02 55 / 0.5)) drop-shadow(0 5px 5px oklch(0.1 0.02 55 / 0.4));
+  --obj-pulled: drop-shadow(0 1px 0 oklch(0.1 0.02 55 / 0.4)) drop-shadow(0 16px 14px oklch(0.08 0.02 55 / 0.55));
+  /* Shelf boards and the wheel rim only. */
+  --wood-top: oklch(0.47 0.075 60);
+  --wood-face: oklch(0.37 0.062 52);
+  --wood-edge: oklch(0.25 0.04 48);
+  --board-shadow: oklch(0.1 0.02 55 / 0.55);
+  --falloff: oklch(0.27 0.035 68);
+  --sheet-shadow: 0 24px 64px -24px oklch(0.08 0.02 55 / 0.7);
 }
 
 [data-theme="light"] {
@@ -42,6 +52,14 @@
   --danger: oklch(0.49 0.16 25);
   --ok: oklch(0.5 0.11 138);
   --grain-opacity: 0.05;
+  --obj-contact: drop-shadow(0 1px 0 oklch(0.3 0.03 55 / 0.3)) drop-shadow(0 5px 5px oklch(0.3 0.03 55 / 0.24));
+  --obj-pulled: drop-shadow(0 1px 0 oklch(0.3 0.03 55 / 0.24)) drop-shadow(0 16px 14px oklch(0.3 0.03 55 / 0.33));
+  --wood-top: oklch(0.8 0.07 72);
+  --wood-face: oklch(0.69 0.078 63);
+  --wood-edge: oklch(0.54 0.07 55);
+  --board-shadow: oklch(0.3 0.03 55 / 0.3);
+  --falloff: oklch(0.985 0.03 88);
+  --sheet-shadow: 0 24px 64px -24px oklch(0.3 0.03 55 / 0.45);
 }
 
 @theme inline {
@@ -60,7 +78,7 @@
 }
 
 @theme {
-  --font-display: "Alegreya Variable", "Iowan Old Style", Georgia, serif;
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
 
   /* Fixed rem scale, ratio ~1.2 */
@@ -77,6 +95,8 @@
   --radius-md: 6px;
 
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Spine lift: settles with a hair of overshoot, like an object tipped forward and caught. */
+  --ease-pull: cubic-bezier(0.3, 1.4, 0.55, 1);
 }
 
 @layer base {
@@ -94,7 +114,8 @@
 
   body {
     min-height: 100dvh;
-    background-color: var(--bg);
+    /* Warm light from above: felt, not seen. */
+    background: radial-gradient(120% 60rem at 50% -10rem, var(--falloff), transparent 70%) no-repeat, var(--bg);
     line-height: 1.5;
   }
 
@@ -189,13 +210,59 @@
   }
 }
 
+/*
+ * Motion (DESIGN.md › Motion). Opening a dialog or switching a tab gets a short arrival; closing is
+ * instant. Under reduced motion the same changes stay legible as opacity fades with no travel;
+ * transforms elsewhere are written with `motion-safe:` or gated in framer via `useReducedMotion`.
+ */
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    translate: 0 var(--panel-rise, 6px);
+  }
+}
+
+@layer base {
+  [role="tabpanel"]:not([hidden]) {
+    animation: panel-in 240ms var(--ease-out-expo);
+  }
+
+  /* Entry only: the dialog's content unmounts on close, so an exit fade would show an empty box. */
+  dialog[open] {
+    transition:
+      opacity 200ms var(--ease-out-expo),
+      translate 320ms var(--ease-out-expo),
+      scale 320ms var(--ease-out-expo);
+  }
+  dialog[open]::backdrop {
+    transition: background-color 200ms var(--ease-out-expo);
+  }
+  @starting-style {
+    dialog[open] {
+      opacity: 0;
+      translate: 0 12px;
+      scale: 0.98;
+    }
+    dialog[open]::backdrop {
+      background-color: transparent;
+    }
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+  :root {
+    --panel-rise: 0px;
+  }
+  dialog[open] {
+    transition: opacity 150ms linear;
+  }
+  @starting-style {
+    dialog[open] {
+      translate: none;
+      scale: none;
+    }
+  }
+  html {
+    scroll-behavior: auto;
   }
 }

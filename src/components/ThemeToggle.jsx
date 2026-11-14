@@ -1,6 +1,6 @@
 import { Moon, Sun } from 'lucide-react';
 
-const NAMES = { dark: 'Cozy Tavern', light: 'Sunlit Porch' };
+const NAMES = { dark: 'Stacks', light: 'Reading Room' };
 
 /** Shows the current theme; switching names the destination for screen readers. */
 export default function ThemeToggle({ theme, onToggle }) {

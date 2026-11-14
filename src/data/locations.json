@@ -1,0 +1,42 @@
+[
+  {
+    "id": "loc-living-room",
+    "name": "Living room shelf",
+    "kind": "physical"
+  },
+  {
+    "id": "loc-bedroom",
+    "name": "Bedroom",
+    "kind": "physical"
+  },
+  {
+    "id": "loc-steam",
+    "name": "Steam",
+    "kind": "digital"
+  },
+  {
+    "id": "loc-switch",
+    "name": "Switch",
+    "kind": "digital"
+  },
+  {
+    "id": "loc-kindle",
+    "name": "Kindle",
+    "kind": "digital"
+  },
+  {
+    "id": "loc-audible",
+    "name": "Audible",
+    "kind": "digital"
+  },
+  {
+    "id": "loc-apple-tv",
+    "name": "Apple TV",
+    "kind": "digital"
+  },
+  {
+    "id": "loc-bandcamp",
+    "name": "Bandcamp",
+    "kind": "digital"
+  }
+]

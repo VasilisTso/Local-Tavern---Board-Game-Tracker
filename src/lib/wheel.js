@@ -1,7 +1,8 @@
-// Fate Wheel math. Pure, so the component only renders and animates.
+// Picker wheel math. Pure, so the component only renders and animates.
 // Angles are degrees, clockwise from 12 o'clock (where the pointer sits).
 
 import { fitsPlayers } from './night';
+import { isKind, lengthUnit } from './kinds';
 
 export const MAX_SLICES = 16;
 
@@ -17,47 +18,148 @@ export function seededRandom(seed) {
   };
 }
 
-/** Games the wheel may land on, before vetoes. */
-export function wheelPool(games, source, { count, countWithMaybes }) {
-  if (source === 'shelf') return games;
-  const n = source === 'maybes' ? countWithMaybes : count;
-  return games.filter((g) => fitsPlayers(g, n));
+// ---------- pool ----------
+
+/** Which statuses the wheel draws from. Backlog by default: things owned but not started. */
+export const PICK_STATUSES = [
+  { id: 'backlog', label: 'Not started', statuses: ['backlog'] },
+  { id: 'active', label: 'In progress', statuses: ['active'] },
+  { id: 'open', label: 'Either', title: 'Not started or in progress', statuses: ['backlog', 'active'] },
+  { id: 'owned', label: 'Anything owned', title: 'Everything except the wishlist', statuses: ['backlog', 'active', 'done', 'dropped'] },
+];
+
+/** Time budgets in minutes. Unknown lengths always fit. */
+export const TIME_BUDGETS = [
+  { id: 'any', label: 'Any length' },
+  { id: '30', label: '30 min', max: 30 },
+  { id: '60', label: '1 hour', max: 60 },
+  { id: '120', label: '2 hours', max: 120 },
+  { id: '240', label: 'An evening', title: 'Up to 4 hours', max: 240 },
+];
+
+/** Player-count source in game night mode. */
+export const NIGHT_SOURCES = ['fits', 'maybes', 'any'];
+
+/** Rough reading pace for books measured in pages. */
+export const MINUTES_PER_PAGE = 1.5;
+
+export const DEFAULT_PICK = {
+  kinds: [],
+  location: 'any',
+  status: 'backlog',
+  budget: 'any',
+  tags: [],
+  favorNeglected: true,
+  nightMode: false,
+  nightSource: 'fits',
+};
+
+const oneOf = (list, value, fallback) => (list.includes(value) ? value : fallback);
+const strings = (value) => (Array.isArray(value) ? [...new Set(value.filter((v) => typeof v === 'string' && v))] : []);
+
+/** Cleans stored Pick settings (`tavern:v3:pick`). Unknown kinds are dropped; a removed place resets to "any" at use time. */
+export function normalizePick(stored) {
+  if (!stored || typeof stored !== 'object') return null;
+  return {
+    kinds: strings(stored.kinds).filter(isKind),
+    location: typeof stored.location === 'string' && stored.location ? stored.location : 'any',
+    status: oneOf(PICK_STATUSES.map((s) => s.id), stored.status, DEFAULT_PICK.status),
+    budget: oneOf(TIME_BUDGETS.map((b) => b.id), stored.budget, DEFAULT_PICK.budget),
+    tags: strings(stored.tags),
+    favorNeglected: stored.favorNeglected !== false,
+    nightMode: stored.nightMode === true,
+    nightSource: oneOf(NIGHT_SOURCES, stored.nightSource, DEFAULT_PICK.nightSource),
+  };
+}
+
+export const defaultPick = () => ({ ...DEFAULT_PICK });
+
+/** Same settings with the pool filters back to their defaults (night mode and weighting kept). */
+export const clearPickFilters = (pick) => ({
+  ...pick,
+  kinds: DEFAULT_PICK.kinds,
+  location: DEFAULT_PICK.location,
+  status: DEFAULT_PICK.status,
+  budget: DEFAULT_PICK.budget,
+  tags: DEFAULT_PICK.tags,
+});
+
+/** Estimated minutes for an item, converting pages at a reading pace. Null when unknown. */
+export function itemMinutes(item) {
+  if (item.length == null) return null;
+  return lengthUnit(item.kind, item.format) === 'pages' ? item.length * MINUTES_PER_PAGE : item.length;
+}
+
+/** Filters (other than night mode's player count) that narrow the pool, for the "N filters" hint. */
+export function pickFilterCount(pick) {
+  return (
+    (pick.kinds.length > 0) +
+    (pick.location !== 'any') +
+    (pick.status !== DEFAULT_PICK.status) +
+    (pick.budget !== 'any') +
+    (pick.tags.length > 0)
+  );
+}
+
+/**
+ * Items the wheel may land on, before skips.
+ * @param {object[]} items
+ * @param {typeof DEFAULT_PICK} pick
+ * @param {{ players?: number | null }} [opts] game night: only items that seat this many
+ */
+export function wheelPool(items, pick, { players = null } = {}) {
+  const statuses = (PICK_STATUSES.find((s) => s.id === pick.status) ?? PICK_STATUSES[0]).statuses;
+  const budget = TIME_BUDGETS.find((b) => b.id === pick.budget)?.max ?? null;
+  return items.filter((item) => {
+    if (!statuses.includes(item.status)) return false;
+    if (pick.kinds.length && !pick.kinds.includes(item.kind)) return false;
+    if (pick.location !== 'any' && item.locationId !== pick.location) return false;
+    if (pick.tags.length && !pick.tags.some((t) => item.tags.includes(t))) return false;
+    if (budget != null) {
+      const minutes = itemMinutes(item);
+      if (minutes != null && minutes > budget) return false;
+    }
+    if (players != null && !fitsPlayers(item, players)) return false;
+    return true;
+  });
 }
 
 const DAY = 24 * 60 * 60 * 1000;
+const daysSince = (date, now) => (date ? Math.max(0, (now - new Date(date).getTime()) / DAY) : 0);
 
 /**
- * Weight for "favor dusty games": 1 for something played today, rising with the days since
- * the last play, capped at 6 months. Never played gets the top weight.
+ * Weight for "favor what's been neglected", 1 to 7. Something used today weighs 1, rising with
+ * the days since the last use (capped at six months). Never used weighs 4 to 7, more the longer
+ * it has sat in the library.
  */
-export function dustWeight(lastPlayed, now = Date.now()) {
-  if (!lastPlayed) return 7;
-  const days = Math.max(0, (now - new Date(lastPlayed).getTime()) / DAY);
-  return 1 + Math.min(days, 180) / 30;
+export function neglectWeight(item, lastUsed, now = Date.now()) {
+  if (lastUsed) return 1 + Math.min(daysSince(lastUsed, now), 180) / 30;
+  const age = item?.addedAt ? daysSince(item.addedAt, now) : 180;
+  return 4 + Math.min(age, 180) / 60;
 }
 
-/** Weighted sample of `size` games without replacement (Efraimidis–Spirakis keys). */
-export function sampleGames(games, size, weightOf, random) {
-  if (games.length <= size) return games;
-  return games
-    .map((g) => ({ g, key: Math.pow(random(), 1 / weightOf(g)) }))
+/** Weighted sample of `size` items without replacement (Efraimidis–Spirakis keys). */
+export function sampleItems(items, size, weightOf, random) {
+  if (items.length <= size) return items;
+  return items
+    .map((item) => ({ item, key: Math.pow(random(), 1 / weightOf(item)) }))
     .sort((a, b) => b.key - a.key)
     .slice(0, size)
-    .map(({ g }) => g);
+    .map(({ item }) => item);
 }
 
 /**
- * Lays games around the wheel. Slice size is proportional to weight, so a uniformly random
- * stop angle picks each game with probability weight / total.
- * @returns {{ game: object, start: number, end: number, mid: number, sweep: number }[]}
+ * Lays items around the wheel. Slice size is proportional to weight, so a uniformly random
+ * stop angle picks each item with probability weight / total.
+ * @returns {{ item: object, start: number, end: number, mid: number, sweep: number }[]}
  */
-export function layoutSlices(games, weightOf = () => 1) {
-  const weights = games.map(weightOf);
+export function layoutSlices(items, weightOf = () => 1) {
+  const weights = items.map(weightOf);
   const total = weights.reduce((sum, w) => sum + w, 0) || 1;
   let start = 0;
-  return games.map((game, i) => {
+  return items.map((item, i) => {
     const sweep = (weights[i] / total) * 360;
-    const slice = { game, start, end: start + sweep, mid: start + sweep / 2, sweep };
+    const slice = { item, start, end: start + sweep, mid: start + sweep / 2, sweep };
     start += sweep;
     return slice;
   });

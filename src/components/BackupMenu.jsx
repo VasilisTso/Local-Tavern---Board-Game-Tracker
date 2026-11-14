@@ -1,11 +1,11 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { ChevronDown, ClipboardCopy, DatabaseBackup, Download, Upload } from 'lucide-react';
+import { ChevronDown, ClipboardCopy, DatabaseBackup, Download, Images, Upload } from 'lucide-react';
 import Modal, { ModalActions, ModalHeader } from './Modal';
 import { backupFileName, buildBackup, copyText, downloadJson, mergeBackup, nightSummary, parseBackup } from '../lib/backup';
-import { formatShortDate } from '../lib/format';
+import { exportCovers, importCovers } from '../lib/coverStore';
+import { countLabel, formatShortDate } from '../lib/format';
 import { btnPrimary, btnSecondary, hint } from './ui';
 
-const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
 
 function focusItem(menu, index) {
   const nodes = menu?.querySelectorAll('[role="menuitem"]');
@@ -111,19 +111,20 @@ function ImportForm({ backup, current, onImport, onCancel, titleId }) {
   const [mode, setMode] = useState('merge');
   const uid = useId();
   const merged = mergeBackup(current, backup);
+  const coverCount = Object.keys(backup.covers).length;
   const options = [
     {
       id: 'merge',
       label: 'Merge into what is here',
       detail:
-        merged.added.games || merged.added.plays
-          ? `Adds ${count(merged.added.games, 'new game', 'new games')} and ${count(merged.added.plays, 'new play', 'new plays')}. Tonight's plan stays.`
+        merged.added.items || merged.added.activity || merged.added.locations
+          ? `Adds ${countLabel(merged.added.items, 'new item', 'new items')}, ${countLabel(merged.added.activity, 'log entry', 'log entries')} and ${countLabel(merged.added.locations, 'place', 'places')}. The game night plan stays.`
           : 'Nothing new to add: everything in the file is already here.',
     },
     {
       id: 'replace',
       label: 'Replace everything',
-      detail: `Your ${count(current.games.length, 'game', 'games')}, ${count(current.plays.length, 'play', 'plays')} and tonight's plan are swapped for the file's. You can undo right after.`,
+      detail: `Your ${countLabel(current.items.length, 'item', 'items')}, ${countLabel(current.activity.length, 'log entry', 'log entries')} and game night plan are swapped for the file's. You can undo right after.`,
     },
   ];
 
@@ -139,8 +140,9 @@ function ImportForm({ backup, current, onImport, onCancel, titleId }) {
       <div className="space-y-4 overflow-y-auto px-5 py-4">
         <p className="text-ink">
           The file holds{' '}
-          <strong className="tabular">{count(backup.games.length, 'game', 'games')}</strong> and{' '}
-          <strong className="tabular">{count(backup.plays.length, 'play', 'plays')}</strong>
+          <strong className="tabular">{countLabel(backup.items.length, 'item', 'items')}</strong> and{' '}
+          <strong className="tabular">{countLabel(backup.activity.length, 'log entry', 'log entries')}</strong>
+          {coverCount > 0 && <> with {countLabel(coverCount, 'cover image', 'cover images')}</>}
           {backup.exportedAt && (
             <>
               , saved <time dateTime={backup.exportedAt}>{formatShortDate(backup.exportedAt)}</time>
@@ -149,7 +151,7 @@ function ImportForm({ backup, current, onImport, onCancel, titleId }) {
           .
         </p>
         {backup.skipped > 0 && (
-          <p className={hint}>{count(backup.skipped, 'damaged entry was', 'damaged entries were')} skipped.</p>
+          <p className={hint}>{countLabel(backup.skipped, 'damaged entry was', 'damaged entries were')} skipped.</p>
         )}
         <fieldset>
           <legend className="sr-only">How to import</legend>
@@ -192,20 +194,39 @@ function ImportForm({ backup, current, onImport, onCancel, titleId }) {
   );
 }
 
-/** Header menu: export a JSON backup, import one (merge or replace, with undo), copy tonight's summary. */
-export default function BackupMenu({ gamesApi, playsApi, nightApi, toast }) {
-  const { games, replaceGames } = gamesApi;
-  const { plays, replacePlays } = playsApi;
+/** Header menu: export a JSON backup (optionally with cover images), import one (merge or replace, with undo), copy the night summary. */
+export default function BackupMenu({ itemsApi, locationsApi, activityApi, nightApi, toast }) {
+  const { items, replaceItems } = itemsApi;
+  const { locations, replaceLocations } = locationsApi;
+  const { activity, replaceActivity } = activityApi;
   const { night, replaceNight } = nightApi;
   const fileRef = useRef(null);
   const returnFocusRef = useRef(null);
   const titleId = useId();
   const [backup, setBackup] = useState(null);
+  const hasCovers = items.some((item) => item.coverId);
 
-  const exportBackup = () => {
-    downloadJson(buildBackup({ games, plays, night }), backupFileName());
-    toast.show({ message: `Saved a backup of ${count(games.length, 'game', 'games')} and ${count(plays.length, 'play', 'plays')}.` });
+  const exportBackup = async (withCovers) => {
+    let covers = null;
+    if (withCovers) {
+      try {
+        covers = await exportCovers(items.map((item) => item.coverId));
+      } catch {
+        covers = null;
+      }
+    }
+    downloadJson(buildBackup({ items, locations, activity, night, covers }), backupFileName());
+    const saved = `Saved a backup of ${countLabel(items.length, 'item', 'items')} and ${countLabel(activity.length, 'log entry', 'log entries')}`;
+    let images = '';
+    if (withCovers) {
+      const n = covers ? Object.keys(covers).length : 0;
+      images = n ? ` with ${countLabel(n, 'cover image', 'cover images')}` : '. Couldn’t read the cover images, so they were left out';
+    }
+    toast.show({ message: `${saved}${images}.` });
   };
+
+  const exportPlain = () => exportBackup(false);
+  const exportWithCovers = () => exportBackup(true);
 
   const pickFile = (button) => {
     returnFocusRef.current = button;
@@ -229,48 +250,64 @@ export default function BackupMenu({ gamesApi, playsApi, nightApi, toast }) {
     returnFocusRef.current?.focus();
   };
 
-  const runImport = (mode, merged) => {
-    const before = { games, plays, night };
+  const runImport = async (mode, merged) => {
+    const before = { items, locations, activity, night };
     if (mode === 'replace') {
-      replaceGames(backup.games);
-      replacePlays(backup.plays);
+      replaceItems(backup.items);
+      replaceActivity(backup.activity);
+      // Old backups had no places: keep the current ones, plus the shelf their games were put on.
+      if (backup.legacy) replaceLocations(merged.locations);
+      else if (backup.locations) replaceLocations(backup.locations);
       if (backup.night) replaceNight(backup.night);
     } else {
-      replaceGames(merged.games);
-      replacePlays(merged.plays);
+      replaceItems(merged.items);
+      replaceLocations(merged.locations);
+      replaceActivity(merged.activity);
     }
     closeImport();
+    // Images keep their original ids. Unused ones (after Undo) are pruned on the next start.
+    let coverNote = '';
+    if (Object.keys(backup.covers).length) {
+      try {
+        const n = await importCovers(backup.covers);
+        coverNote = ` Added ${countLabel(n, 'cover image', 'cover images')}.`;
+      } catch {
+        coverNote = ' Couldn’t store the cover images, so generated covers are shown instead.';
+      }
+    }
     const message =
-      mode === 'replace'
-        ? `Replaced with ${count(backup.games.length, 'game', 'games')} and ${count(backup.plays.length, 'play', 'plays')}.`
-        : `Merged ${count(merged.added.games, 'new game', 'new games')} and ${count(merged.added.plays, 'new play', 'new plays')}.`;
+      (mode === 'replace'
+        ? `Replaced with ${countLabel(backup.items.length, 'item', 'items')} and ${countLabel(backup.activity.length, 'log entry', 'log entries')}.`
+        : `Merged ${countLabel(merged.added.items, 'new item', 'new items')} and ${countLabel(merged.added.activity, 'new log entry', 'new log entries')}.`) + coverNote;
     toast.show({
       message,
       actionLabel: 'Undo',
       duration: 10000,
       onAction: () => {
-        replaceGames(before.games);
-        replacePlays(before.plays);
+        replaceItems(before.items);
+        replaceLocations(before.locations);
+        replaceActivity(before.activity);
         replaceNight(before.night);
       },
     });
   };
 
   const copySummary = async (button) => {
-    const ok = await copyText(nightSummary(night, games));
+    const ok = await copyText(nightSummary(night, items));
     button?.focus();
-    toast.show({ message: ok ? 'Copied tonight’s summary. Paste it in the group chat.' : 'Couldn’t reach the clipboard.' });
+    toast.show({ message: ok ? 'Copied the night summary. Paste it in the group chat.' : 'Couldn’t reach the clipboard.' });
   };
 
-  const items = [
+  const menuItems = [
     { id: 'copy', label: 'Copy night summary', detail: 'Date, pick and guests as plain text', icon: ClipboardCopy, onSelect: copySummary },
-    { id: 'export', label: 'Export backup', detail: 'Download games, plays and tonight as JSON', icon: Download, onSelect: exportBackup, separatorBefore: true },
+    { id: 'export', label: 'Export backup', detail: 'Download the library, places and log as JSON', icon: Download, onSelect: exportPlain, separatorBefore: true },
+    ...(hasCovers ? [{ id: 'export-covers', label: 'Export with cover images', detail: 'A bigger file that also holds uploaded covers', icon: Images, onSelect: exportWithCovers }] : []),
     { id: 'import', label: 'Import backup…', detail: 'Merge or replace from a backup file', icon: Upload, onSelect: pickFile },
   ];
 
   return (
     <>
-      <Menu label="Backup" items={items} />
+      <Menu label="Backup" items={menuItems} />
       <input
         ref={fileRef}
         type="file"
@@ -285,7 +322,7 @@ export default function BackupMenu({ gamesApi, playsApi, nightApi, toast }) {
           <ImportForm
             titleId={titleId}
             backup={backup}
-            current={{ games, plays }}
+            current={{ items, locations, activity }}
             onImport={runImport}
             onCancel={closeImport}
           />

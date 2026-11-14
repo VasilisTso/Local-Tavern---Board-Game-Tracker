@@ -3,7 +3,7 @@ import { usePersistentState } from './usePersistentState';
 import { insertAt } from './useCollection';
 import { KEYS, defaultNight, normalizeGuest, normalizeNight } from '../lib/storage';
 
-/** Tonight: `{ date, guests[{ id, name, status, note }], houseRule, lockedGameId }`. */
+/** Game night: `{ date, guests[{ id, name, status, note }], houseRule, lockedItemId }`. */
 export function useNight() {
   const [night, setNight] = usePersistentState(KEYS.night, defaultNight, normalizeNight);
 
@@ -11,8 +11,8 @@ export function useNight() {
 
   const setDate = useCallback((date) => patch({ date }), [patch]);
   const setHouseRule = useCallback((houseRule) => patch({ houseRule }), [patch]);
-  /** Lock a game in for tonight, or pass null to clear the pick. */
-  const lockGame = useCallback((lockedGameId) => patch({ lockedGameId }), [patch]);
+  /** Lock an item in for the night, or pass null to clear the pick. */
+  const lockItem = useCallback((lockedItemId) => patch({ lockedItemId }), [patch]);
 
   /** Adds a guest (default status "going") and returns it, or null for an empty name. */
   const addGuest = useCallback(
@@ -60,7 +60,7 @@ export function useNight() {
     night,
     setDate,
     setHouseRule,
-    lockGame,
+    lockItem,
     addGuest,
     updateGuest,
     removeGuest,

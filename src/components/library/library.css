@@ -1,0 +1,179 @@
+/*
+ * Library: wooden boards and the objects standing on them. Wood is a material (DESIGN.md › Wood):
+ * it appears only on boards. Objects carry the contact shadow and switch to the pulled shadow
+ * when lifted.
+ */
+
+[data-theme="light"] .lib-board {
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='24' viewBox='0 0 640 24' preserveAspectRatio='none'%3E%3Cfilter id='g' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.38' numOctaves='3' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0.13 0 0 0 0 0.07 0 0 0 0 0.03 1.5 0 0 0 -0.68'/%3E%3C/filter%3E%3Crect width='640' height='24' filter='url(%23g)'/%3E%3C/svg%3E");
+}
+
+/* One place's shelf. Items wrap onto new boards; a repeating background draws a board under each
+ * row, so rows never need measuring. Every slot is the same height and items stand on its floor. */
+.lib-board {
+  /* Wood grain: procedural fractal noise stretched along the board. Stacks adds warm highlight
+   * streaks, since dark streaks alone vanish on the dark board; Reading Room needs only dark ones. */
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='24' viewBox='0 0 640 24' preserveAspectRatio='none'%3E%3Cfilter id='d' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.004 0.38' numOctaves='3' seed='11'/%3E%3CfeColorMatrix values='0 0 0 0 0.08 0 0 0 0 0.04 0 0 0 0 0.02 2.6 0 0 0 -1.1'/%3E%3C/filter%3E%3Cfilter id='l' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.005 0.45' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.86 0 0 0 0 0.62 0 0 0 0 0.38 0 2.2 0 0 -1.02'/%3E%3C/filter%3E%3Crect width='640' height='24' filter='url(%23d)'/%3E%3Crect width='640' height='24' filter='url(%23l)'/%3E%3C/svg%3E");
+  --slot: 11.5rem; /* room for the tallest spine plus the lift */
+  --board: 1.125rem;
+  --row-gap: 1.75rem;
+  --period: calc(var(--slot) + var(--board) + var(--row-gap));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  column-gap: 2px;
+  padding-inline: 0.75rem;
+  background:
+    /* Grain on the face of each board: one layer per wrapped row (a place rarely wraps past 10). */
+    var(--grain) 0 calc(var(--slot) + 3px + 0 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 1 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 2 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 3 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 4 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 5 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 6 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 7 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 8 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    var(--grain) 0 calc(var(--slot) + 3px + 9 * var(--period)) / 100% calc(var(--board) - 6px) no-repeat,
+    linear-gradient(
+      to bottom,
+      transparent 0 var(--slot),
+      var(--wood-top) var(--slot) calc(var(--slot) + 3px),
+      var(--wood-face) calc(var(--slot) + 3px) calc(var(--slot) + var(--board) - 3px),
+      var(--wood-edge) calc(var(--slot) + var(--board) - 3px) calc(var(--slot) + var(--board)),
+      var(--board-shadow) calc(var(--slot) + var(--board)),
+      transparent calc(var(--slot) + var(--board) + 0.75rem)
+    )
+    0 0 / 100% var(--period) repeat-y;
+  border-radius: 2px;
+  /* The last row needs no gap after its board. */
+  margin-bottom: calc(-1 * var(--row-gap));
+}
+
+.lib-slot {
+  display: flex;
+  align-items: flex-end;
+  height: var(--slot);
+  margin-bottom: calc(var(--board) + var(--row-gap));
+}
+
+/* Face-out objects (boxes, records) get breathing room; spines stand shoulder to shoulder. */
+.lib-slot--face {
+  margin-inline: 0.5rem;
+}
+.lib-slot--face + .lib-slot:not(.lib-slot--face) {
+  margin-left: 0.5rem;
+}
+
+/* Phones: one board per place that scrolls sideways and snaps. */
+@media (max-width: 639.98px) {
+  .lib-board {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 1rem;
+    background-attachment: local;
+    scrollbar-width: none;
+    margin-inline: -1rem;
+    padding-inline: 1rem;
+    border-radius: 0;
+  }
+  .lib-board::-webkit-scrollbar {
+    display: none;
+  }
+  .lib-slot {
+    flex: none;
+    scroll-snap-align: start;
+  }
+  /* More on the board: the far edge fades out, and clears once scrolled to the end. The mask
+   * lives only in the scroll-driven animation, so a board that fits (no active timeline) has none. */
+  @supports (animation-timeline: scroll()) {
+    .lib-board {
+      animation: board-fade linear both;
+      animation-timeline: scroll(self inline);
+    }
+  }
+}
+
+/* Stretching the mask past the board's end pushes the fade out of view. */
+@keyframes board-fade {
+  from,
+  85% {
+    mask: linear-gradient(to right, #000 calc(100% - 3rem), transparent) 0 0 / 100% 100% no-repeat;
+  }
+  to {
+    mask: linear-gradient(to right, #000 calc(100% - 3rem), transparent) 0 0 / calc(100% + 3rem) 100% no-repeat;
+  }
+}
+
+/* An object as a control: lifts toward the viewer on hover or keyboard focus. */
+.lib-obj .cv {
+  transition: filter 200ms var(--ease-out-expo);
+}
+.lib-obj:focus-visible .cv {
+  filter: var(--obj-pulled);
+}
+@media (hover: hover) {
+  .lib-obj:hover .cv {
+    filter: var(--obj-pulled);
+  }
+}
+.lib-obj:focus-visible {
+  outline-offset: 4px;
+}
+
+/* Lift on hover or keyboard focus; pressing pulls the object further out, the first beat of the
+ * pull-out into the detail sheet. Uses `translate`/`scale` so it never fights the transform
+ * framer writes for the shared-layout move. */
+@media (prefers-reduced-motion: no-preference) {
+  .lib-lift {
+    transition:
+      translate 280ms var(--ease-pull),
+      scale 280ms var(--ease-pull);
+  }
+  .lib-obj:focus-visible .lib-lift {
+    translate: 0 -6px;
+  }
+  @media (hover: hover) {
+    .lib-obj:hover .lib-lift {
+      translate: 0 -6px;
+    }
+  }
+  .lib-obj:active .lib-lift {
+    translate: 0 -10px;
+    scale: 1.03;
+    transition-duration: 120ms;
+  }
+}
+
+/* Grid cell stage: the cover stands on the floor of a fixed box whatever its aspect ratio. */
+.lib-stage {
+  container-type: size;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  aspect-ratio: 5 / 6;
+}
+
+/* A plain surface the size of an object, for the slot left behind while its cover is in the sheet. */
+.lib-ghost {
+  border-radius: 3px;
+  background: color-mix(in oklch, var(--ink) 6%, transparent);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* The small "out on loan" marker on spines and covers. */
+.lib-lent {
+  position: absolute;
+  inset: auto -2px -2px auto;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: var(--accent-fill);
+  color: var(--on-accent);
+  box-shadow: 0 0 0 2px var(--bg);
+}

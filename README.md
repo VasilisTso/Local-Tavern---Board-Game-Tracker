@@ -1,39 +1,43 @@
-# Local Tavern
+# Shelfspace
 
-> "Pull up a chair, order a mug of mead, and let the Fates decide your next board game night."
+**Shelfspace** is a personal library for everything you own or want: board and card games, video games, books, films and series, and music, kept across the real and digital places they live. Each item is drawn as its real object (a game box, a paperback, a keep-case, a record sleeve) standing on wooden shelves. When you can't decide what's next, a wheel picks for you, and an activity log remembers what you played, read, watched and heard.
 
-**Local Tavern** is a cozy game-night companion built with **React**, **Tailwind CSS** and **Framer Motion**. It keeps your board game shelf, tonight's guest list, a Fate Wheel and a play ledger, all in your browser. No account, no server.
+Built with **React**, **Tailwind CSS** and **Framer Motion**. Everything stays in your browser: no account, no server.
 
 ---
 
 ## Features
 
-The app has three tabs (linked by URL hash: `#tonight`, `#shelf`, `#ledger`).
+The app has three tabs, linked by URL hash: `#library`, `#pick` and `#log`.
 
-### Tonight
-* **The table:** set the date and time, add guests and mark each one Going / Maybe / Out, with a note per guest and a house rule for the night.
-* **The Fate Wheel:** spins over the games that seat everyone going (or with the maybes, or the whole shelf). Option to favor games gathering dust, veto chips, up to 16 slices with a reshuffle. Respects reduced motion.
-* **Lock in the pick**, then log the play straight into the ledger.
+### Library
+* **Shelf view:** one wooden shelf per place (Living room shelf, Bedroom, Steam, Switch, Kindle, Audible, Apple TV, Bandcamp, or your own). Books, films and games stand as spines; boxed games and records stand face-out. On phones each shelf scrolls sideways.
+* **Grid and List views** for browsing covers or scanning a dense list.
+* **Covers drawn per format:** board game box or card tuck box; paperback, ebook reader or audiobook; game case, cartridge or launcher tile; Blu-ray, DVD or series box set; vinyl sleeve or CD jewel case. Add your own image (upload or link) and it goes inside the object frame.
+* **Now:** what you're in the middle of, face-out at the top.
+* **Filters:** kind, place, status (Not started, In progress, Finished, Dropped, Wishlist), length, player count and tags, with seven sort orders.
+* **Detail sheet:** pull an item off the shelf to change its status or rating, see its facts and log it. Remove anything with **Undo**.
+* **Places:** add, rename and remove the places your things live, physical or digital.
 
-### Shelf
-* Game cards with generated box covers, player count, playtime, tags, play count and last played.
-* Search, player-count chips (including "fits tonight"), playtime buckets, tag filter and six sort orders.
-* Add and edit games in a validated dialog, with a box color picker (or let the title pick one); delete with **Undo**.
+### Pick
+* **The wheel** spins over whatever fits: by status, kind, time you have, place and tags. It can favor what's gathering dust. Up to 16 slices, with a reshuffle, and you can leave items out for the round.
+* **Start it** puts the winner on your Now shelf; **Log it** records a session straight away.
+* **Game night mode:** set the date, add guests and mark each one Going, Maybe or Out, add a house rule, and let the wheel pick only games that seat the table. Lock in the pick, then log the session with the guests filled in.
 
-### Ledger
-* **Log a play:** game, date, who played (guests and past players, or type a new name), who won, and a note. Edit or delete any play (with Undo).
-* Plays grouped by month.
-* **Stats:** game nights, plays, games played, average game length, most played, win leaderboard and the games gathering dust.
+### Log
+* **Log** when you start, finish or sit down with something: date, players and winners for games, a rating and a note.
+* Entries grouped by month, filtered by kind; edit or delete any of them (with Undo).
+* **Stats:** the year in one sentence (things finished, game nights, pages read, hours played, watched and heard), entries by kind, what you return to most, a win leaderboard and what's gathering dust.
 
-### Backup and sharing
-* **Export** everything (games, plays, tonight) as a JSON file.
-* **Import** a backup by merging it into what is there or replacing everything, with Undo.
+### Backup
+* **Export** the library, places and log as a JSON file, optionally with your uploaded cover images.
+* **Import** a backup by merging or replacing, with Undo. Backups from Local Tavern, the app's earlier name, still import.
 * **Copy night summary:** date, pick, guests and house rule as plain text for the group chat.
 
 ### Everywhere
-* **Persistent storage** in `localStorage` (versioned; data from older versions migrates automatically).
-* **Cozy Tavern** (dark) and **Sunlit Porch** (light) themes; follows your system setting until you pick one.
-* Keyboard and screen-reader friendly: ARIA tabs and menus, native dialogs, labelled controls.
+* **Local storage:** data in `localStorage`, cover images in IndexedDB. Data from older versions migrates automatically.
+* **Stacks** (dark) and **Reading Room** (light) themes. The app follows your system setting until you pick one.
+* Keyboard and screen-reader friendly: ARIA tabs, arrow keys along each shelf, native dialogs, labelled controls. Respects reduced motion.
 
 ## Development
 
@@ -46,7 +50,8 @@ npm run build
 
 ## Screenshots
 
-![Tonight tab in the Cozy Tavern theme: guest list with RSVPs and the locked-in pick](docs/screenshots/tonight.png)
-![Shelf tab in the Sunlit Porch theme: filters and game cards with generated box covers](docs/screenshots/shelf.png)
-![Adding a game with a chosen box color](docs/screenshots/add-game.png)
-![Ledger tab: plays by month beside the stats panel](docs/screenshots/ledger.png)
+![Library in the Stacks theme: the Now row above wooden shelves of spines, boxes and records](docs/screenshots/library.png)
+![An item pulled off the shelf into the detail sheet](docs/screenshots/item.png)
+![Pick in the Reading Room theme: the wheel after a spin, with the winner's cover](docs/screenshots/pick.png)
+![Log: entries by month beside the year's stats](docs/screenshots/log.png)
+![Library on a phone](docs/screenshots/library-phone.png)
