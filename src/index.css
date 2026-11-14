@@ -1,9 +1,9 @@
-@import "@fontsource-variable/alegreya";
+@import "@fontsource-variable/bricolage-grotesque/standard.css";
 @import "@fontsource-variable/figtree";
 @import "tailwindcss";
 
 /*
- * Theme: data-theme on <html> ("dark" = Cozy Tavern, "light" = Sunlit Porch).
+ * Theme: data-theme on <html> ("dark" = Stacks, "light" = Reading Room).
  * Set before first paint by the inline script in index.html.
  * Dark values are the default so the page still reads if JS never runs.
  */
@@ -60,7 +60,7 @@
 }
 
 @theme {
-  --font-display: "Alegreya Variable", "Iowan Old Style", Georgia, serif;
+  --font-display: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Figtree Variable", ui-sans-serif, system-ui, sans-serif;
 
   /* Fixed rem scale, ratio ~1.2 */

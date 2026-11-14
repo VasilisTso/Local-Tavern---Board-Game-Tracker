@@ -3,7 +3,7 @@ import { coverFor } from '../lib/cover';
 
 /**
  * A game box drawn from its title: warm hue, darker spine, a light band or frame, and an
- * Alegreya monogram. Decorative; the title is always rendered as text next to it.
+ * display-face monogram. Decorative; the title is always rendered as text next to it.
  * `color` is an optional COVER_COLORS id. Size it with `className` (it fills its box; 3:4 portrait looks most like a box).
  */
 export default function GameCover({ title, color = null, className = '', monogramClassName = 'text-2xl' }) {
