@@ -13,8 +13,10 @@ export function tonightPlayerCount(night, { includeMaybe = false } = {}) {
   return 1 + counts.going + (includeMaybe ? counts.maybe : 0);
 }
 
-export function fitsPlayers(game, n) {
-  return n >= game.minPlayers && n <= game.maxPlayers;
+/** False for items without a player range (books, films, music, unspecified video games). */
+export function fitsPlayers(item, n) {
+  if (item.minPlayers == null || item.maxPlayers == null) return false;
+  return n >= item.minPlayers && n <= item.maxPlayers;
 }
 
 /** "4 at the table · 1 maybe · 2 out" (host included in the table count). */

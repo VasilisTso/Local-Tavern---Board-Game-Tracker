@@ -12,7 +12,7 @@ function toForm(game) {
     title: game?.title ?? '',
     minPlayers: String(game?.minPlayers ?? 2),
     maxPlayers: String(game?.maxPlayers ?? 4),
-    playtime: game?.playtime == null ? (game ? '' : '60') : String(game.playtime),
+    playtime: game?.length == null ? (game ? '' : '60') : String(game.length),
     tags: game?.tags?.join(', ') ?? '',
     color: game?.color ?? null,
   };
@@ -175,7 +175,7 @@ function GameForm({ game, games, allTags, onSave, onCancel, titleId }) {
       title: form.title.trim(),
       minPlayers: wholeNumber(form.minPlayers),
       maxPlayers: wholeNumber(form.maxPlayers),
-      playtime: form.playtime.trim() === '' ? null : wholeNumber(form.playtime),
+      length: form.playtime.trim() === '' ? null : wholeNumber(form.playtime),
       tags: typedTags,
       color: form.color,
     });

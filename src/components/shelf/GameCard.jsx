@@ -1,10 +1,10 @@
 import { Clock, Pencil, Trash2, Users } from 'lucide-react';
 import GameCover from '../GameCover';
-import { formatPlayers, formatPlaytime, formatShortDate } from '../../lib/format';
+import { formatLength, formatPlayers, formatShortDate } from '../../lib/format';
 import { iconBtn, iconBtnDanger } from '../ui';
 
 export default function GameCard({ game, stats, isTonightPick, onEdit, onRemove }) {
-  const playtime = formatPlaytime(game.playtime);
+  const playtime = formatLength(game);
   const count = stats?.count ?? 0;
 
   return (

@@ -5,7 +5,7 @@ import { btnPrimary } from '../ui';
 
 /** Ledger tab: the play log beside the stats it feeds. */
 export default function Ledger({ games, playsApi, onLog, onEdit, toast }) {
-  const { plays, removePlay, restorePlay } = playsApi;
+  const { activity: plays, removeActivity: removePlay, restoreActivity: restorePlay } = playsApi;
   const noGames = games.length === 0;
 
   const remove = (play, title) => {

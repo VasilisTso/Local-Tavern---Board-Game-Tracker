@@ -1,6 +1,10 @@
 // Display helpers. All dates are local time.
 
+import { lengthUnit } from './kinds';
+
+/** "2–4 players", or null when the item has no player range. */
 export function formatPlayers(min, max) {
+  if (min == null || max == null) return null;
   if (min === max) return `${min} ${min === 1 ? 'player' : 'players'}`;
   return `${min}–${max} players`;
 }
@@ -10,6 +14,13 @@ export function formatPlaytime(minutes) {
   if (minutes < 120) return `${minutes} min`;
   const hours = Math.round((minutes / 60) * 2) / 2;
   return `${hours} h`;
+}
+
+/** An item's length in its own unit: "45 min", "2 h" or "304 pages". Null when unknown. */
+export function formatLength(item) {
+  if (item?.length == null) return null;
+  if (lengthUnit(item.kind, item.format) === 'pages') return `${item.length} pages`;
+  return formatPlaytime(item.length);
 }
 
 /** Parses `YYYY-MM-DDTHH:mm` (or an ISO string) as a local Date. */

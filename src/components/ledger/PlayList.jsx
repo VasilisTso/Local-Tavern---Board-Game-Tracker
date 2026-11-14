@@ -106,7 +106,7 @@ export default function PlayList({ plays, games, onEdit, onRemove }) {
             <AnimatePresence initial={false}>
               {month.plays.map((play) => (
                 <motion.li key={play.id} {...rowMotion} className="overflow-hidden">
-                  <PlayRow play={play} game={gameById.get(play.gameId)} onEdit={onEdit} onRemove={onRemove} />
+                  <PlayRow play={play} game={gameById.get(play.itemId)} onEdit={onEdit} onRemove={onRemove} />
                 </motion.li>
               ))}
             </AnimatePresence>

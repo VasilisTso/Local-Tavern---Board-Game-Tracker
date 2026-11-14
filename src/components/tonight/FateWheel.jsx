@@ -11,7 +11,7 @@ import confetti from 'canvas-confetti';
 import { ChevronDown, Dices, Lock, RotateCcw, Shuffle } from 'lucide-react';
 import GameCover from '../GameCover';
 import { coverFor } from '../../lib/cover';
-import { formatPlayers, formatPlaytime } from '../../lib/format';
+import { formatLength, formatPlayers } from '../../lib/format';
 import {
   MAX_SLICES,
   dustWeight,
@@ -120,7 +120,7 @@ function Pointer({ rotate }) {
 function Result({ game, onLock, onRespin }) {
   const reduceMotion = useReducedMotion();
   const ref = useRef(null);
-  const playtime = formatPlaytime(game.playtime);
+  const playtime = formatLength(game);
 
   // On a phone the result lands under the wheel; bring it into view without jumping if it already is.
   useEffect(() => {

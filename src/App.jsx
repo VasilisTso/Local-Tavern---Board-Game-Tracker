@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { BookOpen, Library, Moon as NightIcon } from 'lucide-react';
-import { useGames } from './hooks/useGames';
-import { usePlays } from './hooks/usePlays';
+import { useItems } from './hooks/useItems';
+import { useLocations } from './hooks/useLocations';
+import { useActivity } from './hooks/useActivity';
 import { useNight } from './hooks/useNight';
 import { useTheme } from './hooks/useTheme';
 import { useHashTab } from './hooks/useHashTab';
@@ -39,33 +40,35 @@ function Wordmark() {
 }
 
 export default function App() {
-  const gamesApi = useGames();
-  const playsApi = usePlays();
-  const { plays } = playsApi;
+  const itemsApi = useItems();
+  const locationsApi = useLocations();
+  const activityApi = useActivity();
+  const { items } = itemsApi;
+  const { activity } = activityApi;
   const nightApi = useNight();
   const { theme, toggleTheme } = useTheme();
   const [tab, setTab] = useHashTab(TAB_IDS);
   const toast = useToast();
   const [logDialog, setLogDialog] = useState({ open: false, play: null, prefill: null });
-  const knownNames = useMemo(() => knownPlayerNames(nightApi.night, plays), [nightApi.night, plays]);
+  const knownNames = useMemo(() => knownPlayerNames(nightApi.night, activity), [nightApi.night, activity]);
 
   const openLog = (prefill = null) => setLogDialog({ open: true, play: null, prefill });
   const openEditPlay = (play) => setLogDialog({ open: true, play, prefill: null });
   const closeLog = () => setLogDialog((d) => ({ ...d, open: false }));
 
-  const titleOf = (gameId) => gamesApi.games.find((g) => g.id === gameId)?.title ?? 'that game';
+  const titleOf = (itemId) => items.find((item) => item.id === itemId)?.title ?? 'that item';
 
   const savePlay = (values) => {
     if (logDialog.play) {
-      playsApi.updatePlay(logDialog.play.id, values);
-      toast.show({ message: `Saved the ${titleOf(values.gameId)} play.` });
+      activityApi.updateActivity(logDialog.play.id, values);
+      toast.show({ message: `Saved the ${titleOf(values.itemId)} entry.` });
     } else {
-      const play = playsApi.addPlay(values);
-      if (play) {
+      const entry = activityApi.addActivity(values);
+      if (entry) {
         toast.show({
-          message: `Logged ${titleOf(play.gameId)} in the ledger.`,
+          message: `Logged ${titleOf(entry.itemId)}.`,
           actionLabel: 'Undo',
-          onAction: () => playsApi.removePlay(play.id),
+          onAction: () => activityApi.removeActivity(entry.id),
         });
       }
     }
@@ -74,8 +77,8 @@ export default function App() {
 
   const tabs = [
     { id: 'tonight', label: 'Tonight', icon: NightIcon },
-    { id: 'shelf', label: 'Shelf', icon: Library, badge: gamesApi.games.length, badgeLabel: 'games' },
-    { id: 'ledger', label: 'Ledger', icon: BookOpen, badge: plays.length || null, badgeLabel: 'plays' },
+    { id: 'shelf', label: 'Shelf', icon: Library, badge: items.length, badgeLabel: 'items' },
+    { id: 'ledger', label: 'Ledger', icon: BookOpen, badge: activity.length || null, badgeLabel: 'log entries' },
   ];
 
   return (
@@ -85,7 +88,13 @@ export default function App() {
           <div className="flex h-14 items-center justify-between gap-4">
             <Wordmark />
             <div className="flex items-center gap-1">
-              <BackupMenu gamesApi={gamesApi} playsApi={playsApi} nightApi={nightApi} toast={toast} />
+              <BackupMenu
+                itemsApi={itemsApi}
+                locationsApi={locationsApi}
+                activityApi={activityApi}
+                nightApi={nightApi}
+                toast={toast}
+              />
               <ThemeToggle theme={theme} onToggle={toggleTheme} />
             </div>
           </div>
@@ -95,15 +104,15 @@ export default function App() {
 
       <main className="mx-auto max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8">
         <TabPanel id="tonight" active={tab}>
-          <Tonight games={gamesApi.games} plays={plays} nightApi={nightApi} onLog={openLog} toast={toast} />
+          <Tonight games={items} plays={activity} nightApi={nightApi} onLog={openLog} toast={toast} />
         </TabPanel>
 
         <TabPanel id="shelf" active={tab}>
-          <Shelf gamesApi={gamesApi} plays={plays} night={nightApi.night} toast={toast} />
+          <Shelf gamesApi={itemsApi} plays={activity} night={nightApi.night} toast={toast} />
         </TabPanel>
 
         <TabPanel id="ledger" active={tab}>
-          <Ledger games={gamesApi.games} playsApi={playsApi} onLog={openLog} onEdit={openEditPlay} toast={toast} />
+          <Ledger games={items} playsApi={activityApi} onLog={openLog} onEdit={openEditPlay} toast={toast} />
         </TabPanel>
       </main>
 
@@ -111,7 +120,7 @@ export default function App() {
         open={logDialog.open}
         play={logDialog.play}
         prefill={logDialog.prefill}
-        games={gamesApi.games}
+        games={items}
         knownNames={knownNames}
         onSave={savePlay}
         onClose={closeLog}

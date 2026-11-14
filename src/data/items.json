@@ -1,0 +1,542 @@
+[
+  {
+    "id": "mock-1",
+    "title": "Warhammer 40,000: Recruit Edition",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 60,
+    "minPlayers": 2,
+    "maxPlayers": 2,
+    "tags": [
+      "Miniature Wargame",
+      "Sci-Fi",
+      "Tactical"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-2",
+    "title": "Dungeons & Dragons: Starter Set",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 180,
+    "minPlayers": 2,
+    "maxPlayers": 6,
+    "tags": [
+      "RPG",
+      "Fantasy",
+      "Co-op"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-3",
+    "title": "Exploding Kittens",
+    "kind": "board",
+    "format": "card",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 15,
+    "minPlayers": 2,
+    "maxPlayers": 5,
+    "tags": [
+      "Card Game",
+      "Humor",
+      "Party"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-4",
+    "title": "Monopoly: Classic Edition",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 120,
+    "minPlayers": 2,
+    "maxPlayers": 6,
+    "tags": [
+      "Board Game",
+      "Economics",
+      "Classic"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-5",
+    "title": "Cluedo (Clue)",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 45,
+    "minPlayers": 2,
+    "maxPlayers": 6,
+    "tags": [
+      "Board Game",
+      "Deduction",
+      "Mystery"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-6",
+    "title": "Catan",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 90,
+    "minPlayers": 3,
+    "maxPlayers": 4,
+    "tags": [
+      "Resource Management",
+      "Classic",
+      "Trading"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-7",
+    "title": "Gloomhaven: Jaws of the Lion",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 120,
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "tags": [
+      "Campaign",
+      "Fantasy",
+      "Co-op"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-8",
+    "title": "Secret Hitler",
+    "kind": "board",
+    "format": "card",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 45,
+    "minPlayers": 5,
+    "maxPlayers": 10,
+    "tags": [
+      "Social Deduction",
+      "Hidden Roles",
+      "Party"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-9",
+    "title": "Munchkin",
+    "kind": "board",
+    "format": "card",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 90,
+    "minPlayers": 3,
+    "maxPlayers": 6,
+    "tags": [
+      "Card Game",
+      "Fantasy",
+      "Humor"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-10",
+    "title": "Ticket to Ride",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 60,
+    "minPlayers": 2,
+    "maxPlayers": 5,
+    "tags": [
+      "Board Game",
+      "Strategy",
+      "Trains"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-11",
+    "title": "Risk: Global Domination",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 120,
+    "minPlayers": 2,
+    "maxPlayers": 6,
+    "tags": [
+      "Board Game",
+      "Strategy",
+      "Military"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-12",
+    "title": "Pathfinder: Beginner Box",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 180,
+    "minPlayers": 2,
+    "maxPlayers": 7,
+    "tags": [
+      "RPG",
+      "High Fantasy",
+      "Adventure"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-13",
+    "title": "Cards Against Humanity",
+    "kind": "board",
+    "format": "card",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 60,
+    "minPlayers": 4,
+    "maxPlayers": 20,
+    "tags": [
+      "Card Game",
+      "Humor",
+      "Party"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-14",
+    "title": "Unstable Unicorns",
+    "kind": "board",
+    "format": "card",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 45,
+    "minPlayers": 2,
+    "maxPlayers": 8,
+    "tags": [
+      "Card Game",
+      "Strategy",
+      "Humor"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-15",
+    "title": "Codenames",
+    "kind": "board",
+    "format": "card",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 15,
+    "minPlayers": 2,
+    "maxPlayers": 8,
+    "tags": [
+      "Word Game",
+      "Deduction",
+      "Party"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-16",
+    "title": "The Game of Life",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 45,
+    "minPlayers": 2,
+    "maxPlayers": 4,
+    "tags": [
+      "Board Game",
+      "Family",
+      "Classic"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-17",
+    "title": "Star Wars: Legion",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 180,
+    "minPlayers": 2,
+    "maxPlayers": 2,
+    "tags": [
+      "Miniature Wargame",
+      "Sci-Fi",
+      "Tactical"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-18",
+    "title": "Betrayal at House on the Hill",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 60,
+    "minPlayers": 3,
+    "maxPlayers": 6,
+    "tags": [
+      "Board Game",
+      "Horror",
+      "Hidden Traitor"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-19",
+    "title": "Scrabble",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 60,
+    "minPlayers": 2,
+    "maxPlayers": 4,
+    "tags": [
+      "Board Game",
+      "Word Play",
+      "Classic"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "mock-20",
+    "title": "Everdell",
+    "kind": "board",
+    "format": "box",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "length": 60,
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "tags": [
+      "Worker Placement",
+      "Whimsical",
+      "Strategy"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-1",
+    "title": "The Left Hand of Darkness",
+    "kind": "book",
+    "format": "print",
+    "creator": "Ursula K. Le Guin",
+    "year": 1969,
+    "length": 304,
+    "locationId": "loc-bedroom",
+    "status": "active",
+    "tags": [
+      "Sci-Fi",
+      "Classic"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-2",
+    "title": "Piranesi",
+    "kind": "book",
+    "format": "print",
+    "creator": "Susanna Clarke",
+    "year": 2020,
+    "length": 272,
+    "locationId": "loc-bedroom",
+    "status": "done",
+    "rating": 5,
+    "tags": [
+      "Fantasy",
+      "Mystery"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-3",
+    "title": "The Name of the Wind",
+    "kind": "book",
+    "format": "ebook",
+    "creator": "Patrick Rothfuss",
+    "year": 2007,
+    "length": 662,
+    "locationId": "loc-kindle",
+    "status": "backlog",
+    "tags": [
+      "Fantasy"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-4",
+    "title": "Project Hail Mary",
+    "kind": "book",
+    "format": "audio",
+    "creator": "Andy Weir",
+    "year": 2021,
+    "length": 970,
+    "locationId": "loc-audible",
+    "status": "backlog",
+    "tags": [
+      "Sci-Fi"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-video-1",
+    "title": "Hades",
+    "kind": "video",
+    "format": "digital",
+    "creator": "Supergiant Games",
+    "year": 2020,
+    "length": 1500,
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "platform": "PC",
+    "locationId": "loc-steam",
+    "status": "active",
+    "tags": [
+      "Roguelike",
+      "Action"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-video-2",
+    "title": "Stardew Valley",
+    "kind": "video",
+    "format": "digital",
+    "creator": "ConcernedApe",
+    "year": 2016,
+    "length": 3000,
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "platform": "PC",
+    "locationId": "loc-steam",
+    "status": "backlog",
+    "tags": [
+      "Cozy",
+      "Co-op"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-video-3",
+    "title": "Mario Kart 8 Deluxe",
+    "kind": "video",
+    "format": "cartridge",
+    "creator": "Nintendo",
+    "year": 2017,
+    "length": 30,
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "platform": "Switch",
+    "locationId": "loc-switch",
+    "status": "backlog",
+    "tags": [
+      "Racing",
+      "Party"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-film-1",
+    "title": "Spirited Away",
+    "kind": "film",
+    "format": "bluray",
+    "creator": "Hayao Miyazaki",
+    "year": 2001,
+    "length": 125,
+    "locationId": "loc-living-room",
+    "status": "done",
+    "rating": 5,
+    "tags": [
+      "Animation",
+      "Fantasy"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-film-2",
+    "title": "Arrival",
+    "kind": "film",
+    "format": "dvd",
+    "creator": "Denis Villeneuve",
+    "year": 2016,
+    "length": 116,
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "tags": [
+      "Sci-Fi",
+      "Drama"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-film-3",
+    "title": "The Wire",
+    "kind": "film",
+    "format": "series",
+    "creator": "David Simon",
+    "year": 2002,
+    "length": 3600,
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "tags": [
+      "Crime",
+      "Drama"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-music-1",
+    "title": "Kind of Blue",
+    "kind": "music",
+    "format": "vinyl",
+    "creator": "Miles Davis",
+    "year": 1959,
+    "length": 46,
+    "locationId": "loc-living-room",
+    "status": "done",
+    "rating": 5,
+    "tags": [
+      "Jazz"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-music-2",
+    "title": "In Rainbows",
+    "kind": "music",
+    "format": "cd",
+    "creator": "Radiohead",
+    "year": 2007,
+    "length": 42,
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "tags": [
+      "Rock"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  }
+]

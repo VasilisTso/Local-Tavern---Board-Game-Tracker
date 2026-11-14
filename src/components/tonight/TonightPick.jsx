@@ -1,13 +1,13 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, Check, Dices, Lock } from 'lucide-react';
 import GameCover from '../GameCover';
-import { formatPlayers, formatPlaytime, formatShortDate } from '../../lib/format';
+import { formatLength, formatPlayers, formatShortDate } from '../../lib/format';
 import { btnGhost, btnPrimary, btnSecondary } from '../ui';
 
 /** The game locked in for tonight, with a one-tap "log this play". */
 export default function TonightPick({ game, stats, logged, onLog, onChange }) {
   const reduceMotion = useReducedMotion();
-  const playtime = formatPlaytime(game.playtime);
+  const playtime = formatLength(game);
   const count = stats?.count ?? 0;
 
   return (

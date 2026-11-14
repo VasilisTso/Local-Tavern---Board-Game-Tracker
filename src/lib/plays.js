@@ -1,13 +1,13 @@
-// Per-game play history derived from the play log.
+// Per-item history derived from the activity log.
 
-/** Map of gameId -> { count, last } where `last` is the latest play date string. */
-export function playStatsByGame(plays = []) {
+/** Map of itemId -> { count, last } where `last` is the latest activity date string. */
+export function playStatsByGame(activity = []) {
   const stats = new Map();
-  for (const play of plays) {
-    const entry = stats.get(play.gameId) ?? { count: 0, last: null };
+  for (const { itemId, date } of activity) {
+    const entry = stats.get(itemId) ?? { count: 0, last: null };
     entry.count += 1;
-    if (!entry.last || play.date > entry.last) entry.last = play.date;
-    stats.set(play.gameId, entry);
+    if (!entry.last || date > entry.last) entry.last = date;
+    stats.set(itemId, entry);
   }
   return stats;
 }

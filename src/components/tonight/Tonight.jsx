@@ -7,13 +7,13 @@ import { nightCountsLine, tonightPlayerCount } from '../../lib/night';
 import { playStatsByGame } from '../../lib/plays';
 
 export default function Tonight({ games, plays, nightApi, onLog, toast }) {
-  const { night, lockGame } = nightApi;
+  const { night, lockItem: lockGame } = nightApi;
 
   const playStats = useMemo(() => playStatsByGame(plays), [plays]);
   const count = tonightPlayerCount(night);
   const countWithMaybes = tonightPlayerCount(night, { includeMaybe: true });
-  const pick = games.find((g) => g.id === night.lockedGameId) ?? null;
-  const logged = pick ? plays.some((p) => p.gameId === pick.id && p.date === night.date) : false;
+  const pick = games.find((g) => g.id === night.lockedItemId) ?? null;
+  const logged = pick ? plays.some((p) => p.itemId === pick.id && p.date === night.date) : false;
 
   const lockIn = (game) => {
     lockGame(game.id);
@@ -35,7 +35,7 @@ export default function Tonight({ games, plays, nightApi, onLog, toast }) {
   // Opens the log dialog with tonight's date and everyone going.
   const logPlay = (game) => {
     const players = night.guests.filter((g) => g.status === 'going').map((g) => g.name);
-    onLog({ gameId: game.id, date: night.date, players });
+    onLog({ itemId: game.id, date: night.date, players });
   };
 
   return (

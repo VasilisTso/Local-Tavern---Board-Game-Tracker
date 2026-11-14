@@ -11,7 +11,7 @@ function toForm(play, prefill, knownNames) {
   const source = play ?? prefill ?? {};
   const players = source.players ?? [];
   return {
-    gameId: source.gameId ?? '',
+    itemId: source.itemId ?? '',
     date: source.date ?? localDateTimeString(),
     players,
     winners: (source.winners ?? []).filter((w) => hasName(players, w)),
@@ -23,8 +23,8 @@ function toForm(play, prefill, knownNames) {
 
 function validate(form, games) {
   const errors = {};
-  const onShelf = games.some((g) => g.id === form.gameId);
-  if (!form.gameId || (!onShelf && !form.keepMissingGame)) errors.gameId = 'Pick the game you played.';
+  const onShelf = games.some((g) => g.id === form.itemId);
+  if (!form.itemId || (!onShelf && !form.keepMissingGame)) errors.itemId = 'Pick the game you played.';
   if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(form.date)) errors.date = 'Set when you played.';
   return errors;
 }
@@ -61,10 +61,10 @@ function NameChips({ legend, name, options, selected, onToggle, icon: Icon, empt
 
 function PlayForm({ play, prefill, games, knownNames, onSave, onCancel, titleId }) {
   const uid = useId();
-  const ids = { gameId: `${uid}-game`, date: `${uid}-date`, newName: `${uid}-new`, note: `${uid}-note` };
+  const ids = { itemId: `${uid}-game`, date: `${uid}-date`, newName: `${uid}-new`, note: `${uid}-note` };
   const [form, setForm] = useState(() => ({
     ...toForm(play, prefill, knownNames),
-    keepMissingGame: !!play && !games.some((g) => g.id === play.gameId),
+    keepMissingGame: !!play && !games.some((g) => g.id === play.itemId),
   }));
   const [newName, setNewName] = useState('');
   const [nameError, setNameError] = useState('');
@@ -118,7 +118,7 @@ function PlayForm({ play, prefill, games, knownNames, onSave, onCancel, titleId 
     event.preventDefault();
     setSubmitted(true);
     const found = validate(form, games);
-    const first = ['gameId', 'date'].find((k) => found[k]);
+    const first = ['itemId', 'date'].find((k) => found[k]);
     if (first) {
       document.getElementById(ids[first])?.focus();
       return;
@@ -127,7 +127,7 @@ function PlayForm({ play, prefill, games, knownNames, onSave, onCancel, titleId 
     const pending = newName.trim();
     const players = pending && !hasName(form.players, pending) ? [...form.players, pending] : form.players;
     onSave({
-      gameId: form.gameId,
+      itemId: form.itemId,
       date: form.date,
       players,
       winners: form.winners,
@@ -135,7 +135,7 @@ function PlayForm({ play, prefill, games, knownNames, onSave, onCancel, titleId 
     });
   };
 
-  const missingGame = form.keepMissingGame && form.gameId === play?.gameId;
+  const missingGame = form.keepMissingGame && form.itemId === play?.itemId;
   const describedBy = (key) => (errors[key] ? `${ids[key]}-error` : undefined);
   const error = (key) =>
     errors[key] && (
@@ -151,28 +151,28 @@ function PlayForm({ play, prefill, games, knownNames, onSave, onCancel, titleId 
       <div className="space-y-5 overflow-y-auto px-5 py-4">
         <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto]">
           <div className="min-w-0">
-            <label htmlFor={ids.gameId} className={label}>
+            <label htmlFor={ids.itemId} className={label}>
               Game
             </label>
             <select
-              id={ids.gameId}
-              value={form.gameId}
-              onChange={(e) => setForm((prev) => ({ ...prev, gameId: e.target.value, keepMissingGame: false }))}
-              aria-invalid={!!errors.gameId}
-              aria-describedby={describedBy('gameId')}
+              id={ids.itemId}
+              value={form.itemId}
+              onChange={(e) => setForm((prev) => ({ ...prev, itemId: e.target.value, keepMissingGame: false }))}
+              aria-invalid={!!errors.itemId}
+              aria-describedby={describedBy('itemId')}
               className={`${field} mt-1.5 pr-8`}
             >
               <option value="" disabled>
                 Choose a game
               </option>
-              {missingGame && <option value={play.gameId}>A game no longer on the shelf</option>}
+              {missingGame && <option value={play.itemId}>A game no longer on the shelf</option>}
               {sortedGames.map((g) => (
                 <option key={g.id} value={g.id}>
                   {g.title}
                 </option>
               ))}
             </select>
-            {error('gameId')}
+            {error('itemId')}
           </div>
           <div className="min-w-0">
             <label htmlFor={ids.date} className={label}>
@@ -278,7 +278,7 @@ function PlayForm({ play, prefill, games, knownNames, onSave, onCancel, titleId 
 
 /**
  * Log a new play (optionally prefilled, e.g. from tonight's pick) or edit one (`play`).
- * `onSave` receives `{ gameId, date, players, winners, note }`.
+ * `onSave` receives `{ itemId, date, players, winners, note }`.
  */
 export default function LogPlayDialog({ open, play, prefill, games, knownNames, onSave, onClose }) {
   const titleId = useId();

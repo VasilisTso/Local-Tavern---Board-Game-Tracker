@@ -92,7 +92,7 @@ export function ledgerStats(plays, games, { top = 5, now = Date.now() } = {}) {
 
   const nights = new Set(plays.map((p) => p.date.slice(0, 10))).size;
 
-  const timed = plays.map((p) => gameById.get(p.gameId)?.playtime).filter((t) => t != null);
+  const timed = plays.map((p) => gameById.get(p.itemId)).filter((g) => g?.kind === 'board').map((g) => g.length).filter((t) => t != null);
   const avgPlaytime = timed.length ? Math.round(timed.reduce((s, t) => s + t, 0) / timed.length) : null;
 
   const mostPlayed = [...byGame.entries()]

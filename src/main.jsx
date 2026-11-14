@@ -2,10 +2,15 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
-import { migrate } from './lib/storage'
+import { KEYS, migrate, read } from './lib/storage'
+import { pruneCovers } from './lib/coverStore'
 
-// Copy pre-v2 data (tavern_games, tavern_rsvp) into the versioned keys before any hook reads.
+// Copy v1/v2 data into the v3 keys before any hook reads.
 migrate()
+
+// Drop cover images no item points at any more (no undo can be pending at startup).
+const storedItems = read(KEYS.items)
+if (Array.isArray(storedItems)) pruneCovers(storedItems.map((item) => item?.coverId))
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

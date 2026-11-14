@@ -12,7 +12,7 @@ import { btnPrimary, btnSecondary } from '../ui';
 const EASE = [0.16, 1, 0.3, 1];
 
 export default function Shelf({ gamesApi, plays, night, toast }) {
-  const { games, addGame, updateGame, removeGame, restoreGame } = gamesApi;
+  const { items: games, addItem: addGame, updateItem: updateGame, removeItem: removeGame, restoreItem: restoreGame } = gamesApi;
   const reduceMotion = useReducedMotion();
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [dialog, setDialog] = useState({ open: false, game: null });
@@ -143,7 +143,7 @@ export default function Shelf({ gamesApi, plays, night, toast }) {
                 <GameCard
                   game={game}
                   stats={playStats.get(game.id)}
-                  isTonightPick={night.lockedGameId === game.id}
+                  isTonightPick={night.lockedItemId === game.id}
                   onEdit={openEdit}
                   onRemove={remove}
                 />

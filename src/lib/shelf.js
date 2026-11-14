@@ -50,11 +50,11 @@ export function matchesFilters(game, filters, { tonightCount }) {
 
   const { players } = filters;
   if (players === 'tonight' && !fitsPlayers(game, tonightCount)) return false;
-  if (players === '6+' && game.maxPlayers < 6) return false;
+  if (players === '6+' && !(game.maxPlayers >= 6)) return false;
   if (/^\d$/.test(players) && !fitsPlayers(game, Number(players))) return false;
 
   const bucket = TIME_BUCKETS.find((b) => b.id === filters.time) ?? TIME_BUCKETS[0];
-  if (!bucket.test(game.playtime)) return false;
+  if (!bucket.test(game.length)) return false;
 
   if (filters.tags.length && !filters.tags.some((t) => game.tags.includes(t))) return false;
   return true;
@@ -78,9 +78,9 @@ export function sortGames(games, sort, playStats) {
     case 'added':
       return list.sort((a, b) => (b.addedAt ?? '').localeCompare(a.addedAt ?? '') || byTitle(a, b));
     case 'short':
-      return list.sort((a, b) => (a.playtime ?? Infinity) - (b.playtime ?? Infinity) || byTitle(a, b));
+      return list.sort((a, b) => (a.length ?? Infinity) - (b.length ?? Infinity) || byTitle(a, b));
     case 'long':
-      return list.sort((a, b) => (b.playtime ?? -1) - (a.playtime ?? -1) || byTitle(a, b));
+      return list.sort((a, b) => (b.length ?? -1) - (a.length ?? -1) || byTitle(a, b));
     default:
       return list.sort(byTitle);
   }
