@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { BookOpen, Check, Dices, Lock } from 'lucide-react';
-import GameCover from '../GameCover';
+import Cover from '../covers/Cover';
 import { formatLength, formatPlayers, formatShortDate } from '../../lib/format';
 import { btnGhost, btnPrimary, btnSecondary } from '../ui';
 
@@ -18,12 +18,7 @@ export default function TonightPick({ game, stats, logged, onLog, onChange }) {
       className="rounded-md border border-accent bg-surface p-4 sm:p-5"
     >
       <div className="flex gap-4 sm:gap-5">
-        <GameCover
-          title={game.title}
-          color={game.color}
-          className="aspect-[3/4] w-24 shrink-0 self-start sm:w-32"
-          monogramClassName="text-4xl sm:text-5xl"
-        />
+        <Cover item={game} className="w-24 shrink-0 self-start sm:w-32" />
         <div className="min-w-0 flex-1">
           <h3 className="font-display text-3xl leading-tight font-bold text-ink">{game.title}</h3>
           <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-accent">

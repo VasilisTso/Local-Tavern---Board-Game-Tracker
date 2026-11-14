@@ -1,0 +1,750 @@
+/*
+ * Covers: every item drawn as its real object. Pure CSS over four custom properties set by
+ * Cover.jsx (--cv-base, --cv-spine, --cv-band, --cv-ink). Sizes use container units so an
+ * object looks the same at 40px in a list row and at 320px in the detail sheet.
+ * Objects are physical: they cast the contact shadow (--obj-contact, index.css). Chrome never does.
+ */
+
+.cv {
+  position: relative;
+  container-type: inline-size;
+  isolation: isolate;
+  user-select: none;
+  -webkit-user-select: none;
+  filter: var(--obj-contact);
+  font-family: var(--font-display);
+  color: var(--cv-ink);
+  line-height: 1;
+}
+
+/* Zero specificity so every part's own rule wins. */
+:where(.cv > *, .cv:not(.cv--spine) > * > *) {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------- Printed artwork ---------- */
+
+.cv-art {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: inline-size;
+  background: var(--cv-base);
+  color: var(--cv-ink);
+}
+
+.cv-art__img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 200ms var(--ease-out-expo);
+}
+.cv-art__img[data-loaded] {
+  opacity: 1;
+}
+
+.cv-art__orn {
+  position: absolute;
+  pointer-events: none;
+}
+
+.cv-art__text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 10cqw;
+}
+
+.cv-art__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  font-size: var(--cv-title-size);
+  font-weight: 760;
+  font-variation-settings: "wdth" var(--cv-wdth), "opsz" 48;
+  line-height: 0.94;
+  letter-spacing: -0.015em;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.cv-art__by {
+  margin-top: 2cqw;
+  overflow: hidden;
+  font-size: 6.5cqw;
+  font-weight: 500;
+  font-variation-settings: "wdth" 90, "opsz" 14;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cv-art__mono {
+  position: absolute;
+  inset: 0;
+  display: none;
+  place-items: center;
+  font-size: 40cqw;
+  font-weight: 800;
+  font-variation-settings: "wdth" 90, "opsz" 24;
+  letter-spacing: -0.03em;
+}
+
+/* Too small to letter a title: show the monogram. Too small for a byline: drop it. */
+@container (max-width: 76px) {
+  .cv-art__text {
+    display: none;
+  }
+  .cv-art__mono {
+    display: grid;
+  }
+  .cv-tile__chip,
+  .cv-case__banner {
+    display: none;
+  }
+}
+
+@container (max-width: 150px) {
+  .cv-art__by,
+  .cv-box__facts {
+    display: none;
+  }
+}
+
+/* Ornaments, picked per title */
+[data-ornament="bands"] .cv-art__orn {
+  inset: 0;
+  background:
+    linear-gradient(var(--cv-band) 0 0) 0 11% / 100% 5% no-repeat,
+    linear-gradient(var(--cv-band) 0 0) 0 18.5% / 100% 1.4% no-repeat;
+}
+[data-ornament="bands"] .cv-art__text {
+  padding-top: 30cqw;
+}
+[data-ornament="bands"] .cv-art__by {
+  margin-top: auto;
+}
+
+[data-ornament="frame"] .cv-art__orn {
+  inset: 6cqw;
+  border: max(1px, 1.1cqw) solid var(--cv-band);
+  border-radius: 1.5cqw;
+}
+[data-ornament="frame"] .cv-art__text {
+  align-items: center;
+  justify-content: center;
+  padding: 14cqw;
+  text-align: center;
+}
+
+[data-ornament="corner"] .cv-art__orn {
+  right: -45%;
+  bottom: -45%;
+  width: 90%;
+  aspect-ratio: 1;
+  background: var(--cv-band);
+  opacity: 0.45;
+  transform: rotate(45deg);
+}
+
+[data-ornament="sun"] .cv-art__orn {
+  top: -16%;
+  right: -24%;
+  width: 80%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--cv-band);
+  opacity: 0.6;
+}
+[data-ornament="sun"] .cv-art__text {
+  justify-content: flex-end;
+}
+
+[data-ornament="stripes"] .cv-art__orn {
+  inset: auto 0 0;
+  height: 30%;
+  background: repeating-linear-gradient(-45deg, var(--cv-band) 0 2.5cqw, transparent 2.5cqw 6cqw);
+  opacity: 0.5;
+}
+
+/* Light from the top left */
+.cv-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(
+    128deg,
+    oklch(1 0 0 / 0.16),
+    oklch(1 0 0 / 0) 36%,
+    oklch(0 0 0 / 0) 62%,
+    oklch(0 0 0 / 0.16)
+  );
+}
+
+/* Card sleeves: matte, with a faint ring worn by the disc inside */
+.cv-sheen--matte {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 43%, oklch(1 0 0 / 0.06) 44% 45.5%, transparent 46.5%),
+    linear-gradient(128deg, oklch(1 0 0 / 0.1), transparent 40%, transparent 65%, oklch(0 0 0 / 0.12));
+}
+
+/* ---------- Book ---------- */
+
+.cv-book__pages {
+  inset: 2% 0 1% auto;
+  width: 6%;
+  border-radius: 0 1.5cqw 1.5cqw 0;
+  background: repeating-linear-gradient(oklch(0.95 0.02 85) 0 1px, oklch(0.84 0.025 78) 1px 2px);
+  box-shadow: inset 3px 0 3px -1px oklch(0 0 0 / 0.3);
+}
+
+.cv-book__board {
+  right: 4%;
+  overflow: hidden;
+  border-radius: 0.8cqw 2cqw 2cqw 0.8cqw;
+}
+
+.cv-book__art .cv-art__text {
+  padding-left: 15cqw;
+}
+
+/* The hinge groove beside the spine */
+.cv-book__crease {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 12%;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    oklch(0 0 0 / 0.3),
+    oklch(0 0 0 / 0.06) 42%,
+    oklch(1 0 0 / 0.18) 58%,
+    oklch(0 0 0 / 0.16) 72%,
+    transparent
+  );
+}
+
+/* Ebook: a reader with a bezel; the screen is a little desaturated, like e-ink */
+.cv-ebook {
+  border-radius: 7cqw;
+  background: linear-gradient(160deg, oklch(0.31 0.008 60), oklch(0.2 0.006 60));
+  box-shadow:
+    inset 0 0 0 max(1px, 0.6cqw) oklch(0.4 0.01 60),
+    inset 0 1px 0 oklch(1 0 0 / 0.12);
+}
+.cv-ebook::after {
+  content: "";
+  position: absolute;
+  bottom: 6cqw;
+  left: 41%;
+  width: 18%;
+  height: max(2px, 1.4cqw);
+  border-radius: 999px;
+  background: oklch(0.42 0.01 60);
+}
+.cv-ebook__screen {
+  inset: 7cqw 7cqw 15cqw;
+  overflow: hidden;
+  border-radius: 1.5cqw;
+  box-shadow: 0 0 0 1px oklch(0 0 0 / 0.5);
+  filter: saturate(0.72);
+}
+.cv-ebook__glare {
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(115deg, oklch(1 0 0 / 0.09) 0 32%, transparent 32.5%);
+}
+
+/* Audiobook: square art over a waveform band */
+.cv-audio {
+  overflow: hidden;
+  border-radius: 1.5cqw;
+  background: var(--cv-spine);
+}
+.cv-audio .cv-audio__art {
+  inset: 0 0 22%;
+}
+.cv-audio__wave {
+  inset: auto 0 0;
+  display: flex;
+  align-items: center;
+  gap: 1.2cqw;
+  height: 22%;
+  padding: 4cqw 7cqw;
+}
+.cv-audio__wave span {
+  flex: 1;
+  min-height: 2px;
+  border-radius: 999px;
+  background: var(--cv-band);
+}
+
+/* ---------- Board game box ---------- */
+
+.cv-box {
+  perspective: 600px;
+}
+
+.cv-box__lid {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 1.2cqw;
+  transform-origin: 50% 100%;
+  transition: transform 320ms var(--ease-out-expo);
+}
+
+/* Corner shading: lit top-left corner, shadowed bottom-right */
+.cv-box__lid::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 0 0, oklch(1 0 0 / 0.14), transparent 32%),
+    radial-gradient(circle at 100% 100%, oklch(0 0 0 / 0.22), transparent 38%);
+  box-shadow: inset 0 0 0 max(1px, 0.5cqw) oklch(0 0 0 / 0.14);
+  border-radius: inherit;
+}
+
+.cv-box__art .cv-art__text {
+  padding-bottom: 14cqw;
+}
+
+/* The lid's lip where it overlaps the base */
+.cv-box__rim {
+  position: absolute;
+  inset: auto 0 0;
+  height: 6.5%;
+  border-top: 1px solid oklch(1 0 0 / 0.16);
+  background: linear-gradient(oklch(0 0 0 / 0.34), oklch(0 0 0 / 0.18) 35%, oklch(0 0 0 / 0.28));
+}
+
+.cv-box__facts {
+  display: flex;
+  gap: 1.5cqw;
+  margin-top: 3cqw;
+  font-size: 5.5cqw;
+  font-weight: 700;
+  font-variation-settings: "wdth" 85, "opsz" 14;
+  font-variant-numeric: tabular-nums;
+}
+[data-ornament="bands"] .cv-box__facts {
+  margin-top: 3cqw;
+}
+[data-ornament="frame"] .cv-box__facts {
+  justify-content: center;
+}
+.cv-box__facts > span {
+  padding: 1cqw 2.4cqw;
+  border-radius: 999px;
+  background: var(--cv-ink);
+  color: var(--cv-base);
+}
+
+/* Card games: a tuck box with a flap and a thumb notch */
+.cv-box--card .cv-box__lid {
+  border-radius: 0.8cqw;
+  -webkit-mask: radial-gradient(circle at 50% 0, transparent 8cqw, #000 calc(8cqw + 0.5px));
+  mask: radial-gradient(circle at 50% 0, transparent 8cqw, #000 calc(8cqw + 0.5px));
+}
+.cv-box__flap {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 11%;
+  border-bottom: max(1px, 0.5cqw) solid oklch(0 0 0 / 0.3);
+  background: linear-gradient(oklch(1 0 0 / 0.1), oklch(0 0 0 / 0.1));
+  box-shadow: 0 1px 0 oklch(1 0 0 / 0.14);
+}
+.cv-box--card .cv-box__rim {
+  display: none;
+}
+.cv-box--card .cv-art__text {
+  padding-top: 20cqw;
+  padding-bottom: 10cqw;
+}
+.cv-box--card [data-ornament="bands"] .cv-art__text {
+  padding-top: 34cqw;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :where(a, button, [data-cover-host]):hover .cv-box__lid,
+  .cv-box:hover .cv-box__lid {
+    transform: rotateX(5deg) rotateY(-9deg);
+  }
+}
+
+/* ---------- Keep-cases (video games, Blu-ray, DVD) ---------- */
+
+.cv-case {
+  overflow: hidden;
+  border-radius: 4cqw;
+  background: var(--cv-plastic);
+  box-shadow: inset 0 0 0 max(1px, 0.5cqw) oklch(1 0 0 / 0.09);
+}
+.cv-case--game {
+  --cv-plastic: linear-gradient(to right, oklch(0.25 0.012 250), oklch(0.2 0.01 250));
+  --cv-banner: oklch(0.16 0.008 250);
+}
+.cv-case--dvd {
+  --cv-plastic: linear-gradient(to right, oklch(0.2 0.005 60), oklch(0.15 0.005 60));
+}
+.cv-case--bluray {
+  --cv-plastic: linear-gradient(to right, oklch(0.5 0.1 245), oklch(0.42 0.09 245));
+  --cv-banner: oklch(0.42 0.11 250);
+}
+
+.cv-case__hinge {
+  right: auto;
+  width: 8%;
+  border-right: 1px solid oklch(0 0 0 / 0.4);
+  background: repeating-linear-gradient(oklch(1 0 0 / 0.08) 0 1.2cqw, oklch(0 0 0 / 0.2) 1.2cqw 2.4cqw);
+  box-shadow: 1px 0 0 oklch(1 0 0 / 0.08);
+}
+
+.cv-case__insert {
+  inset: 3.5cqw 3.5cqw 3.5cqw 11%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1cqw;
+}
+.cv-case__insert > .cv-art,
+.cv-jewel__booklet > .cv-art {
+  position: relative;
+  inset: auto;
+  flex: 1;
+  height: 100%;
+}
+
+.cv-case__banner {
+  display: flex;
+  flex: none;
+  align-items: center;
+  height: 13cqw;
+  padding: 0 5cqw;
+  overflow: hidden;
+  background: var(--cv-banner);
+  color: oklch(0.96 0.01 85);
+  font-size: 6cqw;
+  font-weight: 760;
+  font-variation-settings: "wdth" 80, "opsz" 14;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The clear sleeve over the insert */
+.cv-case__sleeve {
+  pointer-events: none;
+  border-radius: inherit;
+  background:
+    linear-gradient(105deg, transparent 0 18%, oklch(1 0 0 / 0.14) 26%, transparent 34%),
+    linear-gradient(oklch(1 0 0 / 0.06), transparent 30%);
+}
+
+/* ---------- Cartridge ---------- */
+
+.cv-cart {
+  background: linear-gradient(170deg, oklch(0.75 0.008 80), oklch(0.62 0.01 75));
+  clip-path: polygon(0 0, 87% 0, 100% 10%, 100% 100%, 0 100%);
+}
+.cv-cart__grip {
+  inset: 4cqw 12cqw auto;
+  height: 11cqw;
+  background: repeating-linear-gradient(oklch(0 0 0 / 0.16) 0 1cqw, oklch(1 0 0 / 0.28) 1cqw 2cqw, transparent 2cqw 3cqw);
+}
+.cv-cart__label {
+  inset: 20cqw 9cqw 17cqw;
+  overflow: hidden;
+  border-radius: 2cqw;
+  box-shadow: 0 0 0 1.6cqw oklch(0 0 0 / 0.1);
+}
+.cv-cart__label::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 1.2cqw 1.6cqw oklch(0 0 0 / 0.32);
+}
+/* "Insert this way" arrow */
+.cv-cart__notch {
+  inset: auto 43% 5cqw;
+  height: 7cqw;
+  background: oklch(0 0 0 / 0.22);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+/* ---------- Digital tiles (games, films, music) ---------- */
+
+.cv-tile {
+  overflow: hidden;
+  border-radius: 5cqw;
+}
+.cv-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.16);
+}
+.cv-tile .cv-art__text {
+  padding-bottom: 19cqw;
+}
+.cv-tile__chip {
+  inset: auto 5cqw 5cqw auto;
+  display: flex;
+  align-items: center;
+  gap: 1.5cqw;
+  height: 10cqw;
+  padding: 0 3cqw;
+  border-radius: 999px;
+  background: oklch(0.16 0.01 60 / 0.84);
+  color: oklch(0.96 0.01 85);
+  font-size: 5.5cqw;
+  font-weight: 700;
+  font-variation-settings: "wdth" 85, "opsz" 14;
+  white-space: nowrap;
+}
+.cv-tile__chip svg {
+  width: 5.5cqw;
+  height: 5.5cqw;
+  stroke-width: 2.25;
+}
+.cv-tile__chip--round {
+  justify-content: center;
+  width: 10cqw;
+  padding: 0;
+}
+
+/* ---------- Series box set: the open side shows the cases inside ---------- */
+
+.cv-boxset__cases {
+  inset: 2.5% 0 2.5% auto;
+  display: flex;
+  width: 9%;
+}
+.cv-boxset__cases span {
+  flex: 1;
+  border-left: 1px solid oklch(0 0 0 / 0.45);
+  background: linear-gradient(to right, oklch(0.2 0.008 60), oklch(0.32 0.01 60) 45%, oklch(0.18 0.008 60));
+}
+.cv-boxset__cases span:nth-child(odd) {
+  background: linear-gradient(to right, var(--cv-spine), var(--cv-base) 45%, var(--cv-spine));
+}
+.cv-boxset__front {
+  right: 7%;
+  overflow: hidden;
+  border-radius: 1.2cqw;
+  box-shadow: inset -1px 0 0 oklch(1 0 0 / 0.2);
+}
+
+/* ---------- Vinyl: the disc peeks out of its sleeve ---------- */
+
+.cv-vinyl__disc {
+  inset: 3% 0 3% auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, oklch(0.12 0.005 60) 0 1.5%, var(--cv-band) 2% 15%, oklch(0.1 0.005 60) 15.5% 17%, transparent 17.5%),
+    conic-gradient(from 30deg, transparent, oklch(1 0 0 / 0.1) 8%, transparent 18%, transparent 50%, oklch(1 0 0 / 0.1) 58%, transparent 68%),
+    repeating-radial-gradient(circle, oklch(0.16 0.005 60) 0 0.5cqw, oklch(0.23 0.006 60) 0.5cqw 0.9cqw);
+  box-shadow: inset 0 0 0 max(1px, 0.4cqw) oklch(1 0 0 / 0.16);
+}
+.cv-vinyl__label {
+  display: none;
+}
+.cv-vinyl__sleeve {
+  right: auto;
+  height: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 0.6cqw;
+  box-shadow: 0.8cqw 0 1.6cqw oklch(0 0 0 / 0.35);
+}
+
+/* ---------- CD jewel case ---------- */
+
+.cv-jewel {
+  border-radius: 2.5cqw;
+  background: linear-gradient(135deg, oklch(0.9 0.005 250 / 0.55), oklch(0.68 0.006 250 / 0.4));
+  box-shadow:
+    inset 0 0 0 max(1px, 0.5cqw) oklch(1 0 0 / 0.45),
+    inset 0 0 0 max(2px, 1.2cqw) oklch(0.3 0.005 250 / 0.25);
+}
+.cv-jewel__hinge {
+  right: auto;
+  width: 9%;
+  border-radius: 2.5cqw 0 0 2.5cqw;
+  background:
+    repeating-linear-gradient(oklch(1 0 0 / 0.14) 0 1cqw, transparent 1cqw 2cqw) 0 0 / 100% 14% no-repeat,
+    repeating-linear-gradient(oklch(1 0 0 / 0.14) 0 1cqw, transparent 1cqw 2cqw) 0 100% / 100% 14% no-repeat,
+    linear-gradient(to right, oklch(0.25 0.005 250 / 0.75), oklch(0.45 0.005 250 / 0.6) 50%, oklch(0.25 0.005 250 / 0.75));
+}
+.cv-jewel__booklet {
+  inset: 3cqw 3cqw 3cqw 12%;
+  overflow: hidden;
+  border-radius: 0.5cqw;
+}
+.cv-jewel__glare {
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(120deg, oklch(1 0 0 / 0.3) 0 11%, oklch(1 0 0 / 0.06) 11.5% 40%, transparent 60%);
+}
+
+/* ---------- Spines ---------- */
+
+.cv-spine {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: max(4px, 10cqw);
+  padding-bottom: max(6px, 20cqw);
+  overflow: hidden;
+  background: var(--cv-base);
+  color: var(--cv-ink);
+}
+
+.cv-spine__cap {
+  flex: none;
+  width: 100%;
+  height: max(12px, 45cqw);
+}
+
+.cv-spine__title,
+.cv-spine__foot {
+  min-height: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.cv-spine__title {
+  flex: 1 1 auto;
+  font-size: clamp(0.75rem, 44cqw, 1.2rem);
+  font-weight: 720;
+  font-variation-settings: "wdth" 75, "opsz" 14;
+  letter-spacing: 0.01em;
+  text-align: center;
+}
+
+.cv-spine__foot {
+  flex: none;
+  max-height: 34%;
+  font-size: clamp(0.625rem, 32cqw, 0.8125rem);
+  font-weight: 500;
+  font-variation-settings: "wdth" 80, "opsz" 12;
+}
+
+.cv-spine__icon {
+  flex: none;
+  width: min(52cqw, 16px);
+  height: min(52cqw, 16px);
+  stroke-width: 2;
+  opacity: 0.85;
+}
+
+/* A round spine catches light in the middle */
+.cv-spine__round {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to right,
+    oklch(0 0 0 / 0.28),
+    oklch(1 0 0 / 0.1) 30%,
+    oklch(1 0 0 / 0.03) 58%,
+    oklch(0 0 0 / 0.24)
+  );
+}
+
+/* Bookcloth: bands at head and tail */
+.cv-spine--book {
+  border-radius: 1.5px;
+}
+.cv-spine--book .cv-spine__cap {
+  height: max(16px, 60cqw);
+  background:
+    linear-gradient(var(--cv-band) 0 0) 0 55% / 100% 16% no-repeat,
+    linear-gradient(var(--cv-band) 0 0) 0 85% / 100% 5% no-repeat;
+}
+.cv-spine--book::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 max(3px, 8cqw);
+  height: max(2px, 6cqw);
+  background: var(--cv-band);
+}
+
+/* Box side: printed band under the lid edge, flatter shading */
+.cv-spine--box {
+  border-radius: 2px;
+}
+.cv-spine--box .cv-spine__cap {
+  height: max(14px, 26cqw);
+  border-bottom: max(3px, 8cqw) solid var(--cv-band);
+  background: linear-gradient(oklch(0 0 0 / 0.22), oklch(0 0 0 / 0.08));
+}
+.cv-spine--box .cv-spine__round {
+  background: linear-gradient(to right, oklch(0 0 0 / 0.2), oklch(1 0 0 / 0.06) 12%, transparent 80%, oklch(0 0 0 / 0.18));
+}
+
+/* Keep-case: printed insert behind clear plastic, banner at the top */
+.cv-spine--case {
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px oklch(1 0 0 / 0.14);
+}
+.cv-spine--case .cv-spine__cap {
+  height: max(18px, 70cqw);
+  background: oklch(0.16 0.008 250);
+}
+.cv-spine--bluray .cv-spine__cap {
+  background: oklch(0.42 0.11 250);
+}
+.cv-spine--dvd .cv-spine__cap {
+  height: max(8px, 22cqw);
+  background: oklch(0.15 0.005 60);
+}
+.cv-spine--cd {
+  box-shadow: inset 0 0 0 max(2px, 8cqw) oklch(0.85 0.005 250 / 0.45);
+}
+.cv-spine--cd .cv-spine__cap {
+  height: max(6px, 16cqw);
+  background: none;
+}
+
+/* Record sleeve: thin card, title and artist */
+.cv-spine--record {
+  border-radius: 1px;
+  gap: max(3px, 8cqw);
+}
+.cv-spine--record .cv-spine__cap {
+  height: max(6px, 16cqw);
+  background: none;
+}
+
+/* Digital: a flat tile, no shelf wear */
+.cv-spine--digital {
+  border-radius: 6px;
+}
+.cv-spine--digital .cv-spine__cap {
+  height: max(8px, 24cqw);
+  background: none;
+}
+.cv-spine--digital .cv-spine__round {
+  background: linear-gradient(oklch(1 0 0 / 0.12), transparent 40%);
+}

@@ -1,7 +1,7 @@
 import { useId, useMemo, useState } from 'react';
 import { Check, Plus } from 'lucide-react';
 import Modal, { ModalActions, ModalHeader } from '../Modal';
-import GameCover from '../GameCover';
+import Cover from '../covers/Cover';
 import { COVER_COLORS, swatchFor } from '../../lib/cover';
 import { btnPrimary, btnSecondary, field, hint, label } from '../ui';
 
@@ -86,11 +86,9 @@ function ColorPicker({ name, title, value, onChange }) {
         Box color <span className="font-normal text-muted">· {current.label}</span>
       </legend>
       <div className="mt-2 flex gap-4">
-        <GameCover
-          title={title || '?'}
-          color={value}
-          className="aspect-[3/4] w-14 shrink-0 self-start"
-          monogramClassName="text-xl"
+        <Cover
+          item={{ title: title || '?', color: value, kind: 'board', format: 'box' }}
+          className="w-14 shrink-0 self-start"
         />
         <div className="flex min-w-0 flex-1 flex-wrap content-start gap-1">
           {options.map((option) => {

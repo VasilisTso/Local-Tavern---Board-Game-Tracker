@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Pencil, Trash2, Trophy } from 'lucide-react';
-import GameCover from '../GameCover';
+import Cover from '../covers/Cover';
 import { groupByMonth } from '../../lib/ledger';
 import { parseLocal } from '../../lib/format';
 import { iconBtn, iconBtnDanger } from '../ui';
@@ -31,7 +31,7 @@ function PlayRow({ play, game, onEdit, onRemove }) {
     <article className="flex gap-3 py-3 sm:gap-4">
       <PlayDate date={play.date} />
       {game ? (
-        <GameCover title={game.title} color={game.color} className="aspect-[3/4] w-10 shrink-0 self-start" monogramClassName="text-base" />
+        <Cover item={game} className="w-10 shrink-0 self-start" />
       ) : (
         <div aria-hidden="true" className="aspect-[3/4] w-10 shrink-0 self-start rounded-sm border border-dashed border-line-strong" />
       )}

@@ -1,6 +1,6 @@
 import { useId, useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import GameCover from '../GameCover';
+import Cover from '../covers/Cover';
 import { agoLabel, ledgerStats } from '../../lib/ledger';
 import { formatPlaytime, formatShortDate } from '../../lib/format';
 
@@ -128,7 +128,7 @@ export default function StatsPanel({ plays, games }) {
           <ul className="mt-3 space-y-2.5">
             {stats.dusty.map(({ game, last, days }) => (
               <li key={game.id} className="flex items-center gap-3">
-                <GameCover title={game.title} color={game.color} className="aspect-[3/4] w-7 shrink-0" monogramClassName="text-[0.6rem]" />
+                <Cover item={game} className="w-7 shrink-0" />
                 <span className="min-w-0 flex-1 truncate text-sm font-medium text-ink">{game.title}</span>
                 <span className="tabular shrink-0 text-xs text-muted">
                   {last ? (

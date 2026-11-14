@@ -9,7 +9,7 @@ import {
 } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { ChevronDown, Dices, Lock, RotateCcw, Shuffle } from 'lucide-react';
-import GameCover from '../GameCover';
+import Cover from '../covers/Cover';
 import { coverFor } from '../../lib/cover';
 import { formatLength, formatPlayers } from '../../lib/format';
 import {
@@ -140,7 +140,7 @@ function Result({ game, onLock, onRespin }) {
         animate={{ rotate: 0, y: 0, opacity: 1, transition: { delay: 0.08, type: 'spring', stiffness: 260, damping: 18 } }}
         className="shrink-0 self-start"
       >
-        <GameCover title={game.title} color={game.color} className="aspect-[3/4] w-16 sm:w-20" monogramClassName="text-3xl" />
+        <Cover item={game} className="w-16 sm:w-20" />
       </motion.div>
       <div className="min-w-0 flex-1">
         <p className="font-display text-2xl leading-tight font-bold text-ink">{game.title}</p>
