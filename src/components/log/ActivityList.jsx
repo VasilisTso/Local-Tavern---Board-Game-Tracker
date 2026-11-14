@@ -2,16 +2,25 @@ import { useMemo } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Pencil, Trash2, Trophy } from 'lucide-react';
 import Cover from '../covers/Cover';
-import { groupByMonth } from '../../lib/ledger';
+import { RatingStars } from '../library/Rating';
+import { activityVerb } from '../../lib/kinds';
+import { groupByMonth } from '../../lib/log';
 import { parseLocal } from '../../lib/format';
 import { iconBtn, iconBtnDanger } from '../ui';
+
+// Milestones stand out from ordinary sessions.
+const TYPE_TONE = {
+  started: 'text-accent',
+  finished: 'text-ok',
+  session: 'text-muted',
+};
 
 const listFormat = (names) =>
   typeof Intl.ListFormat === 'function'
     ? new Intl.ListFormat(undefined, { style: 'long', type: 'conjunction' }).format(names)
     : names.join(', ');
 
-function PlayDate({ date }) {
+function EntryDate({ date }) {
   const d = parseLocal(date);
   if (!d) return <span className="w-11 shrink-0" />;
   return (
@@ -24,48 +33,55 @@ function PlayDate({ date }) {
   );
 }
 
-function PlayRow({ play, game, onEdit, onRemove }) {
-  const title = game?.title ?? 'A game no longer on the shelf';
-  const time = parseLocal(play.date)?.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+function EntryRow({ entry, item, onEdit, onRemove }) {
+  const title = item?.title ?? 'Something no longer in the library';
+  const time = parseLocal(entry.date)?.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+  const verb = activityVerb(item?.kind, entry.type);
   return (
     <article className="flex gap-3 py-3 sm:gap-4">
-      <PlayDate date={play.date} />
-      {game ? (
-        <Cover item={game} className="w-10 shrink-0 self-start" />
+      <EntryDate date={entry.date} />
+      {item ? (
+        <Cover item={item} className="w-10 shrink-0 self-start" />
       ) : (
         <div aria-hidden="true" className="aspect-[3/4] w-10 shrink-0 self-start rounded-sm border border-dashed border-line-strong" />
       )}
 
       <div className="min-w-0 flex-1">
-        <h4 className={`font-display text-lg leading-tight font-bold ${game ? 'text-ink' : 'text-muted italic'}`}>
+        <h4 className={`font-display text-lg leading-tight font-bold ${item ? 'text-ink' : 'text-muted italic'}`}>
+          <span className={`mr-1.5 font-sans text-xs font-bold tracking-wide uppercase ${TYPE_TONE[entry.type]}`}>{verb}</span>
           {title}
         </h4>
-        <p className="mt-0.5 text-sm text-muted">
+        <p className="mt-0.5 flex flex-wrap items-center gap-x-1.5 text-sm text-muted">
           {time && <span className="tabular">{time}</span>}
-          {play.players.length > 0 && (
+          {entry.players.length > 0 && (
+            <span>
+              {time && '· '}with {listFormat(entry.players)}
+            </span>
+          )}
+          {entry.rating > 0 && (
             <>
-              {time && ' · '}
-              with {listFormat(play.players)}
+              {(time || entry.players.length > 0) && <span aria-hidden="true">·</span>}
+              <RatingStars value={entry.rating} />
             </>
           )}
         </p>
-        {play.winners.length > 0 && (
+        {entry.winners.length > 0 && (
           <p className="mt-1 flex items-center gap-1.5 text-sm font-semibold text-ink">
             <Trophy aria-hidden="true" className="size-3.5 shrink-0 text-accent" />
-            {listFormat(play.winners)} won
+            {listFormat(entry.winners)} won
           </p>
         )}
-        {play.note && <p className="mt-1 max-w-prose text-sm text-muted italic">“{play.note}”</p>}
+        {entry.note && <p className="mt-1 max-w-prose text-sm text-muted italic">“{entry.note}”</p>}
       </div>
 
       <div className="-mt-1 -mr-1 flex shrink-0 flex-col sm:flex-row">
-        <button type="button" onClick={() => onEdit(play)} aria-label={`Edit ${title} play`} className={iconBtn}>
+        <button type="button" onClick={() => onEdit(entry)} aria-label={`Edit the ${title} entry`} className={iconBtn}>
           <Pencil aria-hidden="true" className="size-4" />
         </button>
         <button
           type="button"
-          onClick={() => onRemove(play, title)}
-          aria-label={`Delete ${title} play from the ledger`}
+          onClick={() => onRemove(entry, title)}
+          aria-label={`Delete the ${title} entry from the log`}
           className={iconBtnDanger}
         >
           <Trash2 aria-hidden="true" className="size-4" />
@@ -75,11 +91,11 @@ function PlayRow({ play, game, onEdit, onRemove }) {
   );
 }
 
-/** The play log, newest first, one section per month. */
-export default function PlayList({ plays, games, onEdit, onRemove }) {
+/** The activity log, newest first, one section per month. */
+export default function ActivityList({ activity, items, onEdit, onRemove }) {
   const reduceMotion = useReducedMotion();
-  const gameById = useMemo(() => new Map(games.map((g) => [g.id, g])), [games]);
-  const months = useMemo(() => groupByMonth(plays), [plays]);
+  const itemById = useMemo(() => new Map(items.map((i) => [i.id, i])), [items]);
+  const months = useMemo(() => groupByMonth(activity), [activity]);
 
   const rowMotion = reduceMotion
     ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
@@ -99,14 +115,14 @@ export default function PlayList({ plays, games, onEdit, onRemove }) {
           >
             {month.label}
             <span className="tabular font-sans text-sm font-semibold text-muted">
-              {month.plays.length} {month.plays.length === 1 ? 'play' : 'plays'}
+              {month.entries.length} {month.entries.length === 1 ? 'entry' : 'entries'}
             </span>
           </h3>
           <ul className="divide-y divide-line">
             <AnimatePresence initial={false}>
-              {month.plays.map((play) => (
-                <motion.li key={play.id} {...rowMotion} className="overflow-hidden">
-                  <PlayRow play={play} game={gameById.get(play.itemId)} onEdit={onEdit} onRemove={onRemove} />
+              {month.entries.map((entry) => (
+                <motion.li key={entry.id} {...rowMotion} className="overflow-hidden">
+                  <EntryRow entry={entry} item={itemById.get(entry.itemId)} onEdit={onEdit} onRemove={onRemove} />
                 </motion.li>
               ))}
             </AnimatePresence>

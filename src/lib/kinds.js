@@ -151,11 +151,49 @@ export const LOCATION_KINDS = [
 ];
 
 export const ACTIVITY_TYPES = [
-  { id: 'session', label: 'Session' },
   { id: 'started', label: 'Started' },
+  { id: 'session', label: 'Session' },
   { id: 'finished', label: 'Finished' },
 ];
 
 export const ACTIVITY_TYPE_IDS = ACTIVITY_TYPES.map((t) => t.id);
+
+/** What a session is called for each kind; the past tense reads as a log line ("Read", "Watched"). */
+const SESSION_VERB = { board: 'Played', video: 'Played', book: 'Read', film: 'Watched', music: 'Listened to' };
+
+/** Board games are played, not started or finished; every other kind has all three entry types. */
+export const activityTypesFor = (kind) =>
+  kind === 'board' ? ACTIVITY_TYPES.filter((t) => t.id === 'session') : ACTIVITY_TYPES;
+
+/** Log-line verb for an entry: "Played", "Read", "Started", "Finished". */
+export function activityVerb(kind, type) {
+  if (type === 'started') return 'Started';
+  if (type === 'finished') return 'Finished';
+  return SESSION_VERB[kind] ?? 'Used';
+}
+
+/** The entry type a new log entry for this item most likely is. */
+export function defaultActivityType(item) {
+  if (!item || item.kind === 'board') return 'session';
+  return item.status === 'backlog' || item.status === 'wishlist' ? 'started' : 'session';
+}
+
+/**
+ * Item changes a new log entry implies: starting (or a first session) puts it in progress,
+ * finishing marks it finished and takes the entry's rating. Board games keep their status.
+ * Returns null when nothing changes.
+ */
+export function itemPatchForEntry(item, entry) {
+  if (!item) return null;
+  const patch = {};
+  if (entry.type === 'finished') {
+    if (item.status !== 'done') patch.status = 'done';
+    if (entry.rating > 0 && entry.rating !== item.rating) patch.rating = entry.rating;
+  } else if (item.kind !== 'board') {
+    const fresh = item.status === 'backlog' || item.status === 'wishlist';
+    if (item.status !== 'active' && (entry.type === 'started' || fresh)) patch.status = 'active';
+  }
+  return Object.keys(patch).length ? patch : null;
+}
 
 export const MAX_RATING = 5;

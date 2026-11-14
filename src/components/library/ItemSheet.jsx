@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, useIsPresent, useReducedMotion } from 'framer-motion';
-import { HandHelping, Pencil, Trash2, X } from 'lucide-react';
+import { HandHelping, NotebookPen, Pencil, Trash2, X } from 'lucide-react';
 import Cover from '../covers/Cover';
 import { RatingInput } from './Rating';
 import { objectLayoutId } from './objects';
@@ -11,7 +11,7 @@ import { kindLine } from '../../lib/shelf';
 import { formatLength, formatPlayers, formatShortDate } from '../../lib/format';
 import { DURATION, EASE_OUT_EXPO, SPRING, fade } from '../../lib/motion';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
-import { btnSecondary, chip, iconBtn } from '../ui';
+import { btnPrimary, btnSecondary, chip, iconBtn } from '../ui';
 
 // The panel and the cover layer share this geometry so the cover, which lives in its own fixed
 // layer (outside the sliding, scrolling panel), lands exactly in the panel's cover slot.
@@ -36,7 +36,7 @@ function Fact({ label, children }) {
  * app behind it is inert, Esc and the backdrop close it, focus is trapped and goes back to the
  * object that opened it. The cover arrives from that object through a shared `layoutId`.
  */
-export default function ItemSheet({ item, origin, fromSpine, placeName, stats, onClose, onUpdate, onEdit, onRemove }) {
+export default function ItemSheet({ item, origin, fromSpine, placeName, stats, onClose, onUpdate, onEdit, onLog, onRemove }) {
   const titleId = useId();
   const reduceMotion = useReducedMotion();
   const wide = useMediaQuery('(min-width: 768px)');
@@ -200,6 +200,10 @@ export default function ItemSheet({ item, origin, fromSpine, placeName, stats, o
         </div>
 
         <div className="flex shrink-0 flex-wrap gap-2 border-t border-line px-5 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:px-7">
+          <button type="button" onClick={onLog} className={btnPrimary}>
+            <NotebookPen aria-hidden="true" className="size-4" />
+            Log
+          </button>
           <button type="button" onClick={onEdit} className={btnSecondary}>
             <Pencil aria-hidden="true" className="size-4" />
             Edit

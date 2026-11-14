@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
-import { Check, Library as LibraryIcon, Lock, Play, Users } from 'lucide-react';
+import { Check, Library as LibraryIcon, Lock, NotebookPen, Play, Users } from 'lucide-react';
 import NightPanel from './NightPanel';
 import PickWheel from './PickWheel';
 import PickFilters from './PickFilters';
@@ -116,7 +116,7 @@ export default function Pick({ items, activity, locations, itemsApi, nightApi, o
 
   const logSession = (item) => {
     const names = night.guests.filter((g) => g.status === 'going').map((g) => g.name);
-    onLog({ itemId: item.id, date: night.date, players: names });
+    onLog({ itemId: item.id, type: 'session', date: night.date, players: names });
   };
 
   const start = (item) => {
@@ -139,19 +139,31 @@ export default function Pick({ items, activity, locations, itemsApi, nightApi, o
       );
     }
     const current = items.find((i) => i.id === winner.id) ?? winner;
+    const logIt = (
+      <button type="button" onClick={() => onLog({ itemId: current.id })} className={btnSecondary}>
+        <NotebookPen aria-hidden="true" className="size-4" />
+        Log it
+      </button>
+    );
     if (current.status === 'active') {
       return (
-        <p className="mr-1 flex items-center gap-1.5 text-sm font-semibold text-ok">
-          <Check aria-hidden="true" className="size-4" strokeWidth={3} />
-          In progress
-        </p>
+        <>
+          <p className="mr-1 flex items-center gap-1.5 text-sm font-semibold text-ok">
+            <Check aria-hidden="true" className="size-4" strokeWidth={3} />
+            In progress
+          </p>
+          {logIt}
+        </>
       );
     }
     return (
-      <button type="button" onClick={() => start(current)} className={btnPrimary}>
-        <Play aria-hidden="true" className="size-4" />
-        Start it
-      </button>
+      <>
+        <button type="button" onClick={() => start(current)} className={btnPrimary}>
+          <Play aria-hidden="true" className="size-4" />
+          Start it
+        </button>
+        {logIt}
+      </>
     );
   };
 

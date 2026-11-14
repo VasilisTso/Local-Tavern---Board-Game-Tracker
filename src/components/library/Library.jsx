@@ -29,7 +29,7 @@ import './library.css';
 
 const defaultView = () => DEFAULT_VIEW;
 
-export default function Library({ itemsApi, locationsApi, activity, toast }) {
+export default function Library({ itemsApi, locationsApi, activity, onLog, toast }) {
   const { items, addItem, updateItem, removeItem, restoreItem } = itemsApi;
   const { locations } = locationsApi;
   const [view, setView] = usePersistentState(KEYS.view, defaultView, normalizeView);
@@ -200,6 +200,10 @@ export default function Library({ itemsApi, locationsApi, activity, toast }) {
             onClose={() => setOpen(null)}
             onUpdate={(patch) => updateItem(openItem.id, patch)}
             onEdit={() => openEdit(openItem)}
+            onLog={() => {
+              setOpen(null);
+              onLog({ itemId: openItem.id });
+            }}
             onRemove={() => remove(openItem)}
           />
         )}

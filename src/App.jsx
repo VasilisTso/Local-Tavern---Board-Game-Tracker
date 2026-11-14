@@ -12,10 +12,11 @@ import Toast from './components/Toast';
 import ThemeToggle from './components/ThemeToggle';
 import Library from './components/library/Library';
 import Pick from './components/pick/Pick';
-import Ledger from './components/ledger/Ledger';
-import LogPlayDialog from './components/ledger/LogPlayDialog';
+import Log from './components/log/Log';
+import LogDialog from './components/log/LogDialog';
 import BackupMenu from './components/BackupMenu';
-import { knownPlayerNames } from './lib/ledger';
+import { knownPlayerNames } from './lib/log';
+import { activityVerb, itemPatchForEntry } from './lib/kinds';
 
 const TAB_IDS = ['library', 'pick', 'log'];
 /** Hashes from earlier versions. */
@@ -51,29 +52,38 @@ export default function App() {
   const { theme, toggleTheme } = useTheme();
   const [tab, setTab] = useHashTab(TAB_IDS, TAB_ALIASES);
   const toast = useToast();
-  const [logDialog, setLogDialog] = useState({ open: false, play: null, prefill: null });
+  const [logDialog, setLogDialog] = useState({ open: false, entry: null, prefill: null });
   const knownNames = useMemo(() => knownPlayerNames(nightApi.night, activity), [nightApi.night, activity]);
 
-  const openLog = (prefill = null) => setLogDialog({ open: true, play: null, prefill });
-  const openEditPlay = (play) => setLogDialog({ open: true, play, prefill: null });
+  const openLog = (prefill = null) => setLogDialog({ open: true, entry: null, prefill });
+  const openEditEntry = (entry) => setLogDialog({ open: true, entry, prefill: null });
   const closeLog = () => setLogDialog((d) => ({ ...d, open: false }));
 
-  const titleOf = (itemId) => items.find((item) => item.id === itemId)?.title ?? 'that item';
-
-  const savePlay = (values) => {
-    if (logDialog.play) {
-      activityApi.updateActivity(logDialog.play.id, values);
-      toast.show({ message: `Saved the ${titleOf(values.itemId)} entry.` });
-    } else {
-      const entry = activityApi.addActivity(values);
-      if (entry) {
-        toast.show({
-          message: `Logged ${titleOf(entry.itemId)}.`,
-          actionLabel: 'Undo',
-          onAction: () => activityApi.removeActivity(entry.id),
-        });
-      }
+  const saveEntry = (values) => {
+    const item = items.find((i) => i.id === values.itemId);
+    const title = item?.title ?? 'that item';
+    if (logDialog.entry) {
+      activityApi.updateActivity(logDialog.entry.id, values);
+      toast.show({ message: `Saved the ${title} entry.` });
+      closeLog();
+      return;
     }
+    const entry = activityApi.addActivity(values);
+    if (!entry) return;
+    // A new entry can move the item along: started puts it in progress, finished marks it done.
+    const patch = itemPatchForEntry(item, entry);
+    const before = patch && Object.fromEntries(Object.keys(patch).map((key) => [key, item[key]]));
+    if (patch) itemsApi.updateItem(item.id, patch);
+    // "Finished X" and "Started X" already say where it moved; a first session needs the hint.
+    const moved = patch?.status === 'active' && entry.type === 'session' ? ` It's on your Now shelf.` : '';
+    toast.show({
+      message: `${activityVerb(item?.kind, entry.type)} ${title}. Logged.${moved}`,
+      actionLabel: 'Undo',
+      onAction: () => {
+        activityApi.removeActivity(entry.id);
+        if (patch) itemsApi.updateItem(item.id, before);
+      },
+    });
     closeLog();
   };
 
@@ -106,7 +116,7 @@ export default function App() {
 
       <main className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 sm:pt-8">
         <TabPanel id="library" active={tab}>
-          <Library itemsApi={itemsApi} locationsApi={locationsApi} activity={activity} toast={toast} />
+          <Library itemsApi={itemsApi} locationsApi={locationsApi} activity={activity} onLog={openLog} toast={toast} />
         </TabPanel>
 
         <TabPanel id="pick" active={tab}>
@@ -122,17 +132,17 @@ export default function App() {
         </TabPanel>
 
         <TabPanel id="log" active={tab}>
-          <Ledger games={items} playsApi={activityApi} onLog={openLog} onEdit={openEditPlay} toast={toast} />
+          <Log items={items} activityApi={activityApi} onLog={openLog} onEdit={openEditEntry} toast={toast} />
         </TabPanel>
       </main>
 
-      <LogPlayDialog
+      <LogDialog
         open={logDialog.open}
-        play={logDialog.play}
+        entry={logDialog.entry}
         prefill={logDialog.prefill}
-        games={items}
+        items={items}
         knownNames={knownNames}
-        onSave={savePlay}
+        onSave={saveEntry}
         onClose={closeLog}
       />
 
