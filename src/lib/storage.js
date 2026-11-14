@@ -25,6 +25,8 @@ export const KEYS = {
   locations: 'tavern:v3:locations',
   activity: 'tavern:v3:activity',
   night: 'tavern:v3:night',
+  /** Library view (shelf, grid or list). */
+  view: 'tavern:v3:view',
   theme: 'tavern:theme',
 };
 

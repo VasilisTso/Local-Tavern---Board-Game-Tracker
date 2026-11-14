@@ -1,0 +1,118 @@
+/*
+ * Library: wooden boards and the objects standing on them. Wood is a material (DESIGN.md › Wood):
+ * it appears only on boards. Objects carry the contact shadow and switch to the pulled shadow
+ * when lifted.
+ */
+
+/* One place's shelf. Items wrap onto new boards; a repeating background draws a board under each
+ * row, so rows never need measuring. Every slot is the same height and items stand on its floor. */
+.lib-board {
+  --slot: 11.5rem; /* room for the tallest spine plus the lift */
+  --board: 0.875rem;
+  --row-gap: 1.75rem;
+  --period: calc(var(--slot) + var(--board) + var(--row-gap));
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  column-gap: 2px;
+  padding-inline: 0.75rem;
+  background: linear-gradient(
+      to bottom,
+      transparent 0 var(--slot),
+      var(--wood-top) var(--slot) calc(var(--slot) + 3px),
+      var(--wood-face) calc(var(--slot) + 3px) calc(var(--slot) + var(--board) - 3px),
+      var(--wood-edge) calc(var(--slot) + var(--board) - 3px) calc(var(--slot) + var(--board)),
+      var(--board-shadow) calc(var(--slot) + var(--board)),
+      transparent calc(var(--slot) + var(--board) + 0.75rem)
+    )
+    0 0 / 100% var(--period) repeat-y;
+  border-radius: 2px;
+  /* The last row needs no gap after its board. */
+  margin-bottom: calc(-1 * var(--row-gap));
+}
+
+.lib-slot {
+  display: flex;
+  align-items: flex-end;
+  height: var(--slot);
+  margin-bottom: calc(var(--board) + var(--row-gap));
+}
+
+/* Face-out objects (boxes, records) get breathing room; spines stand shoulder to shoulder. */
+.lib-slot--face {
+  margin-inline: 0.5rem;
+}
+.lib-slot--face + .lib-slot:not(.lib-slot--face) {
+  margin-left: 0.5rem;
+}
+
+/* Phones: one board per place that scrolls sideways and snaps. */
+@media (max-width: 639.98px) {
+  .lib-board {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 0.75rem;
+    background-attachment: local;
+    scrollbar-width: none;
+    margin-inline: -1rem;
+    padding-inline: 1rem;
+    border-radius: 0;
+  }
+  .lib-board::-webkit-scrollbar {
+    display: none;
+  }
+  .lib-slot {
+    flex: none;
+    scroll-snap-align: start;
+  }
+}
+
+/* An object as a control: lifts toward the viewer on hover or keyboard focus. */
+.lib-obj .cv {
+  transition: filter 200ms var(--ease-out-expo);
+}
+.lib-obj:focus-visible .cv,
+.lib-obj[data-lifted] .cv {
+  filter: var(--obj-pulled);
+}
+@media (hover: hover) {
+  .lib-obj:hover .cv {
+    filter: var(--obj-pulled);
+  }
+}
+.lib-obj:focus-visible {
+  outline-offset: 4px;
+}
+
+/* Grid cell stage: the cover stands on the floor of a fixed box whatever its aspect ratio. */
+.lib-stage {
+  container-type: size;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  aspect-ratio: 5 / 6;
+}
+
+/* A plain surface the size of an object, for the slot left behind while its cover is in the sheet. */
+.lib-ghost {
+  border-radius: 3px;
+  background: color-mix(in oklch, var(--ink) 6%, transparent);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+/* The small "out on loan" marker on spines and covers. */
+.lib-lent {
+  position: absolute;
+  inset: auto -2px -2px auto;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border-radius: 999px;
+  background: var(--accent-fill);
+  color: var(--on-accent);
+  box-shadow: 0 0 0 2px var(--bg);
+}

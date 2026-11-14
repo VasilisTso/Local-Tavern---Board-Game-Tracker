@@ -9,7 +9,7 @@ function titleStyle(title) {
   const longest = Math.max(...words.map((w) => w.length), 1);
   const total = title.length;
   const wdth = total <= 12 ? 100 : total <= 24 ? 88 : 78;
-  const charWidth = wdth === 100 ? 0.6 : wdth === 88 ? 0.54 : 0.5;
+  const charWidth = wdth === 100 ? 0.67 : wdth === 88 ? 0.6 : 0.55; // heavy weight runs wide
   const byTotal = total <= 8 ? 18 : total <= 14 ? 15 : total <= 24 ? 12 : total <= 40 ? 10 : 8.5;
   const byWord = 80 / (longest * charWidth);
   return {
