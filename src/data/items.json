@@ -51,40 +51,6 @@
     "addedAt": "2026-01-01T00:00:00.000Z"
   },
   {
-    "id": "mock-4",
-    "title": "Monopoly: Classic Edition",
-    "kind": "board",
-    "format": "box",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 120,
-    "minPlayers": 2,
-    "maxPlayers": 6,
-    "tags": [
-      "Board Game",
-      "Economics",
-      "Classic"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
-    "id": "mock-5",
-    "title": "Cluedo (Clue)",
-    "kind": "board",
-    "format": "box",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 45,
-    "minPlayers": 2,
-    "maxPlayers": 6,
-    "tags": [
-      "Board Game",
-      "Deduction",
-      "Mystery"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
     "id": "mock-6",
     "title": "Catan",
     "kind": "board",
@@ -115,23 +81,6 @@
       "Campaign",
       "Fantasy",
       "Co-op"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
-    "id": "mock-8",
-    "title": "Secret Hitler",
-    "kind": "board",
-    "format": "card",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 45,
-    "minPlayers": 5,
-    "maxPlayers": 10,
-    "tags": [
-      "Social Deduction",
-      "Hidden Roles",
-      "Party"
     ],
     "addedAt": "2026-01-01T00:00:00.000Z"
   },
@@ -170,74 +119,6 @@
     "addedAt": "2026-01-01T00:00:00.000Z"
   },
   {
-    "id": "mock-11",
-    "title": "Risk: Global Domination",
-    "kind": "board",
-    "format": "box",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 120,
-    "minPlayers": 2,
-    "maxPlayers": 6,
-    "tags": [
-      "Board Game",
-      "Strategy",
-      "Military"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
-    "id": "mock-12",
-    "title": "Pathfinder: Beginner Box",
-    "kind": "board",
-    "format": "box",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 180,
-    "minPlayers": 2,
-    "maxPlayers": 7,
-    "tags": [
-      "RPG",
-      "High Fantasy",
-      "Adventure"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
-    "id": "mock-13",
-    "title": "Cards Against Humanity",
-    "kind": "board",
-    "format": "card",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 60,
-    "minPlayers": 4,
-    "maxPlayers": 20,
-    "tags": [
-      "Card Game",
-      "Humor",
-      "Party"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
-    "id": "mock-14",
-    "title": "Unstable Unicorns",
-    "kind": "board",
-    "format": "card",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 45,
-    "minPlayers": 2,
-    "maxPlayers": 8,
-    "tags": [
-      "Card Game",
-      "Strategy",
-      "Humor"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
     "id": "mock-15",
     "title": "Codenames",
     "kind": "board",
@@ -255,40 +136,6 @@
     "addedAt": "2026-01-01T00:00:00.000Z"
   },
   {
-    "id": "mock-16",
-    "title": "The Game of Life",
-    "kind": "board",
-    "format": "box",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 45,
-    "minPlayers": 2,
-    "maxPlayers": 4,
-    "tags": [
-      "Board Game",
-      "Family",
-      "Classic"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
-    "id": "mock-17",
-    "title": "Star Wars: Legion",
-    "kind": "board",
-    "format": "box",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 180,
-    "minPlayers": 2,
-    "maxPlayers": 2,
-    "tags": [
-      "Miniature Wargame",
-      "Sci-Fi",
-      "Tactical"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
     "id": "mock-18",
     "title": "Betrayal at House on the Hill",
     "kind": "board",
@@ -302,23 +149,6 @@
       "Board Game",
       "Horror",
       "Hidden Traitor"
-    ],
-    "addedAt": "2026-01-01T00:00:00.000Z"
-  },
-  {
-    "id": "mock-19",
-    "title": "Scrabble",
-    "kind": "board",
-    "format": "box",
-    "locationId": "loc-living-room",
-    "status": "backlog",
-    "length": 60,
-    "minPlayers": 2,
-    "maxPlayers": 4,
-    "tags": [
-      "Board Game",
-      "Word Play",
-      "Classic"
     ],
     "addedAt": "2026-01-01T00:00:00.000Z"
   },
@@ -536,6 +366,340 @@
     "status": "backlog",
     "tags": [
       "Rock"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-5",
+    "title": "Dune",
+    "kind": "book",
+    "format": "print",
+    "creator": "Frank Herbert",
+    "year": 1965,
+    "length": 688,
+    "locationId": "loc-bedroom",
+    "status": "backlog",
+    "tags": [
+      "Sci-Fi",
+      "Classic"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-6",
+    "title": "A Wizard of Earthsea",
+    "kind": "book",
+    "format": "print",
+    "creator": "Ursula K. Le Guin",
+    "year": 1968,
+    "length": 183,
+    "locationId": "loc-bedroom",
+    "status": "done",
+    "rating": 4,
+    "tags": [
+      "Fantasy",
+      "Classic"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-7",
+    "title": "Circe",
+    "kind": "book",
+    "format": "ebook",
+    "creator": "Madeline Miller",
+    "year": 2018,
+    "length": 393,
+    "locationId": "loc-kindle",
+    "status": "active",
+    "tags": [
+      "Fantasy",
+      "Myth"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-8",
+    "title": "Klara and the Sun",
+    "kind": "book",
+    "format": "ebook",
+    "creator": "Kazuo Ishiguro",
+    "year": 2021,
+    "length": 303,
+    "locationId": "loc-kindle",
+    "status": "wishlist",
+    "tags": [
+      "Literary"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-book-9",
+    "title": "The Martian",
+    "kind": "book",
+    "format": "audio",
+    "creator": "Andy Weir",
+    "year": 2014,
+    "length": 653,
+    "locationId": "loc-audible",
+    "status": "done",
+    "rating": 4,
+    "tags": [
+      "Sci-Fi"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-video-4",
+    "title": "Hollow Knight",
+    "kind": "video",
+    "format": "digital",
+    "creator": "Team Cherry",
+    "year": 2017,
+    "length": 1800,
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "platform": "PC",
+    "locationId": "loc-steam",
+    "status": "backlog",
+    "tags": [
+      "Metroidvania",
+      "Atmospheric"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-video-5",
+    "title": "Disco Elysium",
+    "kind": "video",
+    "format": "digital",
+    "creator": "ZA/UM",
+    "year": 2019,
+    "length": 1500,
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "platform": "PC",
+    "locationId": "loc-steam",
+    "status": "dropped",
+    "tags": [
+      "RPG",
+      "Detective"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-video-6",
+    "title": "The Legend of Zelda: Tears of the Kingdom",
+    "kind": "video",
+    "format": "cartridge",
+    "creator": "Nintendo",
+    "year": 2023,
+    "length": 3600,
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "platform": "Switch",
+    "locationId": "loc-switch",
+    "status": "active",
+    "tags": [
+      "Adventure",
+      "Open World"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-video-7",
+    "title": "Overcooked! 2",
+    "kind": "video",
+    "format": "cartridge",
+    "creator": "Ghost Town Games",
+    "year": 2018,
+    "length": 30,
+    "minPlayers": 1,
+    "maxPlayers": 4,
+    "platform": "Switch",
+    "locationId": "loc-switch",
+    "status": "done",
+    "rating": 4,
+    "tags": [
+      "Co-op",
+      "Party"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-video-8",
+    "title": "Elden Ring",
+    "kind": "video",
+    "format": "disc",
+    "creator": "FromSoftware",
+    "year": 2022,
+    "length": 4800,
+    "minPlayers": 1,
+    "maxPlayers": 1,
+    "platform": "PlayStation 5",
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "tags": [
+      "Soulslike",
+      "Open World"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-film-4",
+    "title": "Parasite",
+    "kind": "film",
+    "format": "bluray",
+    "creator": "Bong Joon-ho",
+    "year": 2019,
+    "length": 132,
+    "locationId": "loc-living-room",
+    "status": "done",
+    "rating": 5,
+    "tags": [
+      "Thriller",
+      "Drama"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-film-5",
+    "title": "Mad Max: Fury Road",
+    "kind": "film",
+    "format": "bluray",
+    "creator": "George Miller",
+    "year": 2015,
+    "length": 120,
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "tags": [
+      "Action"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-film-6",
+    "title": "In the Mood for Love",
+    "kind": "film",
+    "format": "dvd",
+    "creator": "Wong Kar-wai",
+    "year": 2000,
+    "length": 98,
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "tags": [
+      "Romance",
+      "Drama"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-film-7",
+    "title": "Twin Peaks",
+    "kind": "film",
+    "format": "series",
+    "creator": "David Lynch & Mark Frost",
+    "year": 1990,
+    "length": 1440,
+    "locationId": "loc-living-room",
+    "status": "active",
+    "tags": [
+      "Mystery",
+      "Drama"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-film-8",
+    "title": "Everything Everywhere All at Once",
+    "kind": "film",
+    "format": "digital",
+    "creator": "Daniels",
+    "year": 2022,
+    "length": 139,
+    "locationId": "loc-apple-tv",
+    "status": "wishlist",
+    "tags": [
+      "Sci-Fi",
+      "Comedy"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-music-3",
+    "title": "Rumours",
+    "kind": "music",
+    "format": "vinyl",
+    "creator": "Fleetwood Mac",
+    "year": 1977,
+    "length": 39,
+    "locationId": "loc-living-room",
+    "status": "done",
+    "rating": 4,
+    "tags": [
+      "Rock"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-music-4",
+    "title": "Blue Train",
+    "kind": "music",
+    "format": "vinyl",
+    "creator": "John Coltrane",
+    "year": 1958,
+    "length": 42,
+    "locationId": "loc-living-room",
+    "status": "backlog",
+    "tags": [
+      "Jazz"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-music-5",
+    "title": "OK Computer",
+    "kind": "music",
+    "format": "cd",
+    "creator": "Radiohead",
+    "year": 1997,
+    "length": 53,
+    "locationId": "loc-living-room",
+    "status": "done",
+    "rating": 5,
+    "tags": [
+      "Rock"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-music-6",
+    "title": "Random Access Memories",
+    "kind": "music",
+    "format": "digital",
+    "creator": "Daft Punk",
+    "year": 2013,
+    "length": 74,
+    "locationId": "loc-bandcamp",
+    "status": "backlog",
+    "tags": [
+      "Electronic"
+    ],
+    "addedAt": "2026-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "seed-music-7",
+    "title": "Promises",
+    "kind": "music",
+    "format": "digital",
+    "creator": "Floating Points, Pharoah Sanders",
+    "year": 2021,
+    "length": 46,
+    "locationId": "loc-bandcamp",
+    "status": "active",
+    "tags": [
+      "Jazz",
+      "Ambient"
     ],
     "addedAt": "2026-01-01T00:00:00.000Z"
   }

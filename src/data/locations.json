@@ -28,5 +28,15 @@
     "id": "loc-audible",
     "name": "Audible",
     "kind": "digital"
+  },
+  {
+    "id": "loc-apple-tv",
+    "name": "Apple TV",
+    "kind": "digital"
+  },
+  {
+    "id": "loc-bandcamp",
+    "name": "Bandcamp",
+    "kind": "digital"
   }
 ]

@@ -11,7 +11,7 @@ Built with **React**, **Tailwind CSS** and **Framer Motion**. Everything stays i
 The app has three tabs, linked by URL hash: `#library`, `#pick` and `#log`.
 
 ### Library
-* **Shelf view:** one wooden shelf per place (Living room shelf, Bedroom, Steam, Switch, Kindle, Audible, or your own). Books, films and games stand as spines; boxed games and records stand face-out. On phones each shelf scrolls sideways.
+* **Shelf view:** one wooden shelf per place (Living room shelf, Bedroom, Steam, Switch, Kindle, Audible, Apple TV, Bandcamp, or your own). Books, films and games stand as spines; boxed games and records stand face-out. On phones each shelf scrolls sideways.
 * **Grid and List views** for browsing covers or scanning a dense list.
 * **Covers drawn per format:** board game box or card tuck box; paperback, ebook reader or audiobook; game case, cartridge or launcher tile; Blu-ray, DVD or series box set; vinyl sleeve or CD jewel case. Add your own image (upload or link) and it goes inside the object frame.
 * **Now:** what you're in the middle of, face-out at the top.
